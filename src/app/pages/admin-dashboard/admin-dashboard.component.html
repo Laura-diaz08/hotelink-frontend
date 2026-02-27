@@ -1,0 +1,133 @@
+<div class="admin-container">
+  <h2>Panel de Administración - Hotelink</h2>
+  <button (click)="cerrarSesion()" class="btn-logout">Cerrar Sesión</button>
+  
+  <p>Gestión interna de usuarios (Clientes y Trabajadores).</p>
+
+  <div *ngIf="mensajeError" class="error">{{ mensajeError }}</div>
+  <div *ngIf="mensajeExito" class="exito">{{ mensajeExito }}</div>
+
+  <button *ngIf="!mostrarFormulario" (click)="abrirFormulario()" class="btn-nuevo">
+    + Nuevo Usuario
+  </button>
+
+  <div *ngIf="mostrarFormulario" class="formulario-caja">
+    <h3>Crear Nuevo Usuario</h3>
+    
+    <label>Nombre:</label>
+    <input type="text" [(ngModel)]="nuevoUsuario.nombre" placeholder="Ej: Juan Pérez">
+
+    <label>Email:</label>
+    <input type="email" [(ngModel)]="nuevoUsuario.email" placeholder="Ej: juan@mail.com">
+
+    <label>Contraseña:</label>
+    <input type="password" [(ngModel)]="nuevoUsuario.password" placeholder="Mínimo 4 caracteres">
+
+    <label>Rol:</label>
+    <select [(ngModel)]="nuevoUsuario.rol">
+      <option value="USER">Usuario / Cliente</option>
+      <option value="ADMIN">Administrador</option>
+    </select>
+
+    <div class="botones-form">
+      <button (click)="guardarUsuario()" class="btn-guardar">Guardar</button>
+      <button (click)="cancelarFormulario()" class="btn-cancelar">Cancelar</button>
+    </div>
+  </div>
+
+  <table class="user-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Rol</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let u of usuarios">
+        <td>{{ u.id }}</td>
+        <td>{{ u.nombre }}</td>
+        <td>{{ u.email }}</td>
+        <td>
+          <span class="badge" [ngClass]="u.rol === 'ADMIN' ? 'admin-badge' : 'user-badge'">
+            {{ u.rol }}
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr style="margin: 40px 0; border: 1px solid #ccc;">
+
+  <h2>Gestión de Habitaciones</h2>
+
+  <button *ngIf="!mostrarFormularioHabitacion" (click)="mostrarFormularioHabitacion = true" class="btn-nuevo">
+    + Nueva Habitación
+  </button>
+
+  <div *ngIf="mostrarFormularioHabitacion" class="formulario-caja">
+    <h3>Crear Nueva Habitación</h3>
+    
+    <label>Número de Habitación:</label>
+    <input type="text" [(ngModel)]="nuevaHabitacion.numero" placeholder="Ej: 101, 204A">
+
+    <label>Tipo:</label>
+    <select [(ngModel)]="nuevaHabitacion.tipo">
+      <option value="Sencilla">Sencilla</option>
+      <option value="Doble">Doble</option>
+      <option value="Suite">Suite</option>
+    </select>
+
+    <label>Precio (€):</label>
+    <input type="number" [(ngModel)]="nuevaHabitacion.precio" placeholder="Ej: 50.00">
+
+    <label>Estado Inicial:</label>
+    <select [(ngModel)]="nuevaHabitacion.estado">
+      <option value="LIBRE">Libre</option>
+      <option value="LIMPIEZA">En Limpieza</option>
+      <option value="FUERA_SERVICIO">Fuera de Servicio</option>
+    </select>
+
+    <div class="botones-form">
+      <button (click)="guardarHabitacion()" class="btn-guardar">Guardar Habitación</button>
+      <button (click)="mostrarFormularioHabitacion = false" class="btn-cancelar">Cancelar</button>
+    </div>
+  </div>
+
+  <table class="user-table" style="margin-top: 20px;">
+    <thead>
+      <tr>
+        <th>Número</th>
+        <th>Tipo</th>
+        <th>Precio</th>
+        <th>Estado</th>
+        <th>Cliente Asignado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let h of habitaciones">
+        <td><strong>{{ h.numero }}</strong></td>
+        <td>{{ h.tipo }}</td>
+        <td>{{ h.precio }} €</td>
+        <td>
+          <span class="badge" 
+                [ngClass]="{'libre': h.estado === 'LIBRE', 'ocupada': h.estado === 'OCUPADA'}">
+            {{ h.estado }}
+          </span>
+        </td>
+        <td>
+          <select (change)="asignar(h.id!, $event)">
+            <option value="null" [selected]="!h.cliente">-- Libre / Sin Asignar --</option>
+            
+            <ng-container *ngFor="let u of usuarios">
+              <option *ngIf="u.rol === 'USER'" [value]="u.id" [selected]="h.cliente?.id === u.id">
+                {{ u.nombre }}
+              </option>
+            </ng-container>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
