@@ -1,4 +1,4 @@
-import { Usuario } from './usuario.interface'; // Asegúrate de que la ruta coincida con tu archivo de usuario
+import { Usuario } from './usuario.interface';
 
 export interface Habitacion {
   id?: number;
@@ -6,5 +6,5 @@ export interface Habitacion {
   tipo: string;
   precio: number;
   estado: string;
-  cliente?: Usuario | null; // Aquí guardaremos al cliente asignado
+  cliente?: Usuario | null; 
 }

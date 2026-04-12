@@ -7,7 +7,7 @@ export interface Usuario {
   rol: 'ADMIN' | 'USER'; 
 }
 
-// También vamos a definir qué nos devuelve el Login
+// También definimos qué nos devuelve el Login
 export interface LoginResponse {
   token: string;
   rol: 'ADMIN' | 'USER';

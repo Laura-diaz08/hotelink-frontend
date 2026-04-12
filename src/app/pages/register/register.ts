@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Auth } from '../../services/auth'; // Asegúrate de que esta ruta es correcta
-import { Usuario } from '../../interfaces/usuario.interface'; // Asegúrate de que esta ruta es correcta
+import { Auth } from '../../services/auth';
+import { Usuario } from '../../interfaces/usuario.interface';
 
 @Component({
   selector: 'app-register',

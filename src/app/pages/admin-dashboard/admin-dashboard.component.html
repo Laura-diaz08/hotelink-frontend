@@ -1,133 +1,276 @@
 <div class="admin-container">
-  <h2>Panel de Administración - Hotelink</h2>
-  <button (click)="cerrarSesion()" class="btn-logout">Cerrar Sesión</button>
   
-  <p>Gestión interna de usuarios (Clientes y Trabajadores).</p>
-
-  <div *ngIf="mensajeError" class="error">{{ mensajeError }}</div>
-  <div *ngIf="mensajeExito" class="exito">{{ mensajeExito }}</div>
-
-  <button *ngIf="!mostrarFormulario" (click)="abrirFormulario()" class="btn-nuevo">
-    + Nuevo Usuario
-  </button>
-
-  <div *ngIf="mostrarFormulario" class="formulario-caja">
-    <h3>Crear Nuevo Usuario</h3>
-    
-    <label>Nombre:</label>
-    <input type="text" [(ngModel)]="nuevoUsuario.nombre" placeholder="Ej: Juan Pérez">
-
-    <label>Email:</label>
-    <input type="email" [(ngModel)]="nuevoUsuario.email" placeholder="Ej: juan@mail.com">
-
-    <label>Contraseña:</label>
-    <input type="password" [(ngModel)]="nuevoUsuario.password" placeholder="Mínimo 4 caracteres">
-
-    <label>Rol:</label>
-    <select [(ngModel)]="nuevoUsuario.rol">
-      <option value="USER">Usuario / Cliente</option>
-      <option value="ADMIN">Administrador</option>
-    </select>
-
-    <div class="botones-form">
-      <button (click)="guardarUsuario()" class="btn-guardar">Guardar</button>
-      <button (click)="cancelarFormulario()" class="btn-cancelar">Cancelar</button>
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <span class="logo-text">Hote<span class="logo-accent">link</span></span>
     </div>
-  </div>
+    <ul class="nav-links">
+      <li><a (click)="hacerScroll('seccion-reservas')" style="cursor: pointer;"><i class="fas fa-calendar-alt"></i> Reservas</a></li>
+      <li><a (click)="hacerScroll('seccion-habitaciones')" style="cursor: pointer;"><i class="fas fa-bed"></i> Habitaciones</a></li>
+      <li><a (click)="hacerScroll('seccion-usuarios')" style="cursor: pointer;"><i class="fas fa-users"></i> Usuarios</a></li>
+      <li><a (click)="hacerScroll('seccion-limpieza')" style="cursor: pointer;"><i class="fas fa-broom"></i> Tareas de Limpieza</a></li>
+    </ul>
+  </nav>
 
-  <table class="user-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Email</th>
-        <th>Rol</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let u of usuarios">
-        <td>{{ u.id }}</td>
-        <td>{{ u.nombre }}</td>
-        <td>{{ u.email }}</td>
-        <td>
-          <span class="badge" [ngClass]="u.rol === 'ADMIN' ? 'admin-badge' : 'user-badge'">
-            {{ u.rol }}
-          </span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <hr style="margin: 40px 0; border: 1px solid #ccc;">
-
-  <h2>Gestión de Habitaciones</h2>
-
-  <button *ngIf="!mostrarFormularioHabitacion" (click)="mostrarFormularioHabitacion = true" class="btn-nuevo">
-    + Nueva Habitación
-  </button>
-
-  <div *ngIf="mostrarFormularioHabitacion" class="formulario-caja">
-    <h3>Crear Nueva Habitación</h3>
+  <main class="main-content">
     
-    <label>Número de Habitación:</label>
-    <input type="text" [(ngModel)]="nuevaHabitacion.numero" placeholder="Ej: 101, 204A">
+    <header class="topbar">
+      <h1>Panel de Administración</h1>
+      <div class="user-profile">
+        <button (click)="cerrarSesion()" class="btn-logout">Cerrar Sesión</button>
+      </div>
+    </header>
 
-    <label>Tipo:</label>
-    <select [(ngModel)]="nuevaHabitacion.tipo">
-      <option value="Sencilla">Sencilla</option>
-      <option value="Doble">Doble</option>
-      <option value="Suite">Suite</option>
-    </select>
+    <div class="dashboard-body">
+      
+      <div *ngIf="mensajeError" class="alert error-alert">{{ mensajeError }}</div>
+      <div *ngIf="mensajeExito" class="alert success-alert">{{ mensajeExito }}</div>
 
-    <label>Precio (€):</label>
-    <input type="number" [(ngModel)]="nuevaHabitacion.precio" placeholder="Ej: 50.00">
+      <section class="admin-section reservas-section">
+        <div class="section-header">
+          <h2>🏨 Reservas Actuales</h2>
+        </div>
+        
+        <div class="table-wrapper">
+          <table class="reservas-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let reserva of reservasActuales">
+                <td>#{{ reserva.id }}</td>
+                <td>{{ reserva.usuario?.nombre }}</td>
+                <td>
+                  <span class="status-badge gold">{{ reserva.estado }}</span>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    
+                    <button class="btn-checkin" (click)="hacerCheckIn(reserva.id)">Check-In</button>
+                    <button class="btn-checkout" (click)="realizarCheckOut(reserva.id)">Check-Out</button>
+                    
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="reservasActuales.length === 0">
+                <td colspan="4" class="empty-state">No hay reservas activas en este momento.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-    <label>Estado Inicial:</label>
-    <select [(ngModel)]="nuevaHabitacion.estado">
-      <option value="LIBRE">Libre</option>
-      <option value="LIMPIEZA">En Limpieza</option>
-      <option value="FUERA_SERVICIO">Fuera de Servicio</option>
-    </select>
+      <section class="admin-section reservas-section historial-section">
+        <div class="section-header">
+          <h2>🗄️ Historial de Reservas</h2>
+        </div>
+        
+        <div class="table-wrapper">
+          <table class="reservas-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let reserva of historialReservas">
+                <td>#{{ reserva.id }}</td>
+                <td>{{ reserva.usuario?.nombre }}</td>
+                <td>
+                  <span class="status-badge success">{{ reserva.estado }}</span>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-danger" (click)="eliminar(reserva.id)">Eliminar</button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="historialReservas.length === 0">
+                <td colspan="4" class="empty-state">El historial está vacío.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-    <div class="botones-form">
-      <button (click)="guardarHabitacion()" class="btn-guardar">Guardar Habitación</button>
-      <button (click)="mostrarFormularioHabitacion = false" class="btn-cancelar">Cancelar</button>
-    </div>
-  </div>
+      <section id="seccion-habitaciones" class="admin-section">
+        <div class="section-header">
+          <h2>Gestión de Habitaciones</h2>
+          <button *ngIf="!mostrarFormularioHabitacion" (click)="mostrarFormularioHabitacion = true" class="btn-primary">
+            + Nueva Habitación
+          </button>
+        </div>
 
-  <table class="user-table" style="margin-top: 20px;">
-    <thead>
-      <tr>
-        <th>Número</th>
-        <th>Tipo</th>
-        <th>Precio</th>
-        <th>Estado</th>
-        <th>Cliente Asignado</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let h of habitaciones">
-        <td><strong>{{ h.numero }}</strong></td>
-        <td>{{ h.tipo }}</td>
-        <td>{{ h.precio }} €</td>
-        <td>
-          <span class="badge" 
-                [ngClass]="{'libre': h.estado === 'LIBRE', 'ocupada': h.estado === 'OCUPADA'}">
-            {{ h.estado }}
-          </span>
-        </td>
-        <td>
-          <select (change)="asignar(h.id!, $event)">
-            <option value="null" [selected]="!h.cliente">-- Libre / Sin Asignar --</option>
+        <div *ngIf="mostrarFormularioHabitacion" class="form-card">
+          <h3>Crear Nueva Habitación</h3>
+          <div class="form-grid">
+            <div class="input-group">
+              <label>Número:</label>
+              <input type="text" [(ngModel)]="nuevaHabitacion.numero" placeholder="Ej: 101">
+            </div>
+            <div class="input-group">
+              <label>Tipo:</label>
+              <select [(ngModel)]="nuevaHabitacion.tipo">
+                <option value="Sencilla">Sencilla</option>
+                <option value="Doble">Doble</option>
+                <option value="Suite">Suite</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label>Precio (€):</label>
+              <input type="number" [(ngModel)]="nuevaHabitacion.precio" placeholder="Ej: 50.00">
+            </div>
+            <div class="input-group">
+              <label>Estado:</label>
+              <select [(ngModel)]="nuevaHabitacion.estado">
+                <option value="LIBRE">Libre</option>
+                <option value="LIMPIEZA">En Limpieza</option>
+                <option value="FUERA_SERVICIO">Fuera de Servicio</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button (click)="guardarHabitacion()" class="btn-success">Guardar Habitación</button>
+            <button (click)="mostrarFormularioHabitacion = false" class="btn-cancel">Cancelar</button>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="reservas-table">
+            <thead>
+              <tr>
+                <th>Número</th>
+                <th>Tipo</th>
+                <th>Precio</th>
+                <th>Estado</th>
+                <th>Cliente Asignado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let h of habitaciones">
+                <td><strong>{{ h.numero }}</strong></td>
+                <td>{{ h.tipo }}</td>
+                <td>{{ h.precio }} €</td>
+                <td>
+                  <span class="status-badge" [ngClass]="{'success': h.estado === 'LIBRE', 'danger': h.estado === 'OCUPADA'}">
+                    {{ h.estado }}
+                  </span>
+                </td>
+                <td>
+                  <select class="select-inline" (change)="asignar(h.id!, $event)">
+                    <option value="null" [selected]="!h.cliente">-- Libre / Sin Asignar --</option>
+                    <ng-container *ngFor="let u of usuarios">
+                      <option *ngIf="u.rol === 'USER'" [value]="u.id" [selected]="h.cliente?.id === u.id">
+                        {{ u.nombre }}
+                      </option>
+                    </ng-container>
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="seccion-usuarios" class="admin-section">
+        <div class="section-header">
+          <h2>Gestión de Usuarios</h2>
+          <button *ngIf="!mostrarFormulario" (click)="abrirFormulario()" class="btn-primary">
+            + Nuevo Usuario
+          </button>
+        </div>
+
+        <div *ngIf="mostrarFormulario" class="form-card">
+          <h3>Crear Nuevo Usuario</h3>
+          <div class="form-grid">
+            <div class="input-group">
+              <label>Nombre:</label>
+              <input type="text" [(ngModel)]="nuevoUsuario.nombre" placeholder="Ej: Juan Pérez">
+            </div>
+            <div class="input-group">
+              <label>Email:</label>
+              <input type="email" [(ngModel)]="nuevoUsuario.email" placeholder="Ej: juan@mail.com">
+            </div>
+            <div class="input-group">
+              <label>Contraseña:</label>
+              <input type="password" [(ngModel)]="nuevoUsuario.password" placeholder="Mínimo 4 caracteres">
+            </div>
+            <div class="input-group">
+              <label>Rol:</label>
+              <select [(ngModel)]="nuevoUsuario.rol">
+                <option value="USER">Usuario / Cliente</option>
+                <option value="ADMIN">Administrador</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button (click)="guardarUsuario()" class="btn-success">Guardar Usuario</button>
+            <button (click)="cancelarFormulario()" class="btn-cancel">Cancelar</button>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="reservas-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let u of usuarios">
+                <td>{{ u.id }}</td>
+                <td>{{ u.nombre }}</td>
+                <td>{{ u.email }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="u.rol === 'ADMIN' ? 'gold' : 'blue'">
+                    {{ u.rol }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="seccion-limpieza" class="admin-section">
+        <div class="section-header">
+          <h2>Gestión de Limpieza</h2>
+        </div>
+
+        <div class="form-grid" *ngIf="tareasPendientes.length > 0">
+          <div *ngFor="let t of tareasPendientes" class="form-card" style="margin-bottom: 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <h3 style="margin: 0;">Habitación {{ t.numeroHabitacion }}</h3>
+              <span class="status-badge gold">Requiere Limpieza</span>
+            </div>
             
-            <ng-container *ngFor="let u of usuarios">
-              <option *ngIf="u.rol === 'USER'" [value]="u.id" [selected]="h.cliente?.id === u.id">
-                {{ u.nombre }}
-              </option>
-            </ng-container>
-          </select>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+            <p style="color: var(--color-text-muted); margin-bottom: 20px; font-size: 0.9rem;">
+              <i class="fas fa-clock"></i> Generada el: {{ t.fecha }}
+            </p>
+            
+            <button class="btn-success" style="width: 100%; padding: 12px; font-size: 1rem;" (click)="completarLimpieza(t)">
+              ✨ Marcar como Limpia
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="tareasPendientes.length === 0" class="empty-state">
+          <i class="fas fa-sparkles empty-icon" style="color: #fbbf24;"></i>
+          <p>Todo está reluciente. No hay habitaciones pendientes de limpieza en este momento.</p>
+        </div>
+      </section>
+
+    </div>
+  </main>
 </div>

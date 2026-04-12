@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Habitacion } from '../interfaces/habitacion.interface'; // Ajusta la ruta a tu modelo
+import { Habitacion } from '../interfaces/habitacion.interface'; 
 
 @Injectable({
   providedIn: 'root'
@@ -47,23 +47,22 @@ export class HabitacionService {
   buscarDisponibles(inicio: string, fin: string): Observable<Habitacion[]> {
     const token = localStorage.getItem('token'); 
     
-    // Preparamos la "llave" (el token) para enseñársela a Java
+    // Preparamos el token para enseñársela a Java
     const headers = new HttpHeaders().set('Authorization', token ? 'Bearer ' + token : '');
 
     // Fíjate que al final le pasamos { headers }
     return this.http.get<Habitacion[]>(`${this.apiUrl}/disponibles?inicio=${inicio}&fin=${fin}`, { headers });
   }
 
-  // -------------------------------------------------------------
-  // 3. NUEVO: Hacer la reserva enviando los datos y el token
-  // -------------------------------------------------------------
+  // Hacer la reserva enviando los datos y el token
   reservarHabitacion(habitacionId: number, reservaData: any): Observable<any> {
     const token = localStorage.getItem('token');
     
-    // Preparamos la "llave" otra vez
+    // Preparamos el token otra vez
     const headers = new HttpHeaders().set('Authorization', token ? 'Bearer ' + token : '');
 
-    // Al POST le pasamos: URL, datos que enviamos (el body), y las cabeceras
+    // Al POST le pasamos: URL, datos que enviamos, y las cabeceras
     return this.http.post<any>(`${this.apiUrl}/${habitacionId}/reservar`, reservaData, { headers });
   }
 }
+  

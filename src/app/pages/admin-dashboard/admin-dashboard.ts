@@ -6,7 +6,15 @@ import { UsuarioService } from '../../services/usuario';
 import { Usuario } from '../../interfaces/usuario.interface';
 import { HabitacionService } from '../../services/habitacion';
 import { Habitacion } from '../../interfaces/habitacion.interface';
+import { ReservaService } from '../../services/reserva';
 
+export interface TareaLimpieza {
+  id: number;
+  habitacionId: number;
+  numeroHabitacion: string;
+  fecha: string;
+  estado: 'PENDIENTE' | 'COMPLETADA';
+}
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -15,6 +23,7 @@ import { Habitacion } from '../../interfaces/habitacion.interface';
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css'
 })
+
 export class AdminDashboardComponent implements OnInit {
 
   usuarios: Usuario[] = [];
@@ -23,6 +32,10 @@ export class AdminDashboardComponent implements OnInit {
   habitaciones: Habitacion[] = [];
   mostrarFormularioHabitacion = false;
   nuevaHabitacion: Habitacion = { numero: '', tipo: 'Sencilla', precio: 0, estado: 'LIBRE' };
+  // Aquí guardaremos todas las reservas que vengan de Java
+  reservas: any[] = [];
+
+  tareasLimpieza: TareaLimpieza[] = [];
 
   // Variables para el formulario
   mostrarFormulario: boolean = false;
@@ -37,12 +50,14 @@ export class AdminDashboardComponent implements OnInit {
     private usuarioService: UsuarioService, 
     private habitacionService: HabitacionService,
     private router: Router,
-    private cdr: ChangeDetectorRef 
+    private cdr: ChangeDetectorRef,
+    private reservaService: ReservaService
   ) {}
 
   ngOnInit(): void {
     this.cargarUsuarios();
     this.cargarHabitaciones();
+    this.cargarReservas();
   }
 
   cargarUsuarios() {
@@ -122,9 +137,124 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
+  // Pide la lista al backend
+  cargarReservas(): void {
+    this.reservaService.getAllReservas().subscribe({
+      next: (data) => {
+        this.reservas = data;
+        console.log("¡DATOS RECIBIDOS DE JAVA! ->", data);
+        this.reservas = data;
+        this.cdr.detectChanges();
+        console.log('Reservas cargadas:', this.reservas);
+      },
+      error: (err) => {
+        console.error('Error al cargar las reservas', err);
+        alert('Hubo un error al cargar las reservas. ¿Eres ADMIN?');
+      }
+    });
+  }
+
+  // Botón de Check-In
+  hacerCheckIn(id: number): void {
+    this.reservaService.checkInReserva(id).subscribe({
+      next: () => {
+        alert('¡Check-In realizado con éxito!');
+        this.cargarReservas(); // Recargamos la tabla para que se actualice el estado
+      },
+      error: (err) => console.error('Error en el Check-In', err)
+    });
+  }
+
+  // Hacer Check-Out
+  realizarCheckOut(reservaId: number) {
+    if (confirm('¿Estás seguro de realizar el Check-Out? Esto generará la factura y liberará la habitación.')) {
+      
+      // 1. Buscamos los datos de la reserva actual ANTES de que el backend la cambie
+      const reserva = this.reservas.find(r => r.id === reservaId);
+
+      this.reservaService.hacerCheckOut(reservaId).subscribe({
+        next: (factura: any) => {
+          alert(`¡Check-Out completado con éxito! \nSe ha generado una factura por un total de ${factura.total}€.`);
+          
+          // 2. ¡CREAMOS LA TAREA DE LIMPIEZA!
+          if (reserva && reserva.habitacion) {
+            const nuevaTarea: TareaLimpieza = {
+              id: Date.now(),
+              habitacionId: reserva.habitacion.id,
+              numeroHabitacion: reserva.habitacion.numero,
+              fecha: new Date().toLocaleDateString(),
+              estado: 'PENDIENTE'
+            };
+            this.tareasLimpieza.push(nuevaTarea);
+          }
+
+          // 3. Recargamos los datos
+          this.cargarReservas(); 
+          this.cargarHabitaciones(); 
+        },
+        error: (err) => {
+          console.error('Error al hacer Check-Out:', err);
+        
+          const mensajeError = typeof err.error === 'string' ? err.error : 'Hubo un problema al intentar realizar el Check-Out.';
+          
+          alert(mensajeError);
+        }
+      });
+    }
+  }
+
+  // Botón de Borrar
+  eliminar(id: number): void {
+    if (confirm('¿Estás totalmente seguro de que quieres borrar esta reserva?')) {
+      this.reservaService.eliminarReserva(id).subscribe({
+        next: () => {
+          alert('Reserva eliminada');
+          this.cargarReservas(); // Recargamos la tabla
+        },
+        error: (err) => console.error('Error al eliminar', err)
+      });
+    }
+  }
+
+  hacerScroll(idSeccion: string) {
+    const elemento = document.getElementById(idSeccion);
+    if (elemento) {
+      elemento.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
   cerrarSesion() {
     localStorage.removeItem('token'); // Borramos el token
     localStorage.removeItem('rol');   // Borramos el rol
     this.router.navigate(['/login']); // Volvemos al login
+  }
+
+  // FUNCIONES DE LIMPIEZA
+  completarLimpieza(tarea: TareaLimpieza) {
+    tarea.estado = 'COMPLETADA';
+    
+    // Mostramos un mensaje bonito en verde en la pantalla
+    this.mensajeExito = `¡Habitación ${tarea.numeroHabitacion} reluciente y lista para nuevos clientes! ✨`;
+    setTimeout(() => this.mensajeExito = '', 3000);
+  }
+
+  // Angular usa esto para saber cuántas tareas dibujar en el HTML
+  get tareasPendientes() {
+    return this.tareasLimpieza.filter(t => t.estado === 'PENDIENTE');
+  }
+
+  // 1. Filtro para las reservas de hoy (Las que necesitan atención)
+  get reservasActuales() {
+    // Aquí filtramos las que NO están completadas ni canceladas
+    return this.reservas.filter(r => r.estado !== 'COMPLETADA' && r.estado !== 'CANCELADA');
+  }
+
+  // 2. Filtro para el historial (Todas las reservas, o solo las pasadas)
+  get historialReservas() {
+    // Si quieres que el historial muestre absolutamente TODAS:
+    return this.reservas; 
+    
+    // Si prefieres que el historial SOLO muestre las que ya se han ido:
+    // return this.reservas.filter(r => r.estado === 'COMPLETADA');
   }
 }

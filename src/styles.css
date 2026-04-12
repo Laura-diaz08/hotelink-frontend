@@ -1,1 +1,35 @@
-/* You can add global styles to this file, and also import other style files */
+/* --- src/styles.css --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Fondo y base (Tonos claros y limpios) */
+  --color-base: #f8fafc;        /* Gris muy clarito, casi blanco (Fondo general) */
+  --color-surface: #ffffff;     /* Blanco puro (Para tarjetas y paneles) */
+  --color-border: #e2e8f0;      /* Gris suave para los bordes */
+  
+  /* Acentos (Mantenemos el colorido, pero ajustado para que se lea bien en blanco) */
+  --color-primary: #0d9488;     /* Teal vibrante, un pelín más oscuro para contraste */
+  --color-secondary: #d97706;   /* Dorado/Ámbar oscuro para el buscador */
+  
+  /* Estado */
+  --color-success: #059669;     /* Verde esmeralda */
+  --color-danger: #dc2626;      /* Rojo */
+  
+  /* Texto (Ahora los textos son oscuros) */
+  --color-text-base: #1e293b;   /* Gris muy oscuro (Texto principal) */
+  --color-text-muted: #64748b;  /* Gris medio (Subtítulos, labels) */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: var(--color-base);
+  color: var(--color-text-base);
+  height: 100vh;
+  overflow: hidden; /* El scroll lo manejará el contenido principal */
+}

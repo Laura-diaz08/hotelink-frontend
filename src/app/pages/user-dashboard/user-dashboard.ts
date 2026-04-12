@@ -1,9 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // <-- Añadimos ChangeDetectorRef
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; 
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
 import { HabitacionService } from '../../services/habitacion'; 
 import { Habitacion } from '../../interfaces/habitacion.interface'; 
+import { ReservaService } from '../../services/reserva'; 
 
 @Component({
   selector: 'app-user-dashboard',
@@ -14,9 +15,8 @@ import { Habitacion } from '../../interfaces/habitacion.interface';
 })
 export class UserDashboardComponent implements OnInit {
 
-  misHabitaciones: Habitacion[] = [];
+  misReservas: any[] = []; 
 
-  // --- NUEVAS VARIABLES PARA RESERVAS ---
   habitacionesDisponibles: Habitacion[] = [];
   fechaInicio: string = '';
   fechaFin: string = '';
@@ -25,7 +25,8 @@ export class UserDashboardComponent implements OnInit {
   constructor(
     private router: Router,
     private habitacionService: HabitacionService,
-    private cdr: ChangeDetectorRef // <-- 1. Inyectamos la herramienta para forzar el repintado
+    private reservaService: ReservaService, 
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -37,24 +38,25 @@ export class UserDashboardComponent implements OnInit {
     }
 
     const clienteId = Number(idString);
-    this.cargarMisHabitaciones(clienteId);
+    // Cargamos las reservas nada más entrar al panel
+    this.cargarMisReservas(clienteId);
   }
 
-  cargarMisHabitaciones(clienteId: number) {
-    this.habitacionService.getHabitacionesCliente(clienteId).subscribe({
+  cargarMisReservas(clienteId: number) {
+    this.reservaService.getReservasUsuario(clienteId).subscribe({
       next: (data) => {
-        this.misHabitaciones = data; 
-        
-        // 2. ¡EL TOQUE MÁGICO! Le decimos a Angular que pinte la pantalla YA.
+        this.misReservas = data; 
+        console.log("¡Mis reservas cargadas de Java! ->", data);
+
         this.cdr.detectChanges(); 
       },
       error: (err) => {
-        console.error('Error al pedir las habitaciones:', err);
+        console.error('Error al pedir mis reservas:', err);
       }
     });
   }
 
-  // --- NUEVA FUNCIÓN: BUSCAR DISPONIBLES ---
+  // Buscar habitaciones disponibles
   buscarHabitaciones() {
     if (!this.fechaInicio || !this.fechaFin) {
       this.mensajeReserva = "Por favor, selecciona ambas fechas.";
@@ -75,11 +77,7 @@ export class UserDashboardComponent implements OnInit {
     });
   }
 
-  // --- NUEVA FUNCIÓN: RESERVAR ---
-  // 1. Le decimos que el ID puede ser number o undefined
   hacerReserva(habitacionId: number | undefined) {
-    
-    // 2. Si por algún motivo no llega el ID, cortamos la ejecución aquí
     if (!habitacionId) {
       console.error("Error: La habitación no tiene ID");
       return; 
@@ -93,14 +91,14 @@ export class UserDashboardComponent implements OnInit {
       fechaFin: this.fechaFin
     };
 
-    // 3. Como ya pasamos el 'if' de arriba, aquí TypeScript ya sabe que habitacionId es 100% un número
     this.habitacionService.reservarHabitacion(habitacionId, datosReserva).subscribe({
       next: (respuesta) => {
         alert("¡Reserva completada con éxito!");
         this.habitacionesDisponibles = []; // Limpiamos la búsqueda
         this.fechaInicio = '';
         this.fechaFin = '';
-        this.cargarMisHabitaciones(clienteId); 
+
+        this.cargarMisReservas(clienteId); 
       },
       error: (err) => {
         console.error(err);

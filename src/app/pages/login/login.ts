@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms'; // Necesario para los formularios
+import { FormsModule } from '@angular/forms'; 
 import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
 import { Usuario, LoginResponse } from '../../interfaces/usuario.interface';
-import { CommonModule } from '@angular/common'; // Para usar directivas básicas como *ngIf
+import { CommonModule } from '@angular/common'; 
 
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule], // Importamos FormsModule aquí
+  imports: [FormsModule, CommonModule], 
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
@@ -45,7 +45,7 @@ export class LoginComponent {
             console.error("¡ALERTA! Java no me está devolviendo el ID en el login");
         }
 
-        // 3. Redirección básica (esto lo mejoraremos en el siguiente paso)
+        // 4. Redirección básica 
         if (respuesta.rol === 'ADMIN') {
           this.router.navigate(['/admin']); // Nos lleva al Admin Dashboard
         } else {
