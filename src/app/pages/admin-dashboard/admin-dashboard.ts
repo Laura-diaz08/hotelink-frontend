@@ -7,6 +7,7 @@ import { Usuario } from '../../interfaces/usuario.interface';
 import { HabitacionService } from '../../services/habitacion';
 import { Habitacion } from '../../interfaces/habitacion.interface';
 import { ReservaService } from '../../services/reserva';
+import { TareaLimpiezaService } from '../../services/tarea-limpieza';
 
 export interface TareaLimpieza {
   id: number;
@@ -35,7 +36,7 @@ export class AdminDashboardComponent implements OnInit {
   // Aquí guardaremos todas las reservas que vengan de Java
   reservas: any[] = [];
 
-  tareasLimpieza: TareaLimpieza[] = [];
+  tareasLimpieza: any[] = [];
 
   // Variables para el formulario
   mostrarFormulario: boolean = false;
@@ -51,13 +52,15 @@ export class AdminDashboardComponent implements OnInit {
     private habitacionService: HabitacionService,
     private router: Router,
     private cdr: ChangeDetectorRef,
-    private reservaService: ReservaService
+    private reservaService: ReservaService,
+    private tareaLimpiezaService: TareaLimpiezaService
   ) {}
 
   ngOnInit(): void {
     this.cargarUsuarios();
     this.cargarHabitaciones();
     this.cargarReservas();
+    this.cargarTareasLimpieza();
   }
 
   cargarUsuarios() {
@@ -154,6 +157,17 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
+  cargarTareasLimpieza() {
+    this.tareaLimpiezaService.getTareasLimpieza().subscribe({
+      next: (datos) => {
+        this.tareasLimpieza = datos;
+      },
+      error: (err) => {
+        console.error('Error al cargar las tareas de limpieza:', err);
+      }
+    });
+  }
+
   // Botón de Check-In
   hacerCheckIn(id: number): void {
     this.reservaService.checkInReserva(id).subscribe({
@@ -169,34 +183,17 @@ export class AdminDashboardComponent implements OnInit {
   realizarCheckOut(reservaId: number) {
     if (confirm('¿Estás seguro de realizar el Check-Out? Esto generará la factura y liberará la habitación.')) {
       
-      // 1. Buscamos los datos de la reserva actual ANTES de que el backend la cambie
-      const reserva = this.reservas.find(r => r.id === reservaId);
-
       this.reservaService.hacerCheckOut(reservaId).subscribe({
         next: (factura: any) => {
           alert(`¡Check-Out completado con éxito! \nSe ha generado una factura por un total de ${factura.total}€.`);
           
-          // 2. ¡CREAMOS LA TAREA DE LIMPIEZA!
-          if (reserva && reserva.habitacion) {
-            const nuevaTarea: TareaLimpieza = {
-              id: Date.now(),
-              habitacionId: reserva.habitacion.id,
-              numeroHabitacion: reserva.habitacion.numero,
-              fecha: new Date().toLocaleDateString(),
-              estado: 'PENDIENTE'
-            };
-            this.tareasLimpieza.push(nuevaTarea);
-          }
-
-          // 3. Recargamos los datos
           this.cargarReservas(); 
           this.cargarHabitaciones(); 
+          this.cargarTareasLimpieza(); 
         },
         error: (err) => {
           console.error('Error al hacer Check-Out:', err);
-        
           const mensajeError = typeof err.error === 'string' ? err.error : 'Hubo un problema al intentar realizar el Check-Out.';
-          
           alert(mensajeError);
         }
       });
@@ -243,18 +240,14 @@ export class AdminDashboardComponent implements OnInit {
     return this.tareasLimpieza.filter(t => t.estado === 'PENDIENTE');
   }
 
-  // 1. Filtro para las reservas de hoy (Las que necesitan atención)
+  //Filtro para las reservas de hoy 
   get reservasActuales() {
     // Aquí filtramos las que NO están completadas ni canceladas
     return this.reservas.filter(r => r.estado !== 'COMPLETADA' && r.estado !== 'CANCELADA');
   }
 
-  // 2. Filtro para el historial (Todas las reservas, o solo las pasadas)
+  // Filtro para el historial (Todas las reservas)
   get historialReservas() {
-    // Si quieres que el historial muestre absolutamente TODAS:
     return this.reservas; 
-    
-    // Si prefieres que el historial SOLO muestre las que ya se han ido:
-    // return this.reservas.filter(r => r.estado === 'COMPLETADA');
   }
 }

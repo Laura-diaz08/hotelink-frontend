@@ -248,27 +248,30 @@
           <h2>Gestión de Limpieza</h2>
         </div>
 
-        <div class="form-grid" *ngIf="tareasPendientes.length > 0">
-          <div *ngFor="let t of tareasPendientes" class="form-card" style="margin-bottom: 0;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-              <h3 style="margin: 0;">Habitación {{ t.numeroHabitacion }}</h3>
-              <span class="status-badge gold">Requiere Limpieza</span>
-            </div>
-            
-            <p style="color: var(--color-text-muted); margin-bottom: 20px; font-size: 0.9rem;">
-              <i class="fas fa-clock"></i> Generada el: {{ t.fecha }}
-            </p>
-            
-            <button class="btn-success" style="width: 100%; padding: 12px; font-size: 1rem;" (click)="completarLimpieza(t)">
-              ✨ Marcar como Limpia
-            </button>
-          </div>
-        </div>
-
-        <div *ngIf="tareasPendientes.length === 0" class="empty-state">
-          <i class="fas fa-sparkles empty-icon" style="color: #fbbf24;"></i>
-          <p>Todo está reluciente. No hay habitaciones pendientes de limpieza en este momento.</p>
-        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Habitación</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+              <th>Empleado Asignado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let tarea of tareasLimpieza">
+              <td>{{ tarea.habitacion?.numero }}</td>
+              <td>{{ tarea.fecha }}</td>
+              <td>
+                <span [class]="'badge-' + tarea.estado.toLowerCase()">
+                  {{ tarea.estado.replace('_', ' ') }} 
+                </span>
+              </td>
+              <td [ngClass]="{'sin-asignar': !tarea.empleado}">
+                {{ tarea.empleado ? tarea.empleado.nombre : 'Sin asignar' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </section>
 
     </div>

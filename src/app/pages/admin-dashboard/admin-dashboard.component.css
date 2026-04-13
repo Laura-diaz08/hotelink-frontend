@@ -414,3 +414,83 @@
   color: var(--color-text-muted);
   font-style: italic;
 }
+
+/* --- CONTENEDOR DE LA SECCIÓN --- */
+.limpieza-section {
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  margin-top: 30px;
+}
+
+.limpieza-section h3 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 10px;
+}
+
+/* --- ESTILOS PRINCIPALES DE LA TABLA --- */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  color: #495057;
+  text-align: left;
+  padding: 15px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.table td {
+  padding: 15px;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f3f5;
+  color: #343a40;
+  font-size: 0.95rem;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+  transition: background-color 0.2s ease;
+}
+
+[class^="badge-"] {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-transform: capitalize;
+  display: inline-block;
+  letter-spacing: 0.5px;
+}
+
+.badge-pendiente {
+  background-color: #ffeeba;
+  color: #856404;
+  border: 1px solid #ffeeba;
+}
+
+.badge-en_proceso {
+  background-color: #b8daff;
+  color: #004085;
+  border: 1px solid #b8daff;
+}
+
+.badge-completada {
+  background-color: #c3e6cb;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.sin-asignar {
+  color: #adb5bd;
+  font-style: italic;
+}
