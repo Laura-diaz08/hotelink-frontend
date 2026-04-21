@@ -1,4 +1,21 @@
-/* --- CONTENEDOR PRINCIPAL --- */
+/* =========================================
+   VARIABLES (Asegúrate de tenerlas en tu styles.css global o añádelas aquí si no las tienes)
+   ========================================= */
+:root {
+  --color-base: #f8fafc;
+  --color-surface: #ffffff;
+  --color-text-base: #1e293b;
+  --color-text-muted: #64748b;
+  --color-border: #e2e8f0;
+  --color-primary: #0d9488; /* Verde azulado */
+  --color-secondary: #d97706; /* Naranja oscuro/Dorado */
+  --color-danger: #ef4444;
+  --color-success: #10b981;
+}
+
+/* =========================================
+   CONTENEDOR PRINCIPAL
+   ========================================= */
 .user-wrapper {
   background-color: var(--color-base);
   height: 100vh;
@@ -7,7 +24,15 @@
   overflow-y: auto;
 }
 
-/* --- TOPBAR CLIENTE --- */
+.container {
+  padding: 60px 5%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* =========================================
+   TOPBAR CLIENTE Y NAVEGACIÓN
+   ========================================= */
 .client-topbar {
   padding: 15px 5%;
   display: flex;
@@ -15,6 +40,8 @@
   align-items: center;
   background-color: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
+  gap: 20px;
+  flex-wrap: wrap; /* Permite que el menú baje en pantallas pequeñas */
 }
 
 .logo-text {
@@ -24,6 +51,51 @@
 
 .logo-accent {
   color: var(--color-primary);
+}
+
+.main-nav {
+  flex: 1; /* Toma el espacio central disponible */
+  display: flex;
+  justify-content: center;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: var(--color-text-base);
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding-bottom: 5px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover, 
+.nav-link.active {
+  color: var(--color-primary);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--color-primary);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after, 
+.nav-link.active::after {
+  width: 100%;
 }
 
 .user-actions {
@@ -52,25 +124,102 @@
   color: white;
 }
 
-/* --- BANNER Y BUSCADOR --- */
-.hero-section {
-  /* Un degradado suave y luminoso con un toque del color primario */
+/* Media Queries NAVEGACIÓN */
+@media (max-width: 1100px) {
+  .nav-list { gap: 15px; }
+  .nav-link { font-size: 0.85rem; }
+}
+@media (max-width: 850px) {
+  .main-nav { order: 3; width: 100%; margin-top: 15px; }
+  .nav-list { justify-content: center; flex-wrap: wrap; gap: 15px; }
+}
+
+/* =========================================
+   CARRUSEL HERO (Reemplaza a hero-section)
+   ========================================= */
+.hero-carousel {
+  /* Usamos tu degradado luminoso */
   background: linear-gradient(135deg, #e0f2fe, #ccfbf1);
-  padding: 80px 5% 100px;
-  text-align: center;
+  width: 100%;
+  height: 450px;
+  position: relative;
   border-bottom: 1px solid var(--color-border);
 }
 
-.hero-content h1 {
-  font-size: 2.5rem;
-  color: var(--color-text-base);
-  margin-bottom: 10px;
-  font-weight: 700;
+.carousel-slide {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.hero-content p {
+.carousel-control {
+  background: none;
+  border: none;
+  font-size: 2.5rem;
+  color: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  padding: 0 30px;
+  transition: color 0.3s;
+}
+
+.carousel-control:hover {
+  color: var(--color-primary);
+}
+
+.carousel-indicators {
+  position: absolute;
+  bottom: 80px; /* Subido un poco para no chocar con el buscador */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.carousel-indicators span {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--color-primary);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.carousel-indicators span.active {
+  background-color: var(--color-primary);
+}
+
+.btn-reserve-hero {
+  position: absolute;
+  bottom: 40px;
+  left: 5%;
+  background: var(--color-surface);
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  padding: 12px 25px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
   font-size: 1.1rem;
-  color: var(--color-text-muted);
+  transition: all 0.3s;
+}
+
+.btn-reserve-hero:hover {
+  background: var(--color-primary);
+  color: white;
+}
+
+/* =========================================
+   BUSCADOR (SUPERPUESTO)
+   ========================================= */
+.search-filter-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
 }
 
 .search-box {
@@ -78,16 +227,13 @@
   padding: 25px;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-  /* Sombra mucho más suave */
   display: flex;
   gap: 20px;
   justify-content: center;
   align-items: flex-end;
   width: 90%;
-  max-width: 900px;
-  margin: -50px auto 0;
-  position: relative;
-  z-index: 10;
+  max-width: 1000px;
+  margin-top: -45px; /* Sube la caja sobre el carrusel */
   border: 1px solid var(--color-secondary);
 }
 
@@ -121,7 +267,6 @@
   color: var(--color-text-base);
   outline: none;
   color-scheme: light;
-  /* Calendario en modo claro */
 }
 
 .input-group input:focus {
@@ -132,7 +277,6 @@
 .btn-search {
   background-color: var(--color-secondary);
   color: white;
-  /* Texto blanco sobre el botón dorado oscuro */
   font-weight: bold;
   font-size: 1rem;
   padding: 12px 25px;
@@ -141,6 +285,7 @@
   cursor: pointer;
   transition: transform 0.2s, background-color 0.2s;
   height: 45px;
+  white-space: nowrap;
 }
 
 .btn-search:hover {
@@ -148,29 +293,70 @@
   transform: translateY(-2px);
 }
 
-/* --- CONTENEDOR GENERAL --- */
-.container {
-  padding: 60px 5%;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* --- TARJETAS DE HABITACIONES (RESULTADOS) --- */
-.results-section {
+/* =========================================
+   SECCIONES Y UTILIDADES GENERALES
+   ========================================= */
+.content-section {
   margin-bottom: 60px;
 }
 
-.results-section h2,
-.my-reservations-section h2 {
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 25px;
+}
+
+.section-title {
   color: var(--color-text-base);
   font-size: 1.5rem;
   font-weight: 600;
+  text-transform: uppercase;
 }
 
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.btn-outline:hover {
+  background: var(--color-primary);
+  color: white;
+}
+
+/* Utilidades para los placeholders de las tarjetas (estilo wireframe) */
+.text-lines { margin-top: 10px; }
+.text-lines .line {
+  height: 10px;
+  background-color: var(--color-border);
+  border-radius: 5px;
+  margin-bottom: 8px;
+  width: 100%;
+}
+.text-lines .w-75 { width: 75%; }
+.text-lines .w-50 { width: 50%; }
+.mt-3 { margin-top: 15px; }
+.mb-2 { margin-bottom: 10px; }
+.card-footer-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+}
+.justify-end { justify-content: flex-end !important; }
+
+/* =========================================
+   TARJETAS DE HABITACIONES
+   ========================================= */
 .rooms-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 30px;
 }
 
@@ -189,11 +375,15 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
 }
 
-.room-image {
-  height: 160px;
+.room-image, .room-image-placeholder {
+  height: 180px;
   background: linear-gradient(45deg, #f1f5f9, #e2e8f0);
-  /* Placeholder estilo claro */
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 2rem;
 }
 
 .room-badge {
@@ -212,7 +402,7 @@
 
 .room-info {
   padding: 20px;
-  text-align: center;
+  text-align: left; /* Ajustado para el diseño de wireframe */
 }
 
 .room-info h3 {
@@ -222,79 +412,162 @@
 }
 
 .price {
-  margin-bottom: 20px;
   color: var(--color-text-muted);
+  margin: 0;
 }
 
 .amount {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   color: var(--color-secondary);
   font-weight: bold;
 }
 
-.btn-book {
-  width: 100%;
+.btn-book, .btn-book-outline {
   background-color: var(--color-primary);
   color: white;
-  padding: 12px;
+  padding: 10px 20px;
   border: none;
   border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
   transition: 0.2s;
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
-.btn-book:hover {
+.btn-book:hover, .btn-book-outline:hover {
   background-color: #0f766e;
   box-shadow: 0 4px 15px rgba(13, 148, 136, 0.3);
 }
 
-/* --- TABLA DE MIS RESERVAS --- */
-.table-wrapper {
+/* =========================================
+   SERVICIOS (Diseño Horizontal estilo prototipo)
+   ========================================= */
+.services-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.service-horizontal-card {
   background-color: var(--color-surface);
-  border-radius: 12px;
-  overflow: hidden;
   border: 1px solid var(--color-border);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  gap: 25px;
+  align-items: center;
+  transition: border-color 0.3s;
 }
 
-.reservas-table {
+.service-horizontal-card:hover {
+  border-color: var(--color-secondary);
+}
+
+.service-image-square {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(45deg, #fef3c7, #fde68a);
+  border-radius: 8px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.service-info-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
-  border-collapse: collapse;
-  text-align: left;
 }
 
-.reservas-table th {
-  background-color: #f8fafc;
-  padding: 15px 20px;
+.service-desc {
   color: var(--color-text-muted);
-  text-transform: uppercase;
-  font-size: 0.85rem;
-  letter-spacing: 1px;
-  border-bottom: 1px solid var(--color-border);
+  font-size: 0.95rem;
+  margin-top: 10px;
+  line-height: 1.5;
 }
 
-.reservas-table td {
-  padding: 15px 20px;
-  border-bottom: 1px solid var(--color-border);
-  color: var(--color-text-base);
+.service-action {
+  text-align: right;
+  min-width: 120px;
 }
 
-.reservas-table tr:last-child td {
-  border-bottom: none;
+.btn-service {
+  background-color: var(--color-secondary);
 }
 
-.status-badge.success {
-  background-color: #d1fae5;
-  color: var(--color-success);
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: bold;
+.btn-service:hover {
+  background-color: #b45309;
 }
 
-/* --- ALERTAS Y ESTADOS VACÍOS --- */
+/* =========================================
+   OPINIONES
+   ========================================= */
+.opinions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.opinion-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.opinion-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatar-circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #e2e8f0;
+  border: 2px solid var(--color-border);
+}
+
+.opinion-stars {
+  font-size: 1.5rem;
+  color: var(--color-secondary); /* Dorado de tus estrellas */
+  letter-spacing: 2px;
+}
+
+/* =========================================
+   GALERÍA
+   ========================================= */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.gallery-item {
+  height: 150px;
+  background-color: #cbd5e1;
+  border-radius: 8px;
+  transition: opacity 0.3s;
+}
+
+.gallery-item:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.gallery-footer {
+  text-align: right;
+  margin-top: 20px;
+}
+
+/* =========================================
+   ALERTAS Y ESTADOS VACÍOS
+   ========================================= */
 .info-alert {
   background-color: #e0f2fe;
   color: #0284c7;
@@ -319,4 +592,105 @@
   color: var(--color-border);
   margin-bottom: 15px;
   display: block;
+}
+
+/* =========================================
+   MODAL FLOTANTE
+   ========================================= */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--color-surface);
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.btn-close-modal {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: color 0.2s;
+}
+
+.btn-close-modal:hover {
+  color: var(--color-danger);
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  color: var(--color-text-base);
+  margin-bottom: 5px;
+}
+
+.modal-desc {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.btn-cancel {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-base);
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.btn-cancel:hover {
+  background-color: #f8fafc;
+}
+
+.btn-confirm {
+  background-color: var(--color-secondary);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.btn-confirm:hover {
+  background-color: #b45309;
 }

@@ -19,7 +19,7 @@ export class RegisterComponent {
     nombre: '',
     email: '',
     password: '',
-    rol: 'USER' // Por defecto, el que se registra es un cliente normal
+    rol: 'CLIENTE' // Por defecto, el que se registra es un cliente normal
   };
 
   mensajeError: string = '';

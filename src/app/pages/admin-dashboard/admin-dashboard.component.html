@@ -168,7 +168,7 @@
                   <select class="select-inline" (change)="asignar(h.id!, $event)">
                     <option value="null" [selected]="!h.cliente">-- Libre / Sin Asignar --</option>
                     <ng-container *ngFor="let u of usuarios">
-                      <option *ngIf="u.rol === 'USER'" [value]="u.id" [selected]="h.cliente?.id === u.id">
+                      <option *ngIf="u.rol === 'CLIENTE'" [value]="u.id" [selected]="h.cliente?.id === u.id">
                         {{ u.nombre }}
                       </option>
                     </ng-container>
@@ -204,11 +204,13 @@
               <input type="password" [(ngModel)]="nuevoUsuario.password" placeholder="Mínimo 4 caracteres">
             </div>
             <div class="input-group">
-              <label>Rol:</label>
-              <select [(ngModel)]="nuevoUsuario.rol">
-                <option value="USER">Usuario / Cliente</option>
-                <option value="ADMIN">Administrador</option>
-              </select>
+              <label for="rol">Rol del Usuario:</label>
+                <select id="rol" name="rol" [(ngModel)]="nuevoUsuario.rol" class="form-control" required>
+                  <option value="" disabled selected>Selecciona un rol...</option>
+                  <option *ngFor="let rol of rolesDisponibles" [value]="rol">
+                    {{ rol }}
+                  </option>
+                </select>
             </div>
           </div>
           <div class="form-actions">

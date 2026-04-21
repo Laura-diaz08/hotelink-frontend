@@ -1,0 +1,72 @@
+.panel-container {
+  padding: 30px;
+  background-color: #f4f7f6;
+  min-height: 100vh;
+}
+
+.header-section {
+  margin-bottom: 25px;
+}
+
+.header-section h2 {
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.header-section p {
+  color: #7f8c8d;
+}
+
+.table-container {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  color: #495057;
+  padding: 15px;
+  text-align: left;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.table td {
+  padding: 15px;
+  border-bottom: 1px solid #e9ecef;
+  vertical-align: middle;
+}
+
+/* Badges de estado */
+[class^="badge-"] {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.badge-pendiente { background-color: #fff3cd; color: #856404; }
+.badge-completada { background-color: #d4edda; color: #155724; }
+.badge-cancelada { background-color: #f8d7da; color: #721c24; }
+
+/* Botón de acción */
+.btn-completar {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.btn-completar:hover {
+  background-color: #218838;
+}

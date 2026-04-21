@@ -1,0 +1,95 @@
+<div class="user-wrapper">
+
+    <header class="topbar client-topbar">
+    <div class="logo-text">Hote<span class="logo-accent">link</span></div>
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li><a routerLink="/home" class="nav-link">Inicio</a></li>
+        <li><a routerLink="/habitaciones" class="nav-link">Habitaciones</a></li>
+        <li><a routerLink="/mis-reservas" class="nav-link">Mis Reservas</a></li>
+        <li><a routerLink="/servicios" class="nav-link">Servicios</a></li>
+        <li><a routerLink="/nosotros" class="nav-link">Nosotros</a></li>
+        <li><a routerLink="/contacto" class="nav-link">Contacto</a></li>
+        <li><a routerLink="/opiniones" class="nav-link">Opiniones</a></li>
+        <li><a routerLink="/galeria" class="nav-link">Galería</a></li>
+      </ul>
+    </nav>
+    <div class="user-actions">
+      <span class="welcome-text">¡Hola, Viajero!</span>
+      <button (click)="cerrarSesion()" class="btn-logout">Cerrar Sesión</button>
+    </div>
+  </header>
+
+  <div class="container main-content">
+    
+    <h2 class="page-title">HABITACIONES</h2>
+
+    <div class="habitaciones-layout">
+      
+      <aside class="filtros-sidebar">
+        <h3>Filtros</h3>
+
+        <div class="input-group">
+          <label>Tipo de Habitación</label>
+          <select [(ngModel)]="filtroTipo">
+            <option value="">Todas</option>
+            <option value="Doble">Doble</option>
+            <option value="Suite">Suite</option>
+            <option value="Familiar">Familiar</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label>Precio Máximo (€)</label>
+          <input type="number" [(ngModel)]="filtroPrecioMax" placeholder="Ej: 100">
+        </div>
+
+        <div class="input-group">
+            <label>Huéspedes (Min.)</label>
+            <input type="number" [(ngModel)]="filtroCapacidad" placeholder="Ej: 2" (input)="aplicarFiltros()">
+        </div>
+
+        <div class="filtros-actions">
+          <button class="btn-outline" (click)="limpiarFiltros()">Limpiar</button>
+          <button class="btn-search btn-aplicar" (click)="aplicarFiltros()">Aplicar</button>
+        </div>
+      </aside>
+
+      <section class="habitaciones-lista">
+        
+        <div *ngIf="habitacionesFiltradas.length === 0" class="empty-state client-empty">
+          <p>No hemos encontrado habitaciones que coincidan con esos filtros.</p>
+          <button class="btn-outline mt-3" (click)="limpiarFiltros()">Quitar filtros</button>
+        </div>
+
+        <div class="room-details" *ngFor="let h of habitacionesFiltradas">
+            <div class="room-info-text">
+                <div class="room-header">
+                <h3>Habitación {{ h.numero }}</h3>
+                <span class="status-pill" [attr.data-status]="h.estado">{{ h.estado }}</span>
+                </div>
+                
+                <p class="service-desc">{{ h.descripcion }}</p>
+                
+                <div class="room-features">
+                <span><i class="fas fa-user"></i> Capacidad: {{ h.capacidad }} pers.</span>
+                <span><i class="fas fa-bed"></i> {{ h.tipo }}</span>
+                </div>
+            </div>
+            
+            <div class="room-actions-bottom">
+                <p class="price mb-0"><span class="amount">{{ h.precio }}€</span> / noche</p>
+                <div class="buttons-group">
+                    <button class="btn-outline" (click)="verDetalles(h.id)">Ver detalles</button>
+                    <button class="btn-book" [disabled]="h.estado !== 'LIBRE'" (click)="reservar(h.id)">
+                        {{ h.estado === 'LIBRE' ? 'Reservar' : 'No disponible' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+      </section>
+
+    </div>
+  </div>
+</div>

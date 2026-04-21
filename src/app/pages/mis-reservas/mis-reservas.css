@@ -1,0 +1,197 @@
+.section-container {
+  padding: 60px 5%;
+  min-height: 400px;
+}
+
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: var(--color-text-base);
+  border-left: 5px solid var(--color-primary);
+  padding-left: 15px;
+}
+
+.reservas-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.reservas-column h3 {
+  margin-bottom: 20px;
+  color: var(--color-text-muted);
+  font-size: 1.2rem;
+}
+
+.reserva-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  border: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s;
+}
+
+.reserva-card:hover {
+  transform: translateX(5px);
+}
+
+.reserva-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.status-badge {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  font-weight: bold;
+  width: fit-content;
+}
+
+.status-badge.CONFIRMADA { background: #dcfce7; color: #166534; }
+.status-badge.PENDIENTE { background: #fef9c3; color: #854d0e; }
+
+.price-tag {
+  font-weight: bold;
+  color: var(--color-secondary);
+}
+
+/* Responsivo para móviles */
+@media (max-width: 768px) {
+  .reservas-grid { grid-template-columns: 1fr; }
+}
+
+/* --- TOPBAR CLIENTE --- */
+.client-topbar {
+  padding: 15px 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  gap: 20px;
+  flex-wrap: wrap; /* Permite que el menú baje en pantallas pequeñas */
+}
+
+/* --- MENÚ DE NAVEGACIÓN PRINCIPAL --- */
+.main-nav {
+  flex: 1; /* Toma el espacio central disponible */
+  display: flex;
+  justify-content: center;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  gap: 25px; /* Separación entre los enlaces */
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: var(--color-text-base);
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding-bottom: 5px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover, 
+.nav-link.active {
+  color: var(--color-primary);
+}
+
+/* Efecto de subrayado animado al hacer hover */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--color-primary);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after, 
+.nav-link.active::after {
+  width: 100%;
+}
+
+/* Ajustes para pantallas de portátiles pequeños o tablets */
+@media (max-width: 1100px) {
+  .nav-list {
+    gap: 15px;
+  }
+  .nav-link {
+    font-size: 0.85rem;
+  }
+}
+
+/* Si la pantalla es un móvil, el menú pasa debajo del logo y los botones */
+@media (max-width: 850px) {
+  .main-nav {
+    order: 3;
+    width: 100%;
+    margin-top: 15px;
+  }
+  .nav-list {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+}
+
+/* --- TOPBAR CLIENTE --- */
+.client-topbar {
+  padding: 15px 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.logo-accent {
+  color: var(--color-primary);
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.welcome-text {
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.btn-logout {
+  background-color: transparent;
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-logout:hover {
+  background-color: var(--color-danger);
+  color: white;
+}

@@ -1,94 +1,187 @@
 <div class="user-wrapper">
-  
+
   <header class="topbar client-topbar">
     <div class="logo-text">Hote<span class="logo-accent">link</span></div>
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li><a routerLink="/home" class="nav-link">Inicio</a></li>
+        <li><a routerLink="/habitaciones" class="nav-link">Habitaciones</a></li>
+        <li><a routerLink="/mis-reservas" class="nav-link">Mis Reservas</a></li>
+        <li><a routerLink="/servicios" class="nav-link">Servicios</a></li>
+        <li><a routerLink="/nosotros" class="nav-link">Nosotros</a></li>
+        <li><a routerLink="/contacto" class="nav-link">Contacto</a></li>
+        <li><a routerLink="/opiniones" class="nav-link">Opiniones</a></li>
+        <li><a routerLink="/galeria" class="nav-link">Galería</a></li>
+      </ul>
+    </nav>
     <div class="user-actions">
       <span class="welcome-text">¡Hola, Viajero!</span>
       <button (click)="cerrarSesion()" class="btn-logout">Cerrar Sesión</button>
     </div>
   </header>
 
-  <section class="hero-section">
-    <div class="hero-content">
-      <h1>Encuentra tu estancia perfecta</h1>
-      <p>Reserva ahora y prepárate para unas vacaciones inolvidables 🌴</p>
-    </div>
-
-    <div class="search-box">
-      <div class="search-inputs">
-        <div class="input-group">
-          <label><i class="fas fa-calendar-check"></i> Fecha de Entrada</label>
-          <input type="date" [(ngModel)]="fechaInicio">
-        </div>
-        <div class="input-group">
-          <label><i class="fas fa-calendar-times"></i> Fecha de Salida</label>
-          <input type="date" [(ngModel)]="fechaFin">
-        </div>
+  <section class="hero-carousel">
+    <div class="carousel-slide">
+      <button class="carousel-control prev">❮</button>
+      <button class="carousel-control next">❯</button>
+      
+      <div class="carousel-indicators">
+        <span class="active"></span>
+        <span></span>
+        <span></span>
       </div>
-      <button (click)="buscarHabitaciones()" class="btn-search">
-        🔍 Buscar Libres
-      </button>
+
+      <button class="btn-reserve-hero">Reserva ahora</button>
     </div>
   </section>
 
-  <div class="container">
-    
+  <div class="search-filter-wrapper">
+    <div class="search-box filter-bar">
+      <div class="search-inputs">
+        <div class="input-group">
+          <label>Entrada</label>
+          <input type="date" [(ngModel)]="fechaInicio">
+        </div>
+        <div class="input-group">
+          <label>Salida</label>
+          <input type="date" [(ngModel)]="fechaFin">
+        </div>
+        <div class="input-group">
+          <label>Huéspedes</label>
+          <input type="number" min="1" value="2"> 
+        </div>
+      </div>
+      <button (click)="buscarHabitaciones()" class="btn-search">
+        Buscar
+      </button>
+    </div>
+  </div>
+
+  <div class="container main-content">
+
     <div *ngIf="mensajeReserva" class="alert info-alert">
       {{ mensajeReserva }}
     </div>
 
-    <section *ngIf="habitacionesDisponibles.length > 0" class="results-section">
-      <h2>Habitaciones Disponibles para tus fechas</h2>
-      
-      <div class="rooms-grid">
-        <div *ngFor="let h of habitacionesDisponibles" class="room-card">
-          <div class="room-image">
+    <section class="content-section rooms-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          {{ habitacionesDisponibles.length > 0 ? 'HABITACIONES DISPONIBLES' : 'TIPOS DE HABITACIONES' }}
+        </h2>
+        <button class="btn-outline">Ver todas</button>
+      </div>
+
+      <div class="rooms-grid" *ngIf="habitacionesDisponibles.length > 0">
+        <div *ngFor="let h of habitacionesDisponibles" class="room-card card-outline">
+          <div class="room-image-placeholder">
             <div class="room-badge">{{ h.tipo }}</div>
           </div>
           <div class="room-info">
             <h3>Habitación {{ h.numero }}</h3>
-            <p class="price"><span class="amount">{{ h.precio }}€</span> / noche</p>
-            <button class="btn-book" (click)="hacerReserva(h.id)">
-              🔔 Reservar Ahora
-            </button>
+            <div class="text-lines">
+              <div class="line"></div>
+              <div class="line w-75"></div>
+            </div>
+            <div class="card-footer-flex">
+              <p class="price"><span class="amount">{{ h.precio }}€</span> / noche</p>
+              <button class="btn-book-outline" (click)="hacerReserva(h.id)">Reservar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rooms-grid" *ngIf="habitacionesDisponibles.length === 0">
+        <div class="room-card card-outline" *ngFor="let i of [1,2,3]">
+          <div class="room-image-placeholder"></div>
+          <div class="room-info">
+            <div class="text-lines">
+              <div class="line"></div>
+              <div class="line w-100"></div>
+              <div class="line w-50"></div>
+            </div>
+            <div class="card-footer-flex justify-end">
+              <button class="btn-book-outline">Reservar</button>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="my-reservations-section">
-      <h2>🏖️ Mis Reservas Confirmadas</h2>
-      
-      <div class="table-wrapper" *ngIf="misReservas && misReservas.length > 0">
-        <table class="reservas-table">
-          <thead>
-            <tr>
-              <th>Nº Reserva</th>
-              <th>Habitación</th>
-              <th>Día de Entrada</th>
-              <th>Día de Salida</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let r of misReservas">
-              <td>#{{ r.id }}</td>
-              <td><strong>Hab. {{ r.habitacion?.numero || 'N/A' }}</strong> ({{ r.habitacion?.tipo || 'N/A' }})</td>
-              <td>{{ r.fechaEntrada }}</td>
-              <td>{{ r.fechaSalida }}</td>
-              <td>
-                <span class="status-badge success">CONFIRMADA</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <section class="content-section services-section">
+      <h2 class="section-title">SERVICIOS MÁS DESTACADOS</h2>
+
+      <div *ngIf="catalogoServicios.length === 0" class="empty-state client-empty card-outline">
+        <p>Cargando nuestro catálogo de bienestar y servicios...</p>
       </div>
 
-      <div *ngIf="!misReservas || misReservas.length === 0" class="empty-state client-empty">
-        <i class="fas fa-suitcase-rolling empty-icon"></i>
-        <p>Aún no tienes ninguna reserva con nosotros. ¡Anímate a buscar una habitación para tus próximas vacaciones!</p>
+      <div class="services-list" *ngIf="catalogoServicios.length > 0">
+        <div *ngFor="let s of catalogoServicios" class="service-horizontal-card card-outline">
+          <div class="service-image-square"></div>
+          <div class="service-info-flex">
+            <div>
+              <h3>{{ s.nombre }}</h3>
+              <p class="service-desc">{{ s.descripcion }}</p>
+            </div>
+            <div class="service-action">
+              <p class="price mb-2"><span class="amount">{{ s.precio }}€</span></p>
+              <button class="btn-book-outline" (click)="abrirModalReserva(s)">Reservar</button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
+    <section class="content-section opinions-section">
+      <h2 class="section-title">OPINIONES</h2>
+      <div class="opinions-grid">
+        <div class="opinion-card card-outline" *ngFor="let i of [1,2,3]">
+          <div class="opinion-header">
+            <div class="avatar-circle"></div>
+            <div class="line w-50"></div>
+          </div>
+          <div class="opinion-body text-lines mt-3">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line w-75"></div>
+          </div>
+          <div class="opinion-stars mt-3">
+            ★★★★★
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section gallery-section">
+      <h2 class="section-title">GALERÍA</h2>
+      <div class="gallery-grid">
+        <div class="gallery-item card-outline" *ngFor="let i of [1,2,3,4,5,6]"></div>
+      </div>
+      <div class="gallery-footer text-right mt-3">
+        <button class="btn-outline">Ver galería</button>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="mostrarModalServicio">
+  <div class="modal-content">
+    <button class="btn-close-modal" (click)="cerrarModal()">✖</button>
+    <h3 *ngIf="servicioSeleccionado">Reservar {{ servicioSeleccionado.nombre }}</h3>
+    <p class="modal-desc" *ngIf="servicioSeleccionado">{{ servicioSeleccionado.descripcion }}</p>
+    <div class="modal-form">
+      <div class="input-group">
+        <label>📅 Día de la cita</label>
+        <input type="date" [(ngModel)]="fechaCita">
+      </div>
+      <div class="input-group">
+        <label>⏰ Hora </label>
+        <input type="time" [(ngModel)]="horaCita" step="1800">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
+      <button class="btn-confirm" (click)="confirmarReservaServicio()">Confirmar Reserva</button>
+    </div>
   </div>
 </div>

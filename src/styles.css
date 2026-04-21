@@ -31,5 +31,5 @@ body {
   background-color: var(--color-base);
   color: var(--color-text-base);
   height: 100vh;
-  overflow: hidden; /* El scroll lo manejará el contenido principal */
+  overflow: auto;
 }

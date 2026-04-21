@@ -1,0 +1,41 @@
+<div class="panel-container">
+  <div class="header-section">
+    <h2>Panel de Instalaciones y Servicios 💆‍♂️🏋️‍♀️</h2>
+    <p>Gestión de citas para Spa, Gimnasio y otras actividades</p>
+  </div>
+
+  <div class="table-container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Fecha y Hora</th>
+          <th>Servicio</th>
+          <th>Cliente</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="citas.length === 0">
+          <td colspan="5" style="text-align: center; padding: 20px; color: #6c757d;">
+            No hay citas programadas en este momento.
+          </td>
+        </tr>
+        
+        <tr *ngFor="let cita of citas">
+          <td>{{ cita.fechaHoraCita | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td><strong>{{ cita.servicio.nombre }}</strong></td>
+          <td>{{ cita.cliente?.nombre || 'Cliente sin registrar' }}</td>
+          <td>
+            <span [class]="'badge-' + cita.estado.toLowerCase()">
+              {{ cita.estado }}
+            </span>
+          </td>
+          <td>
+            <button class="btn-completar">✔ Completar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

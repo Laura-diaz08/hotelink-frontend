@@ -52,4 +52,12 @@ export class ReservaService {
     // 3. Enviamos la petición POST adjuntando la cabecera
     return this.http.post(`${this.apiUrl}/${reservaId}/checkout`, {}, { headers: headers });
   }
+
+  obtenerPorCliente(idCliente: number): Observable<any> {
+    const token = localStorage.getItem('token');
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`); 
+    
+    return this.http.get(`${this.apiUrl}/cliente/${idCliente}`, { headers: headers });
+  }
 }

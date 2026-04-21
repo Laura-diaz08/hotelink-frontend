@@ -5,6 +5,8 @@ export interface Habitacion {
   numero: string;
   tipo: string;
   precio: number;
+  capacidad: number;    
+  descripcion: string; 
   estado: string;
-  cliente?: Usuario | null; 
+  cliente?: any;
 }

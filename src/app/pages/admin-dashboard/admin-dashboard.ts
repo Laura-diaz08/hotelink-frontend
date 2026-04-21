@@ -27,12 +27,20 @@ export interface TareaLimpieza {
 
 export class AdminDashboardComponent implements OnInit {
 
+  rolesDisponibles: string[] = [
+    'ADMIN',
+    'CLIENTE',
+    'RECEPCION',
+    'LIMPIEZA',
+    'SERVICIOS'
+  ];
+
   usuarios: Usuario[] = [];
   mensajeError: string = '';
   mensajeExito: string = '';
   habitaciones: Habitacion[] = [];
   mostrarFormularioHabitacion = false;
-  nuevaHabitacion: Habitacion = { numero: '', tipo: 'Sencilla', precio: 0, estado: 'LIBRE' };
+  nuevaHabitacion: Habitacion = { numero: '', tipo: 'Sencilla', precio: 0, estado: 'LIBRE', capacidad: 1, descripcion: '' };
   // Aquí guardaremos todas las reservas que vengan de Java
   reservas: any[] = [];
 
@@ -44,7 +52,7 @@ export class AdminDashboardComponent implements OnInit {
     nombre: '',
     email: '',
     password: '',
-    rol: 'USER' // Por defecto crearemos usuarios normales
+    rol: 'CLIENTE' // Por defecto crearemos usuarios normales
   };
 
   constructor(
@@ -93,7 +101,7 @@ export class AdminDashboardComponent implements OnInit {
       next: (respuesta) => {
         this.mensajeExito = '¡Usuario creado correctamente!';
         this.mostrarFormulario = false;
-        this.cargarUsuarios(); // Recargamos la tabla para que salga el nuevo
+        this.cargarUsuarios(); 
         
         // Limpiamos el formulario
         this.nuevoUsuario = { nombre: '', email: '', password: '', rol: 'USER' };
@@ -120,8 +128,8 @@ export class AdminDashboardComponent implements OnInit {
       next: () => {
         this.mensajeExito = 'Habitación creada con éxito';
         this.mostrarFormularioHabitacion = false;
-        this.nuevaHabitacion = { numero: '', tipo: 'Sencilla', precio: 0, estado: 'LIBRE' };
-        this.cargarHabitaciones(); // Recargamos la tabla
+        this.nuevaHabitacion = { numero: '', tipo: 'Sencilla', precio: 0, estado: 'LIBRE', capacidad: 1, descripcion: '' };
+        this.cargarHabitaciones(); 
       },
       error: () => this.mensajeError = 'Error al crear la habitación'
     });
@@ -134,21 +142,18 @@ export class AdminDashboardComponent implements OnInit {
     this.habitacionService.asignarCliente(idHabitacion, idCliente).subscribe({
       next: () => {
         this.mensajeExito = idCliente ? 'Cliente asignado' : 'Habitación liberada';
-        this.cargarHabitaciones(); // Recargamos la tabla para ver el cambio de estado
+        this.cargarHabitaciones(); 
       },
       error: () => this.mensajeError = 'Error al asignar la habitación'
     });
   }
 
-  // Pide la lista al backend
   cargarReservas(): void {
     this.reservaService.getAllReservas().subscribe({
       next: (data) => {
         this.reservas = data;
-        console.log("¡DATOS RECIBIDOS DE JAVA! ->", data);
         this.reservas = data;
         this.cdr.detectChanges();
-        console.log('Reservas cargadas:', this.reservas);
       },
       error: (err) => {
         console.error('Error al cargar las reservas', err);
@@ -168,7 +173,6 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
-  // Botón de Check-In
   hacerCheckIn(id: number): void {
     this.reservaService.checkInReserva(id).subscribe({
       next: () => {
@@ -200,7 +204,6 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
-  // Botón de Borrar
   eliminar(id: number): void {
     if (confirm('¿Estás totalmente seguro de que quieres borrar esta reserva?')) {
       this.reservaService.eliminarReserva(id).subscribe({
@@ -226,12 +229,12 @@ export class AdminDashboardComponent implements OnInit {
     this.router.navigate(['/login']); // Volvemos al login
   }
 
-  // FUNCIONES DE LIMPIEZA
+
   completarLimpieza(tarea: TareaLimpieza) {
     tarea.estado = 'COMPLETADA';
     
-    // Mostramos un mensaje bonito en verde en la pantalla
-    this.mensajeExito = `¡Habitación ${tarea.numeroHabitacion} reluciente y lista para nuevos clientes! ✨`;
+    // Mostramos un mensaje de exito en verde en la pantalla
+    this.mensajeExito = `¡Habitación ${tarea.numeroHabitacion} reluciente y lista para nuevos clientes!`;
     setTimeout(() => this.mensajeExito = '', 3000);
   }
 

@@ -1,12 +1,9 @@
-/* --- src/app/.../admin-dashboard.component.css --- */
-
 /* --- LAYOUT PRINCIPAL (Sidebar + Main) --- */
 .admin-container {
   display: flex;
   height: 100vh;
 }
 
-/* --- 1. SIDEBAR (Estilo Profesional y Oscuro) --- */
 .sidebar {
   width: 260px;
   background-color: var(--color-surface);
@@ -71,7 +68,6 @@
   flex-direction: column;
 }
 
-/* --- 2. TOPBAR (Estilo Serio y Profundo) --- */
 .topbar {
   background-color: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
@@ -100,15 +96,12 @@
   border: 2px solid var(--color-primary);
 }
 
-/* --- 3. CUERPO DEL DASHBOARD (Scroll) --- */
 .dashboard-body {
   flex: 1;
   padding: 30px;
   overflow-y: auto;
-  /* Aquí controlamos el scroll */
 }
 
-/* --- 4. GRID DE TARJETAS (Toque de Color Vibrante) --- */
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -160,7 +153,6 @@
   color: var(--color-accent);
 }
 
-/* --- 5. SECCIÓN DE RESERVAS (Tabla Profesional) --- */
 .reservas-section h2 {
   font-size: 1.4rem;
   margin-bottom: 20px;
@@ -228,7 +220,6 @@
   color: var(--color-danger);
 }
 
-/* Botones de Acción (Reutilizando tu botón de Check-Out) */
 .action-buttons {
   display: flex;
   gap: 8px;
@@ -244,7 +235,6 @@
 
 .btn-checkin {
   background-color: #475569;
-  /* Gris oscuro para una acción secundaria */
   color: white;
 }
 
@@ -254,7 +244,6 @@
 
 .btn-checkout {
   background-color: var(--color-primary);
-  /* Teal vibrante para la acción principal */
   color: white;
   font-weight: bold;
 }

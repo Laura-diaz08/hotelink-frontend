@@ -45,11 +45,35 @@ export class LoginComponent {
             console.error("¡ALERTA! Java no me está devolviendo el ID en el login");
         }
 
-        // 4. Redirección básica 
-        if (respuesta.rol === 'ADMIN') {
-          this.router.navigate(['/admin']); // Nos lleva al Admin Dashboard
-        } else {
-          this.router.navigate(['/home']);  // Nos lleva al User Dashboard
+        // Evaluamos el rol exacto que nos llega desde Java
+        switch (respuesta.rol) {
+          case 'ADMIN':
+            this.router.navigate(['/admin']);
+            break;
+
+          case 'CLIENTE':
+            this.router.navigate(['/home']); // La pantalla del huésped
+            break;
+
+          case 'SERVICIOS':
+            this.router.navigate(['/servicios-dashboard']); // ¡La que acabamos de crear!
+            break;
+
+          case 'LIMPIEZA':
+            // Cambia '/panel-limpieza' por la ruta que le pusieras a la tabla de limpieza
+            this.router.navigate(['/limpieza-dashboard']); 
+            break;
+
+          case 'RECEPCION':
+            // Cambia esto por la ruta del panel de recepción cuando la crees
+            this.router.navigate(['/recepcion']); 
+            break;
+
+          default:
+            // Por si acaso llega un rol raro o vacío, lo mandamos al login de vuelta
+            console.error('Rol no reconocido:', respuesta.rol);
+            this.router.navigate(['/login']);
+            break;
         }
       },
       error: (error: any) => {
