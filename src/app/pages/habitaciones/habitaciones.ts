@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -17,6 +17,9 @@ export class HabitacionesComponent implements OnInit {
   
   habitaciones: Habitacion[] = [];
   habitacionesFiltradas: Habitacion[] = [];
+  habitacionesDisponibles: Habitacion[] = [];
+  fechaInicio: string = '';
+  fechaFin: string = '';
 
   // Variables de los filtros adaptadas a tu BD
   filtroTipo: string = '';
@@ -25,9 +28,18 @@ export class HabitacionesComponent implements OnInit {
 
   filtroCapacidad: number | null = null; // Recuperamos esta variable
 
+  cargando: boolean = true;
+
+  mostrarModal: boolean = false;
+  habitacionSeleccionadaId: number | undefined;
+  reservaFechaInicio: string = '';
+  reservaFechaFin: string = '';
+  reservaHuespedes: number = 1;
+
   constructor(
     private habitacionService: HabitacionService,
     private router: Router,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -35,13 +47,22 @@ export class HabitacionesComponent implements OnInit {
   }
 
   cargarHabitaciones() {
+    this.cargando = true;
+    console.log("1. Llamando a Spring Boot..."); // Chivato 1
+
     this.habitacionService.getHabitaciones().subscribe({
       next: (data: Habitacion[]) => {
+        console.log("2. ¡Spring Boot respondió! Datos recibidos:", data); // Chivato 2
+        
         this.habitaciones = data;
         this.habitacionesFiltradas = data;
+        this.cargando = false;
+        this.cdr.detectChanges(); 
       },
       error: (err) => {
-        console.error('Error al obtener las habitaciones', err);
+        console.error('3. ERROR GRAVE al conectar con Spring Boot:', err); // Chivato 3
+        this.cargando = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -55,17 +76,101 @@ export class HabitacionesComponent implements OnInit {
       
       return cumpleTipo && cumplePrecio && cumpleCapacidad;
     });
+    this.cdr.detectChanges();
   }
 
   limpiarFiltros() {
     this.filtroTipo = '';
     this.filtroPrecioMax = null;
+    this.filtroCapacidad = null; 
     this.habitacionesFiltradas = [...this.habitaciones];
+
+    this.cdr.detectChanges();
   }
 
-  reservar(id: number | undefined) {
-    if (!id) return;
-    alert(`Redirigiendo a reserva de habitación ID: ${id}`);
+  abrirModalReserva(id: number | undefined) {
+    this.habitacionSeleccionadaId = id;
+    this.mostrarModal = true;
+    this.reservaFechaInicio = ''; 
+    this.reservaFechaFin = '';
+    this.reservaHuespedes = 1;
+  }
+  cerrarModal() {
+    this.mostrarModal = false;
+    this.habitacionSeleccionadaId = undefined;
+  }
+
+  confirmarReserva() {
+
+    if (!this.reservaFechaInicio || !this.reservaFechaFin) {
+      alert("⚠️ Por favor, selecciona las fechas de entrada y salida.");
+      return; 
+    }
+
+    if (!this.reservaHuespedes || this.reservaHuespedes < 1) {
+      alert("⚠️ Por favor, indica al menos 1 huésped.");
+      return;
+    }
+
+    if (!this.habitacionSeleccionadaId) {
+      console.error("Error: No hay ninguna habitación seleccionada.");
+      return;
+    }
+
+    const clienteId = Number(localStorage.getItem('id'));
+
+    const datosReserva = {
+      clienteId: clienteId,
+      fechaInicio: this.reservaFechaInicio,
+      fechaFin: this.reservaFechaFin,
+      numeroHuespedes: this.reservaHuespedes 
+    };
+
+    this.habitacionService.reservarHabitacion(this.habitacionSeleccionadaId, datosReserva).subscribe({
+      next: (respuesta) => {
+        alert("¡Reserva completada con éxito!");
+        this.cerrarModal();
+      },
+      error: (err) => {
+        console.error(err);
+        alert("Hubo un problema con la reserva.");
+      }
+    });
+  }
+
+  hacerReserva(habitacionId: number | undefined) {
+    if (!habitacionId) {
+      console.error("Error: La habitación no tiene ID");
+      return; 
+    }
+
+    if (!this.fechaInicio || !this.fechaFin) {
+      alert("⚠️ Por favor, selecciona las fechas de entrada y salida antes de reservar.");
+      console.error("Error: Las fechas están vacías", { inicio: this.fechaInicio, fin: this.fechaFin });
+      return; // Cancelamos la operación aquí mismo
+    }
+
+    const clienteId = Number(localStorage.getItem('id'));
+    
+    const datosReserva = {
+      clienteId: clienteId,
+      fechaInicio: this.fechaInicio,
+      fechaFin: this.fechaFin
+    };
+
+    this.habitacionService.reservarHabitacion(habitacionId, datosReserva).subscribe({
+      next: (respuesta) => {
+        alert("¡Reserva completada con éxito!");
+        this.habitacionesDisponibles = []; 
+        this.fechaInicio = '';
+        this.fechaFin = '';
+        // this.cargarMisReservas(clienteId); 
+      },
+      error: (err) => {
+        console.error(err);
+        alert("Hubo un problema al hacer la reserva.");
+      }
+    });
   }
 
   verDetalles(id: number | undefined) {

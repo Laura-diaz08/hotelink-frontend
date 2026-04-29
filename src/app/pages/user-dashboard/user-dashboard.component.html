@@ -1,25 +1,5 @@
 <div class="user-wrapper">
 
-  <header class="topbar client-topbar">
-    <div class="logo-text">Hote<span class="logo-accent">link</span></div>
-    <nav class="main-nav">
-      <ul class="nav-list">
-        <li><a routerLink="/home" class="nav-link">Inicio</a></li>
-        <li><a routerLink="/habitaciones" class="nav-link">Habitaciones</a></li>
-        <li><a routerLink="/mis-reservas" class="nav-link">Mis Reservas</a></li>
-        <li><a routerLink="/servicios" class="nav-link">Servicios</a></li>
-        <li><a routerLink="/nosotros" class="nav-link">Nosotros</a></li>
-        <li><a routerLink="/contacto" class="nav-link">Contacto</a></li>
-        <li><a routerLink="/opiniones" class="nav-link">Opiniones</a></li>
-        <li><a routerLink="/galeria" class="nav-link">Galería</a></li>
-      </ul>
-    </nav>
-    <div class="user-actions">
-      <span class="welcome-text">¡Hola, Viajero!</span>
-      <button (click)="cerrarSesion()" class="btn-logout">Cerrar Sesión</button>
-    </div>
-  </header>
-
   <section class="hero-carousel">
     <div class="carousel-slide">
       <button class="carousel-control prev">❮</button>
@@ -68,42 +48,45 @@
         <h2 class="section-title">
           {{ habitacionesDisponibles.length > 0 ? 'HABITACIONES DISPONIBLES' : 'TIPOS DE HABITACIONES' }}
         </h2>
-        <button class="btn-outline">Ver todas</button>
+        <button class="btn-outline" routerLink="/habitaciones">Ver todas</button>
       </div>
 
-      <div class="rooms-grid" *ngIf="habitacionesDisponibles.length > 0">
-        <div *ngFor="let h of habitacionesDisponibles" class="room-card card-outline">
-          <div class="room-image-placeholder">
-            <div class="room-badge">{{ h.tipo }}</div>
-          </div>
-          <div class="room-info">
-            <h3>Habitación {{ h.numero }}</h3>
-            <div class="text-lines">
-              <div class="line"></div>
-              <div class="line w-75"></div>
+      <div class="rooms-grid">
+        
+        <ng-container *ngIf="habitacionesDisponibles.length > 0">
+          <div class="room-card card-outline" *ngFor="let h of habitacionesDisponibles">
+            <div class="room-image-placeholder">
+              <div class="room-badge">{{ h.tipo }}</div>
             </div>
-            <div class="card-footer-flex">
-              <p class="price"><span class="amount">{{ h.precio }}€</span> / noche</p>
-              <button class="btn-book-outline" (click)="hacerReserva(h.id)">Reservar</button>
+            <div class="room-info">
+              <h3>Habitación {{ h.numero }}</h3>
+              <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 15px;">{{ h.descripcion }}</p>
+              
+              <div class="card-footer-flex justify-between align-center">
+                <p class="price mb-0"><span class="amount">{{ h.precio }}€</span> / noche</p>
+                <button class="btn-book-outline" routerLink="/habitaciones">Ver detalles</button>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </ng-container>
 
-      <div class="rooms-grid" *ngIf="habitacionesDisponibles.length === 0">
-        <div class="room-card card-outline" *ngFor="let i of [1,2,3]">
-          <div class="room-image-placeholder"></div>
-          <div class="room-info">
-            <div class="text-lines">
-              <div class="line"></div>
-              <div class="line w-100"></div>
-              <div class="line w-50"></div>
+        <ng-container *ngIf="habitacionesDisponibles.length === 0">
+          <div class="room-card card-outline" *ngFor="let h of habitaciones">
+            <div class="room-image-placeholder">
+              <div class="room-badge">{{ h.tipo }}</div>
             </div>
-            <div class="card-footer-flex justify-end">
-              <button class="btn-book-outline">Reservar</button>
+            <div class="room-info">
+              <h3>Habitación {{ h.numero }}</h3>
+              <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 15px;">{{ h.descripcion }}</p>
+              
+              <div class="card-footer-flex justify-between align-center">
+                <p class="price mb-0"><span class="amount">{{ h.precio }}€</span> / noche</p>
+                <button class="btn-book-outline" routerLink="/habitaciones">Ver detalles</button>
+              </div>
             </div>
           </div>
-        </div>
+        </ng-container>
+
       </div>
     </section>
 

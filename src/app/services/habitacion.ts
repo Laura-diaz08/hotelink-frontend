@@ -51,7 +51,7 @@ export class HabitacionService {
     const headers = new HttpHeaders().set('Authorization', token ? 'Bearer ' + token : '');
 
     // Fíjate que al final le pasamos { headers }
-    return this.http.get<Habitacion[]>(`${this.apiUrl}/disponibles?inicio=${inicio}&fin=${fin}`, { headers });
+    return this.http.get<Habitacion[]>(`${this.apiUrl}/disponibles?inicio=${inicio}&fin=${fin}`, { headers: headers });
   }
 
   // Hacer la reserva enviando los datos y el token

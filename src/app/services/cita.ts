@@ -24,4 +24,23 @@ export class CitaService {
     
     return this.http.get(`${this.apiUrl}/cliente/${idCliente}`, { headers: headers });
   }
+
+  actualizarEstado(id: number, estado: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    // Aquí también lo añadimos al final
+    return this.http.put(`${this.apiUrl}/${id}/estado`, { estado }, { headers: headers });
+  }
+
+    // Dentro de tu CitaService o ServicioService de Angular
+  anularYEliminarCita(id: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    
+    return this.http.delete(`${this.apiUrl}/${id}`, { headers });
+  }
 }

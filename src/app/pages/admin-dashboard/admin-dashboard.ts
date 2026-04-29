@@ -174,7 +174,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   hacerCheckIn(id: number): void {
-    this.reservaService.checkInReserva(id).subscribe({
+    this.reservaService.hacerCheckIn(id).subscribe({
       next: () => {
         alert('¡Check-In realizado con éxito!');
         this.cargarReservas(); // Recargamos la tabla para que se actualice el estado

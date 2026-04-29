@@ -1,197 +1,291 @@
-.section-container {
-  padding: 60px 5%;
-  min-height: 400px;
+.container {
+  max-width: 1100px; /* Ajusta el ancho máximo de la página */
+  margin: 0 auto;    /* Esto centra la caja y crea los márgenes laterales automáticos */
+  padding: 0 20px;   /* Un pequeño margen extra para cuando se vea en móviles */
 }
 
-.section-title {
-  font-size: 2rem;
+/* Fondos y contenedores */
+.reservas-wrapper {
+  background-color: #f8f9fa; /* Fondo gris muy clarito para que resalten las tarjetas blancas */
+  min-height: 100vh;
+  padding: 40px 0;
+}
+
+.page-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 40px;
+}
+
+.section-header {
+  margin-bottom: 20px;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 10px;
+}
+
+.section-header h3 {
+  font-size: 1.4rem;
+  color: #333;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mt-5 { margin-top: 50px; }
+.mt-4 { margin-top: 20px; }
+.mt-3 { margin-top: 15px; }
+
+/* --- TARJETAS MODERNAS --- */
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Sombra elegante */
+  border: 1px solid #f1f3f5;
+  padding: 25px;
+}
+
+.reserva-item {
   margin-bottom: 30px;
-  color: var(--color-text-base);
-  border-left: 5px solid var(--color-primary);
-  padding-left: 15px;
 }
 
-.reservas-grid {
+/* --- ESTRUCTURA A DOS COLUMNAS (Estilo Wireframe pero bonito) --- */
+.modern-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 25px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.card-header h4 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #1a1a1a;
+}
+
+/* --- DATOS (Sustituyen a los inputs) --- */
+.data-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 30px;
+  gap: 20px;
 }
 
-.reservas-column h3 {
+.data-group label {
+  font-size: 0.85rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.data-group p {
+  font-size: 1.05rem;
+  color: #212529;
+  font-weight: 500;
+  margin: 0;
+}
+
+.text-muted {
+  color: #adb5bd !important;
+  font-style: italic;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #e9ecef;
+  margin: 25px 0;
+}
+
+/* --- SIDEBAR DE RESUMEN --- */
+.sidebar-card h4 {
+  margin-top: 0;
   margin-bottom: 20px;
-  color: var(--color-text-muted);
   font-size: 1.2rem;
 }
 
-.reserva-card {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 15px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  border: 1px solid var(--color-border);
+.room-image {
+  width: 100%;
+  height: 160px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.room-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.summary-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  transition: transform 0.2s;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f3f5;
+  font-size: 0.95rem;
 }
 
-.reserva-card:hover {
-  transform: translateX(5px);
+.summary-row:last-child {
+  border-bottom: none;
 }
 
-.reserva-info {
+.summary-row.total {
+  margin-top: 10px;
+  font-size: 1.1rem;
+  color: #1a1a1a;
+}
+
+/* --- BOTONES --- */
+.card-actions {
   display: flex;
-  flex-direction: column;
-  gap: 5px;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 30px;
 }
 
+.btn-primary {
+  background-color: #1a1a1a;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-primary:hover { background-color: #333; }
+
+.btn-danger-outline {
+  background-color: transparent;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-danger-outline:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* --- ETIQUETAS DE ESTADO (Badges) --- */
 .status-badge {
+  padding: 6px 12px;
+  border-radius: 50px;
   font-size: 0.75rem;
-  padding: 4px 8px;
-  border-radius: 20px;
+  font-weight: 700;
   text-transform: uppercase;
-  font-weight: bold;
-  width: fit-content;
+  letter-spacing: 0.5px;
 }
 
-.status-badge.CONFIRMADA { background: #dcfce7; color: #166534; }
-.status-badge.PENDIENTE { background: #fef9c3; color: #854d0e; }
-
-.price-tag {
-  font-weight: bold;
-  color: var(--color-secondary);
+.status-badge.pending {
+  background-color: #fff3cd;
+  color: #856404;
 }
 
-/* Responsivo para móviles */
-@media (max-width: 768px) {
-  .reservas-grid { grid-template-columns: 1fr; }
+.status-badge.completed {
+  background-color: #d1e7dd;
+  color: #0f5132;
 }
 
-/* --- TOPBAR CLIENTE --- */
-.client-topbar {
-  padding: 15px 5%;
+/* --- TARJETA COMPACTA (Para Completadas) --- */
+.compact-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
-  gap: 20px;
-  flex-wrap: wrap; /* Permite que el menú baje en pantallas pequeñas */
+  padding: 20px 25px;
+  border-left: 5px solid #198754; /* Un toque verde para indicar completado */
 }
 
-/* --- MENÚ DE NAVEGACIÓN PRINCIPAL --- */
-.main-nav {
-  flex: 1; /* Toma el espacio central disponible */
+.compact-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.icon-box {
+  font-size: 1.8rem;
+  color: #198754;
+}
+
+.compact-info h4 {
+  margin: 0 0 5px 0;
+  font-size: 1.1rem;
+}
+
+.compact-info p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.compact-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.btn-outline-small {
+  background: transparent;
+  border: 1px solid #ced4da;
+  padding: 6px 15px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.btn-outline-small:hover { background: #f8f9fa; }
+
+/* --- RESPONSIVE --- */
+@media (max-width: 992px) {
+  .modern-layout {
+    grid-template-columns: 1fr; /* Pasa a 1 columna en móviles y tablets */
+  }
+  
+  .compact-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .compact-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* FONDO OSCURO DE LA VENTANA */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6); /* Fondo semitransparente */
   display: flex;
   justify-content: center;
-}
-
-.nav-list {
-  list-style: none;
-  display: flex;
-  gap: 25px; /* Separación entre los enlaces */
-  margin: 0;
-  padding: 0;
-}
-
-.nav-link {
-  text-decoration: none;
-  color: var(--color-text-base);
-  font-weight: 500;
-  font-size: 0.95rem;
-  padding-bottom: 5px;
-  position: relative;
-  transition: color 0.3s ease;
-}
-
-.nav-link:hover, 
-.nav-link.active {
-  color: var(--color-primary);
-}
-
-/* Efecto de subrayado animado al hacer hover */
-.nav-link::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: 0;
-  left: 0;
-  background-color: var(--color-primary);
-  transition: width 0.3s ease;
-}
-
-.nav-link:hover::after, 
-.nav-link.active::after {
-  width: 100%;
-}
-
-/* Ajustes para pantallas de portátiles pequeños o tablets */
-@media (max-width: 1100px) {
-  .nav-list {
-    gap: 15px;
-  }
-  .nav-link {
-    font-size: 0.85rem;
-  }
-}
-
-/* Si la pantalla es un móvil, el menú pasa debajo del logo y los botones */
-@media (max-width: 850px) {
-  .main-nav {
-    order: 3;
-    width: 100%;
-    margin-top: 15px;
-  }
-  .nav-list {
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
-  }
-}
-
-/* --- TOPBAR CLIENTE --- */
-.client-topbar {
-  padding: 15px 5%;
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  background-color: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
+  z-index: 9999; /* ¡Clave! Esto hace que se ponga por encima de todo */
 }
 
-.logo-text {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.logo-accent {
-  color: var(--color-primary);
-}
-
-.user-actions {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.welcome-text {
-  color: var(--color-text-muted);
-  font-weight: 500;
-}
-
-.btn-logout {
-  background-color: transparent;
-  color: var(--color-danger);
-  border: 1px solid var(--color-danger);
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.btn-logout:hover {
-  background-color: var(--color-danger);
-  color: white;
+/* LA CAJA BLANCA CENTRAL */
+.modal-content {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }

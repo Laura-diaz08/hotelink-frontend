@@ -1,0 +1,100 @@
+.client-topbar {
+  padding: 15px 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  gap: 20px;
+  flex-wrap: wrap; /* Permite que el menú baje en pantallas pequeñas */
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.logo-accent {
+  color: var(--color-primary);
+}
+
+.main-nav {
+  flex: 1; /* Toma el espacio central disponible */
+  display: flex;
+  justify-content: center;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: var(--color-text-base);
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding-bottom: 5px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover, 
+.nav-link.active {
+  color: var(--color-primary);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--color-primary);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after, 
+.nav-link.active::after {
+  width: 100%;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.welcome-text {
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.btn-logout {
+  background-color: transparent;
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-logout:hover {
+  background-color: var(--color-danger);
+  color: white;
+}
+
+/* Media Queries NAVEGACIÓN */
+@media (max-width: 1100px) {
+  .nav-list { gap: 15px; }
+  .nav-link { font-size: 0.85rem; }
+}
+@media (max-width: 850px) {
+  .main-nav { order: 3; width: 100%; margin-top: 15px; }
+  .nav-list { justify-content: center; flex-wrap: wrap; gap: 15px; }
+}

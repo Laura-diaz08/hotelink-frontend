@@ -25,6 +25,7 @@ export class UserDashboardComponent implements OnInit {
   fechaInicio: string = '';
   fechaFin: string = '';
   mensajeReserva: string = '';
+  habitaciones:  Habitacion[] = [];
 
   // Variable para guardar el catálogo de Spa, Gimnasio, etc.
   catalogoServicios: Servicio[] = [];
@@ -59,6 +60,7 @@ export class UserDashboardComponent implements OnInit {
     // this.cargarMisReservas(clienteId);
     // Cargamos el catálogo de servicios 
     this.cargarServicios();
+    this.cargarHabitaciones();
   }
 
   // cargarMisReservas(clienteId: number) {
@@ -171,7 +173,7 @@ export class UserDashboardComponent implements OnInit {
     const fechaHoraCita = `${this.fechaCita}T${this.horaCita}:00`;
 
     const nuevaCita = {
-      cliente: { id: idCliente },  
+      usuario: { id: idCliente },  
       servicio: { id: idServicio }, 
       fechaHoraCita: fechaHoraCita
     };
@@ -190,6 +192,18 @@ export class UserDashboardComponent implements OnInit {
         } else {
           alert("Hubo un problema al hacer la reserva. Inténtalo de nuevo.");
         }
+      }
+    });
+  }
+
+  cargarHabitaciones() {
+    this.habitacionService.getHabitaciones().subscribe({
+      next: (data: Habitacion[]) => {
+        this.habitaciones = data.slice(-3); 
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error cargando habitaciones en Home', err);
       }
     });
   }
