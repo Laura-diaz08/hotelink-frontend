@@ -36,4 +36,16 @@ export class UsuarioService {
     return this.http.post(this.apiUrl, nuevoUsuario, { headers: headers });
   }
 
+  editarUsuario(id: number, usuario: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+    return this.http.put(`${this.apiUrl}/${id}`, usuario, { headers });
+  }
+
+  eliminarUsuario(id: number): Observable<any> {
+      const token = localStorage.getItem('token');
+      const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+      return this.http.delete(`${this.apiUrl}/${id}`, { headers });
+  }
+
 }

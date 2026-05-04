@@ -1,0 +1,151 @@
+<div class="admin-container">
+
+  <nav class="barra-lateral">
+    <div class="cabecera-logo">
+      <span class="texto-logo">Hote<span class="acento-logo">link</span></span>
+    </div>
+    <ul class="enlaces-nav">
+      <li><a routerLink="/admin"><i class="fas fa-chart-line"></i> Panel de Control</a></li>
+      <li><a routerLink="/admin/reservas"><i class="fas fa-calendar-alt"></i> Reservas</a></li>
+      <li><a routerLink="/admin/habitaciones" class="activo"><i class="fas fa-bed"></i> Habitaciones</a></li>
+      <li><a routerLink="/admin/usuarios"><i class="fas fa-users"></i> Usuarios</a></li>
+      <li><a routerLink="/admin/limpieza"><i class="fas fa-broom"></i> Limpieza</a></li>
+    </ul>
+    <div class="pie-nav">
+      <button class="btn-cerrar-sesion" (click)="cerrarSesion()">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+      </button>
+    </div>
+  </nav>
+
+  <main class="main-content">
+
+    <header class="topbar">
+      <h1>Mapa de Habitaciones</h1>
+      <button class="btn-primary" (click)="abrirModalCrear()">+ Nueva Habitación</button>
+    </header>
+
+    <div class="dashboard-body">
+
+      <div *ngIf="mensajeExito" class="alert success-alert">{{ mensajeExito }}</div>
+      <div *ngIf="mensajeError" class="alert error-alert">{{ mensajeError }}</div>
+
+      <!-- FILTROS -->
+      <section class="filtros-section">
+        <div class="filtros-grid">
+          <div class="input-group">
+            <label>Estado</label>
+            <select [(ngModel)]="filtroEstado" (change)="filtrar()">
+              <option value="">Todos</option>
+              <option *ngFor="let e of estados" [value]="e">{{ e }}</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Planta</label>
+            <select [(ngModel)]="filtroPlanta" (change)="filtrar()">
+              <option value="">Todas</option>
+              <option *ngFor="let p of plantas" [value]="p">Planta {{ p }}</option>
+            </select>
+          </div>
+          <button class="btn-secondary" (click)="limpiarFiltros()">Limpiar filtros</button>
+        </div>
+
+        <!-- LEYENDA -->
+        <div class="leyenda">
+          <span class="leyenda-item"><span class="dot estado-libre"></span> Libre</span>
+          <span class="leyenda-item"><span class="dot estado-ocupada"></span> Ocupada</span>
+          <span class="leyenda-item"><span class="dot estado-limpieza"></span> Limpieza</span>
+          <span class="leyenda-item"><span class="dot estado-mantenimiento"></span> Mantenimiento</span>
+        </div>
+      </section>
+
+      <!-- HABITACIONES POR PLANTA -->
+      <div *ngFor="let planta of plantas" class="planta-section">
+        <h2 class="planta-titulo">Planta {{ planta }}</h2>
+        <div class="habitaciones-grid">
+          <div *ngFor="let hab of getHabitacionesPorPlanta(planta)"
+               class="habitacion-card"
+               [ngClass]="getClaseEstado(hab.estado)">
+
+            <div class="hab-header">
+              <span class="hab-numero">{{ hab.numero }}</span>
+              <span class="hab-badge">{{ hab.estado }}</span>
+            </div>
+
+            <div class="hab-info">
+              <p><i class="fas fa-tag"></i> {{ hab.tipo }}</p>
+              <p><i class="fas fa-euro-sign"></i> {{ hab.precio }}€/noche</p>
+              <p><i class="fas fa-users"></i> Capacidad: {{ hab.capacidad }}</p>
+              <p *ngIf="hab.cliente"><i class="fas fa-user"></i> {{ hab.cliente?.nombre }}</p>
+            </div>
+
+            <div class="hab-actions">
+              <select class="select-estado" (change)="cambiarEstado(hab, $any($event.target).value)">
+                <option value="">Cambiar estado</option>
+                <option *ngFor="let e of estados" [value]="e">{{ e }}</option>
+              </select>
+              <div class="btn-group">
+                <button class="btn-edit" (click)="abrirModalEditar(hab)">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="btn-delete" (click)="eliminar(hab)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="habitacionesFiltradas.length === 0" class="empty-state">
+        No hay habitaciones con los filtros seleccionados.
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- MODAL CREAR/EDITAR -->
+<div class="modal-overlay" *ngIf="mostrarModal">
+  <div class="modal-content">
+    <h3>{{ modoEdicion ? 'Editar Habitación' : 'Nueva Habitación' }}</h3>
+
+    <div class="form-grid">
+      <div class="input-group">
+        <label>Número</label>
+        <input type="text" [(ngModel)]="habitacionSeleccionada.numero" placeholder="Ej: 101">
+      </div>
+      <div class="input-group">
+        <label>Tipo</label>
+        <select [(ngModel)]="habitacionSeleccionada.tipo">
+          <option *ngFor="let t of tipos" [value]="t">{{ t }}</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>Precio por noche (€)</label>
+        <input type="number" [(ngModel)]="habitacionSeleccionada.precio">
+      </div>
+      <div class="input-group">
+        <label>Capacidad</label>
+        <input type="number" [(ngModel)]="habitacionSeleccionada.capacidad">
+      </div>
+      <div class="input-group" *ngIf="modoEdicion">
+        <label>Estado</label>
+        <select [(ngModel)]="habitacionSeleccionada.estado">
+          <option *ngFor="let e of estados" [value]="e">{{ e }}</option>
+        </select>
+      </div>
+      <div class="input-group full-width">
+        <label>Descripción</label>
+        <textarea [(ngModel)]="habitacionSeleccionada.descripcion" rows="3"></textarea>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-primary" (click)="guardar()">
+        {{ modoEdicion ? 'Guardar cambios' : 'Crear habitación' }}
+      </button>
+      <button class="btn-secondary" (click)="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
+</div>

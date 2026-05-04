@@ -81,7 +81,6 @@ export class ReservasAdminComponent implements OnInit{
       this.usuarioService.getUsuarios().subscribe({
         next: (data: Usuario[]) => {
           this.usuarios = data;
-          
           this.cdr.detectChanges(); 
         },
         error: (error: any) => {

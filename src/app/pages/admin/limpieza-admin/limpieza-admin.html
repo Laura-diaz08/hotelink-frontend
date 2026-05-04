@@ -1,0 +1,173 @@
+<div class="admin-container">
+
+  <nav class="barra-lateral">
+    <div class="cabecera-logo">
+      <span class="texto-logo">Hote<span class="acento-logo">link</span></span>
+    </div>
+    <ul class="enlaces-nav">
+      <li><a routerLink="/admin"><i class="fas fa-chart-line"></i> Panel de Control</a></li>
+      <li><a routerLink="/admin/reservas"><i class="fas fa-calendar-alt"></i> Reservas</a></li>
+      <li><a routerLink="/admin/habitaciones"><i class="fas fa-bed"></i> Habitaciones</a></li>
+      <li><a routerLink="/admin/usuarios"><i class="fas fa-users"></i> Usuarios</a></li>
+      <li><a routerLink="/admin/limpieza" class="activo"><i class="fas fa-broom"></i> Limpieza</a></li>
+    </ul>
+    <div class="pie-nav">
+      <button class="btn-cerrar-sesion" (click)="cerrarSesion()">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+      </button>
+    </div>
+  </nav>
+
+  <main class="main-content">
+
+    <header class="topbar">
+      <h1>Gestión de Limpieza</h1>
+      <button class="btn-primary" (click)="abrirModalCrear()">+ Nueva Tarea</button>
+    </header>
+
+    <div class="dashboard-body">
+
+      <div *ngIf="mensajeExito" class="alert success-alert">{{ mensajeExito }}</div>
+      <div *ngIf="mensajeError" class="alert error-alert">{{ mensajeError }}</div>
+
+      <!-- FILTROS -->
+      <section class="filtros-section">
+        <div class="filtros-grid">
+          <div class="input-group">
+            <label>Estado</label>
+            <select [(ngModel)]="filtroEstado" (change)="filtrar()">
+              <option value="">Todos</option>
+              <option *ngFor="let e of estados" [value]="e">{{ e }}</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Empleado</label>
+            <input type="text" [(ngModel)]="filtroEmpleado" (input)="filtrar()" placeholder="Nombre empleado...">
+          </div>
+          <div class="input-group">
+            <label>Planta</label>
+            <select [(ngModel)]="filtroPlanta" (change)="filtrar()">
+              <option value="">Todas</option>
+              <option *ngFor="let p of getPlantasDisponibles()" [value]="p">Planta {{ p }}</option>
+            </select>
+          </div>
+          <button class="btn-secondary" (click)="limpiarFiltros()">Limpiar</button>
+        </div>
+      </section>
+
+      <!-- PANEL PRINCIPAL: EMPLEADOS + TAREAS -->
+      <section class="panel-principal">
+
+        <!-- EMPLEADOS -->
+        <div class="card-empleados">
+          <h2><i class="fas fa-users"></i> Empleados</h2>
+          <ul class="lista-empleados">
+            <li *ngIf="empleados.length === 0" class="empty-empleados">
+              No hay empleados de limpieza
+            </li>
+            <li *ngFor="let emp of empleados" class="empleado-item">
+              <div class="empleado-avatar">{{ emp.nombre.charAt(0).toUpperCase() }}</div>
+              <div class="empleado-info">
+                <strong>{{ emp.nombre }}</strong>
+                <span>{{ emp.email }}</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- LISTA DE TAREAS -->
+        <div class="card-tareas">
+          <h2><i class="fas fa-list-ul"></i> Lista de Tareas</h2>
+          <div *ngIf="tareasFiltradas.length === 0" class="empty-state">
+            No hay tareas con los filtros seleccionados.
+          </div>
+          <div *ngFor="let tarea of tareasFiltradas" class="tarea-item" [ngClass]="getClaseEstado(tarea.estado)">
+            <div class="tarea-header">
+              <span class="tarea-hab">🛏️ Hab. {{ tarea.habitacion?.numero }}</span>
+              <span class="tarea-badge" [ngClass]="getClaseEstado(tarea.estado)">{{ tarea.estado }}</span>
+            </div>
+            <div class="tarea-info">
+              <span><i class="fas fa-calendar"></i> {{ tarea.fecha | date:'dd/MM/yyyy' }}</span>
+              <span><i class="fas fa-user"></i> {{ tarea.empleado?.nombre || 'Sin asignar' }}</span>
+            </div>
+            <div class="tarea-actions">
+                <div class="asignar-group" *ngIf="!tarea.empleado">
+                    <select class="select-empleado" [(ngModel)]="tarea.empleadoSeleccionado">
+                    <option value="">Asignar empleado...</option>
+                    <option *ngFor="let emp of empleados" [value]="emp.id">{{ emp.nombre }}</option>
+                    </select>
+                    <button class="btn-aceptar" (click)="asignarEmpleado(tarea, tarea.empleadoSeleccionado)">
+                    ✓ Aceptar
+                    </button>
+                </div>
+                <div class="empleado-asignado" *ngIf="tarea.empleado">
+                    <i class="fas fa-user-check"></i> {{ tarea.empleado.nombre }}
+                </div>
+                <div class="btn-group">
+                    <button class="btn-pendiente" 
+                            *ngIf="tarea.estado !== 'PENDIENTE'"
+                            (click)="cambiarEstado(tarea, 'PENDIENTE')">Pendiente</button>
+                    <button class="btn-proceso" 
+                            *ngIf="tarea.estado !== 'EN_PROCESO'"
+                            (click)="cambiarEstado(tarea, 'EN_PROCESO')">En proceso</button>
+                    <button class="btn-completada" 
+                            *ngIf="tarea.estado !== 'COMPLETADA'"
+                            (click)="cambiarEstado(tarea, 'COMPLETADA')">Completada</button>
+                    <button class="btn-delete" (click)="eliminar(tarea.id)">🗑️</button>
+                </div>
+                </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- COLUMNAS POR ESTADO -->
+      <section class="columnas-estado">
+        <div class="columna" *ngFor="let estado of estados">
+          <div class="columna-header" [ngClass]="'header-' + estado.toLowerCase()">
+            <h3>{{ estado.replace('_', ' ') }}</h3>
+            <span class="columna-count">{{ getTareasPorEstado(estado).length }}</span>
+          </div>
+          <div class="columna-body">
+            <div *ngIf="getTareasPorEstado(estado).length === 0" class="columna-empty">
+              Sin tareas
+            </div>
+            <div *ngFor="let tarea of getTareasPorEstado(estado)" class="columna-card">
+              <span class="columna-hab">Hab. {{ tarea.habitacion?.numero }}</span>
+              <span class="columna-emp">{{ tarea.empleado?.nombre || 'Sin asignar' }}</span>
+              <span class="columna-fecha">{{ tarea.fecha | date:'dd/MM' }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- MODAL CREAR TAREA -->
+<div class="modal-overlay" *ngIf="mostrarModalCrear">
+  <div class="modal-content">
+    <h3>Nueva Tarea de Limpieza</h3>
+    <div class="form-grid">
+      <div class="input-group">
+        <label>Habitación</label>
+        <select [(ngModel)]="nuevaTarea.habitacionId">
+          <option value="">Selecciona habitación...</option>
+          <option *ngFor="let hab of habitaciones" [value]="hab.id">
+            {{ hab.numero }} - {{ hab.tipo }}
+          </option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>Fecha</label>
+        <input type="date" [(ngModel)]="nuevaTarea.fecha">
+      </div>
+    </div>
+    <div *ngIf="mensajeError" class="alert error-alert">{{ mensajeError }}</div>
+    <div class="modal-actions">
+      <button class="btn-primary" (click)="crearTarea()">Crear tarea</button>
+      <button class="btn-secondary" (click)="cerrarModalCrear()">Cancelar</button>
+    </div>
+  </div>
+</div>

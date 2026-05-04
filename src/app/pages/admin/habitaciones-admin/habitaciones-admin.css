@@ -1,0 +1,504 @@
+/* --- 1. VARIABLES Y CONFIGURACIÓN --- */
+:host {
+    --fondo-principal: #f1f5f9;
+    --fondo-tarjeta: #ffffff;
+    --fondo-lateral: #1e293b;
+    --texto-principal: #334155;
+    --texto-suave: #64748b;
+    --color-primario: #3b82f6;
+    --color-exito: #10b981;
+    --color-peligro: #ef4444;
+    --color-aviso: #f59e0b;
+    --radio: 12px;
+    --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* --- 2. ESTRUCTURA GLOBAL --- */
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--fondo-principal);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* --- 3. BARRA LATERAL --- */
+.barra-lateral {
+    width: 260px;
+    background-color: var(--fondo-lateral);
+    color: white;
+    padding: 25px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.cabecera-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+}
+
+.acento-logo {
+    color: var(--color-primario);
+}
+
+.enlaces-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+}
+
+.enlaces-nav li {
+    margin-bottom: 10px;
+}
+
+.enlaces-nav a {
+    color: #94a3b8;
+    text-decoration: none;
+    padding: 12px 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-radius: 8px;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.enlaces-nav a:hover,
+.enlaces-nav a.activo {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+}
+
+.enlaces-nav a.activo {
+    background: var(--color-primario);
+}
+
+.pie-nav {
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-cerrar-sesion {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--color-peligro);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-cerrar-sesion:hover {
+    background-color: #b91c1c;
+}
+
+/* --- 4. CONTENIDO PRINCIPAL --- */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.topbar {
+    background-color: var(--fondo-tarjeta);
+    border-bottom: 1px solid #cbd5e1;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.topbar h1 {
+    font-size: 1.5rem;
+    color: var(--texto-principal);
+    margin: 0;
+}
+
+.dashboard-body {
+    flex: 1;
+    padding: 30px;
+}
+
+/* --- 5. ALERTAS --- */
+.alert {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.error-alert {
+    background-color: #fecaca;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+.success-alert {
+    background-color: #a7f3d0;
+    color: #065f46;
+    border: 1px solid #6ee7b7;
+}
+
+/* --- 6. FILTROS --- */
+.filtros-section {
+    background: var(--fondo-tarjeta);
+    border-radius: var(--radio);
+    padding: 24px;
+    box-shadow: var(--sombra);
+    margin-bottom: 30px;
+    border: 1px solid #e2e8f0;
+}
+
+.filtros-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+    margin-bottom: 16px;
+}
+
+.input-group {
+    flex: 1;
+    min-width: 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.input-group label {
+    font-size: 0.85rem;
+    color: var(--texto-suave);
+    font-weight: 500;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background-color: #f8fafc;
+    font-family: inherit;
+}
+
+.input-group input:focus,
+.input-group select:focus,
+.input-group textarea:focus {
+    outline: none;
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.full-width {
+    flex: 100%;
+}
+
+/* --- 7. LEYENDA --- */
+.leyenda {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.leyenda-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--texto-suave);
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* --- 8. PLANTAS Y HABITACIONES --- */
+.planta-section {
+    margin-bottom: 40px;
+}
+
+.planta-titulo {
+    font-size: 1.1rem;
+    color: var(--texto-principal);
+    font-weight: 600;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.habitaciones-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+/* --- 9. TARJETAS DE HABITACIÓN --- */
+.habitacion-card {
+    background: var(--fondo-tarjeta);
+    border-radius: var(--radio);
+    padding: 20px;
+    box-shadow: var(--sombra);
+    border: 1px solid #e2e8f0;
+    border-top: 4px solid #e2e8f0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.habitacion-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Colores por estado */
+.estado-libre {
+    border-top-color: var(--color-exito);
+}
+
+.estado-ocupada {
+    border-top-color: var(--color-peligro);
+}
+
+.estado-limpieza {
+    border-top-color: var(--color-aviso);
+}
+
+.estado-mantenimiento {
+    border-top-color: #94a3b8;
+}
+
+/* Dots de leyenda */
+.dot.estado-libre {
+    background-color: var(--color-exito);
+}
+
+.dot.estado-ocupada {
+    background-color: var(--color-peligro);
+}
+
+.dot.estado-limpieza {
+    background-color: var(--color-aviso);
+}
+
+.dot.estado-mantenimiento {
+    background-color: #94a3b8;
+}
+
+.hab-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hab-numero {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--texto-principal);
+}
+
+.hab-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+
+.estado-libre .hab-badge {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.estado-ocupada .hab-badge {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.estado-limpieza .hab-badge {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.estado-mantenimiento .hab-badge {
+    background-color: #f1f5f9;
+    color: #475569;
+}
+
+.hab-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hab-info p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--texto-suave);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hab-info i {
+    color: var(--color-primario);
+    width: 14px;
+}
+
+/* --- 10. ACCIONES DE HABITACIÓN --- */
+.hab-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.select-estado {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    background-color: #f8fafc;
+    cursor: pointer;
+}
+
+.btn-group {
+    display: flex;
+    gap: 8px;
+}
+
+/* --- 11. BOTONES --- */
+.btn-primary {
+    padding: 10px 20px;
+    background-color: var(--color-primario);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8;
+}
+
+.btn-secondary {
+    padding: 10px 20px;
+    background-color: #f1f5f9;
+    color: var(--texto-principal);
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+    align-self: flex-end;
+}
+
+.btn-secondary:hover {
+    background-color: #e2e8f0;
+}
+
+.btn-edit {
+    flex: 1;
+    padding: 8px;
+    background-color: var(--color-primario);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-edit:hover {
+    background-color: #1d4ed8;
+}
+
+.btn-delete {
+    padding: 8px 12px;
+    background-color: var(--color-peligro);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background-color 0.2s ease;
+}
+
+.btn-delete:hover {
+    background-color: #b91c1c;
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--texto-suave);
+    padding: 60px;
+    background: var(--fondo-tarjeta);
+    border-radius: var(--radio);
+    font-size: 1rem;
+}
+
+/* --- 12. MODAL --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: var(--fondo-tarjeta);
+    border-radius: var(--radio);
+    padding: 32px;
+    width: 100%;
+    max-width: 560px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h3 {
+    margin: 0 0 24px 0;
+    font-size: 1.25rem;
+    color: var(--texto-principal);
+}
+
+.form-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}

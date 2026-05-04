@@ -105,5 +105,17 @@ export class HabitacionService {
     
     return this.http.put(url, habitacion, { headers });
   }
+
+  editarHabitacion(id: number, habitacion: Habitacion): Observable<Habitacion> {
+    return this.http.put<Habitacion>(`${this.apiUrl}/${id}`, habitacion, { headers: this.getHeaders() });
+  }
+
+  eliminarHabitacion(id: number): Observable<any> {
+      return this.http.delete(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
+  }
+
+  cambiarEstado(id: number, estado: string): Observable<any> {
+      return this.http.patch(`${this.apiUrl}/${id}/estado`, { estado }, { headers: this.getHeaders() });
+  }
 }
   

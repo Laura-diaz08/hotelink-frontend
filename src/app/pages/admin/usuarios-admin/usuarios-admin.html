@@ -1,0 +1,174 @@
+<div class="admin-container">
+
+  <nav class="barra-lateral">
+    <div class="cabecera-logo">
+      <span class="texto-logo">Hote<span class="acento-logo">link</span></span>
+    </div>
+    <ul class="enlaces-nav">
+      <li><a routerLink="/admin"><i class="fas fa-chart-line"></i> Panel de Control</a></li>
+      <li><a routerLink="/admin/reservas"><i class="fas fa-calendar-alt"></i> Reservas</a></li>
+      <li><a routerLink="/admin/habitaciones"><i class="fas fa-bed"></i> Habitaciones</a></li>
+      <li><a routerLink="/admin/usuarios" class="activo"><i class="fas fa-users"></i> Usuarios</a></li>
+      <li><a routerLink="/admin/limpieza"><i class="fas fa-broom"></i> Limpieza</a></li>
+    </ul>
+    <div class="pie-nav">
+      <button class="btn-cerrar-sesion" (click)="cerrarSesion()">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+      </button>
+    </div>
+  </nav>
+
+  <main class="main-content">
+
+    <header class="topbar">
+      <h1>Gestión de Usuarios</h1>
+      <button class="btn-primary" (click)="abrirModalCrear()">+ Nuevo Usuario</button>
+    </header>
+
+    <div class="dashboard-body">
+
+      <div *ngIf="mensajeExito" class="alert success-alert">{{ mensajeExito }}</div>
+      <div *ngIf="mensajeError" class="alert error-alert">{{ mensajeError }}</div>
+
+      <!-- FILTROS -->
+      <section class="filtros-section">
+        <div class="filtros-grid">
+          <div class="input-group">
+            <label>Buscar por nombre</label>
+            <input type="text" [(ngModel)]="filtroNombre" (input)="filtrar()" placeholder="Nombre de usuario...">
+          </div>
+          <div class="input-group">
+            <label>Filtrar por rol</label>
+            <select [(ngModel)]="filtroRol" (change)="filtrar()">
+              <option value="">Todos los roles</option>
+              <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+            </select>
+          </div>
+          <button class="btn-secondary" (click)="limpiarFiltros()">Limpiar</button>
+        </div>
+      </section>
+
+      <!-- EMPLEADOS -->
+      <section class="admin-section">
+        <div class="section-header">
+          <h2>👷 Empleados ({{ getEmpleados().length }})</h2>
+        </div>
+        <div class="table-wrapper">
+          <table class="usuarios-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let u of getEmpleados()">
+                <td class="id-col">#{{ u.id }}</td>
+                <td><strong>{{ u.nombre }}</strong></td>
+                <td>{{ u.email }}</td>
+                <td>
+                  <span class="rol-badge" [ngClass]="getRolBadgeClass(u.rol)">
+                    {{ u.rol }}
+                  </span>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-edit" (click)="abrirModalEditar(u)">
+                      ✏️ Editar
+                    </button>
+                    <button class="btn-delete" (click)="eliminar(u)">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="getEmpleados().length === 0">
+                <td colspan="5" class="empty-state">No hay empleados registrados.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- CLIENTES -->
+      <section class="admin-section">
+        <div class="section-header">
+          <h2>👤 Clientes ({{ getClientes().length }})</h2>
+        </div>
+        <div class="table-wrapper">
+          <table class="usuarios-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let u of getClientes()">
+                <td class="id-col">#{{ u.id }}</td>
+                <td><strong>{{ u.nombre }}</strong></td>
+                <td>{{ u.email }}</td>
+                <td>
+                  <span class="rol-badge" [ngClass]="getRolBadgeClass(u.rol)">
+                    {{ u.rol }}
+                  </span>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-edit" (click)="abrirModalEditar(u)">
+                      ✏️ Editar
+                    </button>
+                    <button class="btn-delete" (click)="eliminar(u)">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="getClientes().length === 0">
+                <td colspan="5" class="empty-state">No hay clientes registrados.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" *ngIf="mostrarModal">
+  <div class="modal-content">
+    <h3>{{ modoEdicion ? 'Editar Usuario' : 'Nuevo Usuario' }}</h3>
+
+    <div class="form-grid">
+      <div class="input-group">
+        <label>Nombre de usuario</label>
+        <input type="text" [(ngModel)]="usuarioSeleccionado.nombre" placeholder="Nombre...">
+      </div>
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="usuarioSeleccionado.email" placeholder="Email...">
+      </div>
+      <div class="input-group">
+        <label>{{ modoEdicion ? 'Nueva contraseña (dejar vacío para no cambiar)' : 'Contraseña' }}</label>
+        <input type="password" [(ngModel)]="usuarioSeleccionado.password" placeholder="Contraseña...">
+      </div>
+      <div class="input-group" *ngIf="!modoEdicion">
+        <label>Rol</label>
+        <select [(ngModel)]="usuarioSeleccionado.rol">
+          <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-primary" (click)="guardar()">
+        {{ modoEdicion ? 'Guardar cambios' : 'Crear usuario' }}
+      </button>
+      <button class="btn-secondary" (click)="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
+</div>

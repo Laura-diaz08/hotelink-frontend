@@ -7,14 +7,21 @@ import { ServiciosComponent } from './pages/servicios/servicios';
 import { MisReservasComponent } from './pages/mis-reservas/mis-reservas';
 import { HabitacionesComponent } from './pages/habitaciones/habitaciones'; 
 import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-dashboard';
+import { HabitacionesAdmin } from './pages/admin/habitaciones-admin/habitaciones-admin';
+import { UsuariosAdmin } from './pages/admin/usuarios-admin/usuarios-admin';
+import { LimpiezaAdmin } from './pages/admin/limpieza-admin/limpieza-admin';
+
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'admin/reservas', component: ReservasAdminComponent }, 
   { path: 'admin', component: AdminDashboardComponent },
+  { path: 'admin/reservas', component: ReservasAdminComponent }, 
+  { path: 'admin/habitaciones', component: HabitacionesAdmin },
+  { path: 'admin/usuarios', component: UsuariosAdmin },
+  { path: 'admin/limpieza', component: LimpiezaAdmin },
   { path: 'home', component: UserDashboardComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'servicios-dashboard', component:  ServiciosComponent},   
+  { path: 'servicios-dashboard', component: ServiciosComponent },   
   { path: 'mis-reservas', component: MisReservasComponent },
   { path: 'habitaciones', component: HabitacionesComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' }
