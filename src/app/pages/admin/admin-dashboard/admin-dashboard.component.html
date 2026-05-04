@@ -1,0 +1,105 @@
+<div class="contenedor-admin">
+  
+  <nav class="barra-lateral">
+    <div class="cabecera-logo">
+      <span class="texto-logo">Hote<span class="acento-logo">link</span></span>
+    </div>
+    <ul class="enlaces-nav">
+      <li><a routerLink="/admin" class="activo"><i class="fas fa-chart-line"></i> Panel de Control</a></li>
+      <li><a routerLink="/admin/reservas"><i class="fas fa-calendar-alt"></i> Reservas</a></li>
+      <li><a routerLink="/admin/habitaciones"><i class="fas fa-bed"></i> Habitaciones</a></li>
+      <li><a routerLink="/admin/usuarios"><i class="fas fa-users"></i> Usuarios</a></li>
+      <li><a routerLink="/admin/limpieza"><i class="fas fa-broom"></i> Limpieza</a></li>
+    </ul>
+
+    <div class="pie-nav">
+    <button class="btn-cerrar-sesion" (click)="cerrarSesion()">
+      <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+    </button>
+  </div>
+  </nav>
+
+  <main class="contenido-principal">
+    
+    <header class="cabecera-dash">
+      <h1>VISTA GENERAL</h1>
+      <div class="acciones">
+        <input type="text" placeholder="Buscar..." class="buscador">
+      </div>
+    </header>
+
+    <div class="rejilla-stats">
+      <div class="tarjeta stat">
+        <label>Ocupación</label>
+        <span class="valor">{{ resumen.porcentajeOcupacion }}%</span>
+        
+        <div class="barra-progreso-fondo">
+          <div class="progreso-relleno" [style.width.%]="resumen.porcentajeOcupacion"></div>
+        </div>
+        
+        <small>{{ resumen.ocupadas }} de {{ resumen.total }} habitaciones</small>
+      </div>
+
+      <div class="tarjeta stat">
+        <label>Ingresos Hoy</label>
+        <span class="valor">{{ resumen.ingresosHoy }}€</span>
+      </div>
+      
+    </div>
+
+    <div class="fila-calendario-full">
+      <div class="tarjeta">
+        <h3>Calendario de Ocupación - {{ mesActual }}</h3>
+        
+        <div class="vista-calendario">
+          
+          <div class="fila-calendario cabecera-dias" style="min-width: 1100px;">
+            <span class="celda" style="min-width: 70px;">Hab</span>
+            <span class="celda" *ngFor="let dia of diasDelMes">
+              {{ dia }}
+            </span>
+          </div>
+
+          <div class="fila-calendario" *ngFor="let hab of habitacionesMes" style="min-width: 1100px;">
+            <span class="celda num-hab">{{ hab.numero }}</span>
+            
+            <span class="celda" 
+                  *ngFor="let diaInfo of hab.dias" 
+                  [ngClass]="{'ocupado': diaInfo.ocupado}">
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="rejilla-inferior-triple">
+      
+      <div class="tarjeta">
+        <h3><i class="fas fa-bell color-peligro"></i> Alertas</h3>
+        <div class="alerta critica">Hab 204: Avería Aire</div>
+        <div class="alerta aviso">Stock bajo: Amenities</div>
+      </div>
+
+      <div class="tarjeta">
+        <h3><i class="fas fa-list-ul color-primario"></i> Tareas de Limpieza</h3>
+        <ul class="lista-tareas-simple">
+          <li *ngIf="tareasLimpieza.length === 0">✅ Todo limpio. ¡Buen trabajo!</li>
+          
+          <li *ngFor="let habitacion of tareasLimpieza">
+            <input type="checkbox" (change)="marcarComoLimpia(habitacion)"> 
+            Limpiar Habitación {{ habitacion.numero }} ({{ habitacion.tipo }})
+          </li>
+        </ul>
+      </div>
+
+      <div class="tarjeta">
+        <h3><i class="fas fa-exchange-alt color-exito"></i> Movimientos</h3>
+        <div class="mov-item"><strong>L:</strong> F. García - 101</div>
+        <div class="mov-item"><strong>L:</strong> M. Sánchez - 203</div>
+        <div class="mov-item"><strong>S:</strong> Sr. Roberts - 202</div>
+      </div>
+
+    </div>
+  </main>
+</div>

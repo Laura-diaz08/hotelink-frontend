@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Habitacion } from '../interfaces/habitacion.interface'; 
 
 @Injectable({
@@ -10,6 +10,10 @@ export class HabitacionService {
   // Tu ruta de Spring Boot
   private apiUrl = 'http://localhost:8080/habitaciones';
 
+  private reservaCreadaSource = new Subject<void>();
+
+  reservaCreada$ = this.reservaCreadaSource.asObservable();
+
   constructor(private http: HttpClient) {}
 
   // Método auxiliar para meter el token en las peticiones
@@ -18,6 +22,10 @@ export class HabitacionService {
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
+  }
+
+  notificarCambioReserva() {
+    this.reservaCreadaSource.next();
   }
 
   // 1. Obtener todas las habitaciones
@@ -63,6 +71,39 @@ export class HabitacionService {
 
     // Al POST le pasamos: URL, datos que enviamos, y las cabeceras
     return this.http.post<any>(`${this.apiUrl}/${habitacionId}/reservar`, reservaData, { headers });
+  }
+
+  obtenerResumen(): Observable<any> {
+    const token = localStorage.getItem('token'); 
+    console.log('Token recuperado en el servicio:', token);
+    
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    // Cambia la ruta eliminando el prefijo duplicado
+    return this.http.get<any>(`${this.apiUrl}/admin/resumen`, { headers });
+  }
+
+  obtenerHabitacionesActualizadas(): Observable<any[]> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('token')}`);
+    // Llamamos al endpoint que acabamos de crear en el Controller
+    return this.http.get<any[]>('http://localhost:8080/habitaciones/actualizadas', { headers });
+  }
+
+  getReservas(): Observable<any[]> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('token')}`);
+    // Asegúrate de que esta URL coincida con tu endpoint en Spring Boot (por ejemplo, /reservas)
+    return this.http.get<any[]>('http://localhost:8080/reservas', { headers }); 
+  }
+
+  actualizarHabitacion(habitacion: any): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('token')}`);
+    
+    // Ajusta la URL si tu endpoint de actualización es diferente (por ejemplo, si usa /api/habitaciones)
+    const url = `http://localhost:8080/habitaciones/${habitacion.id || habitacion.numero}`;
+    
+    return this.http.put(url, habitacion, { headers });
   }
 }
   

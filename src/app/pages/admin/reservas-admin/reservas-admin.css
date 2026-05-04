@@ -1,0 +1,348 @@
+/* --- 1. VARIABLES Y CONFIGURACIÓN --- */
+:host {
+  --fondo-principal: #f1f5f9;
+  --fondo-tarjeta: #ffffff;
+  --fondo-lateral: #1e293b;
+  --texto-principal: #334155;
+  --texto-suave: #64748b;
+  --color-primario: #3b82f6;
+  --color-exito: #10b981;
+  --color-peligro: #ef4444;
+  --color-aviso: #f59e0b;
+  --radio: 12px;
+  --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* --- 2. ESTRUCTURA GLOBAL --- */
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--fondo-principal);
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* --- 3. BARRA LATERAL (SIDEBAR) --- */
+.barra-lateral {
+  width: 260px;
+  background-color: var(--fondo-lateral);
+  color: white;
+  padding: 25px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.cabecera-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding-bottom: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 20px;
+}
+
+.acento-logo {
+  color: var(--color-primario);
+}
+
+.enlaces-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+}
+
+.enlaces-nav li {
+  margin-bottom: 10px;
+}
+
+.enlaces-nav a {
+  color: #94a3b8;
+  text-decoration: none;
+  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 8px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.enlaces-nav a:hover,
+.enlaces-nav a.activo {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.enlaces-nav a.activo {
+  background: var(--color-primario);
+}
+
+.pie-nav {
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-cerrar-sesion {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--color-peligro);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-cerrar-sesion:hover {
+  background-color: #b91c1c;
+}
+
+/* --- 4. CONTENIDO PRINCIPAL --- */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.topbar {
+  background-color: var(--fondo-tarjeta);
+  border-bottom: 1px solid #cbd5e1;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topbar h1 {
+  font-size: 1.5rem;
+  color: var(--texto-principal);
+  margin: 0;
+}
+
+.topbar-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-logout {
+  background: var(--color-peligro);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-logout:hover {
+  background-color: #b91c1c;
+}
+
+.dashboard-body {
+  flex: 1;
+  padding: 30px;
+}
+
+/* --- 5. ALERTAS Y BUSCADOR --- */
+.alert {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.error-alert {
+  background-color: #fecaca;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.success-alert {
+  background-color: #a7f3d0;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+}
+
+.search-section {
+  background: var(--fondo-tarjeta);
+  padding: 24px;
+}
+
+.search-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+}
+
+.input-group {
+  flex: 1;
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-group label {
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+  font-weight: 500;
+}
+
+.input-group input, 
+.input-group select {
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background-color: #f8fafc;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.search-actions {
+  display: flex;
+}
+
+/* --- 6. SECCIONES Y TABLAS --- */
+.admin-section {
+  background: var(--fondo-tarjeta);
+  border-radius: var(--radio);
+  padding: 24px;
+  box-shadow: var(--sombra);
+  margin-bottom: 30px;
+  border: 1px solid #e2e8f0;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--texto-principal);
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.reservas-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.reservas-table th, 
+.reservas-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.reservas-table th {
+  background-color: #f8fafc;
+  color: var(--texto-suave);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.reservas-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.total-col {
+  font-weight: bold;
+  color: var(--texto-principal);
+  font-size: 0.95rem;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--texto-suave);
+  padding: 40px !important;
+}
+
+/* --- 7. BADGES DE ESTADO --- */
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.gold {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.status-badge.success {
+  background-color: #d1fae5;
+  color: #059669;
+}
+
+.status-badge.danger {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+/* --- 8. BOTONES --- */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-primary, 
+.btn-checkin, 
+.btn-checkout {
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  color: white;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--color-primario);
+}
+.btn-primary:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-checkin {
+  background-color: var(--color-aviso);
+}
+.btn-checkin:hover {
+  background-color: #d97706;
+}
+
+.btn-checkout {
+  background-color: var(--color-exito);
+}
+.btn-checkout:hover {
+  background-color: #059669;
+}

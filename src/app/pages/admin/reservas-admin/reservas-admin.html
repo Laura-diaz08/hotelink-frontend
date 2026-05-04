@@ -1,15 +1,22 @@
-<div class="admin-container">
+<!-- <div class="admin-container">
   
-  <nav class="sidebar">
-    <div class="sidebar-header">
-      <span class="logo-text">Hote<span class="logo-accent">link</span></span>
+  <nav class="barra-lateral">
+    <div class="cabecera-logo">
+      <span class="texto-logo">Hote<span class="acento-logo">link</span></span>
     </div>
-    <ul class="nav-links">
-      <li><a (click)="hacerScroll('seccion-reservas')" style="cursor: pointer;"><i class="fas fa-calendar-alt"></i> Reservas</a></li>
-      <li><a (click)="hacerScroll('seccion-habitaciones')" style="cursor: pointer;"><i class="fas fa-bed"></i> Habitaciones</a></li>
-      <li><a (click)="hacerScroll('seccion-usuarios')" style="cursor: pointer;"><i class="fas fa-users"></i> Usuarios</a></li>
-      <li><a (click)="hacerScroll('seccion-limpieza')" style="cursor: pointer;"><i class="fas fa-broom"></i> Tareas de Limpieza</a></li>
+    <ul class="enlaces-nav">
+      <li><a routerLink="/admin"><i class="fas fa-chart-line"></i> Panel de Control</a></li>
+      <li><a routerLink="/admin/reservas" class="activo"><i class="fas fa-calendar-alt"></i> Reservas</a></li>
+      <li><a routerLink="/admin/habitaciones"><i class="fas fa-bed"></i> Habitaciones</a></li>
+      <li><a routerLink="/admin/usuarios"><i class="fas fa-users"></i> Usuarios</a></li>
+      <li><a routerLink="/admin/limpieza"><i class="fas fa-broom"></i> Limpieza</a></li>
     </ul>
+
+    <div class="pie-nav">
+    <button class="btn-cerrar-sesion" (click)="cerrarSesion()">
+      <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+    </button>
+  </div>
   </nav>
 
   <main class="main-content">
@@ -274,6 +281,123 @@
             </tr>
           </tbody>
         </table>
+      </section>
+
+    </div>
+  </main>
+</div> -->
+
+
+<div class="admin-container">
+  
+  <nav class="barra-lateral">
+    <div class="cabecera-logo">
+      <span class="texto-logo">Hote<span class="acento-logo">link</span></span>
+    </div>
+    <ul class="enlaces-nav">
+      <li><a routerLink="/admin"><i class="fas fa-chart-line"></i> Panel de Control</a></li>
+      <li><a routerLink="/admin/reservas"  class="activo"><i class="fas fa-calendar-alt"></i> Reservas</a></li>
+      <li><a routerLink="/admin/habitaciones"><i class="fas fa-bed"></i> Habitaciones</a></li>
+      <li><a routerLink="/admin/usuarios"><i class="fas fa-users"></i> Usuarios</a></li>
+      <li><a routerLink="/admin/limpieza"><i class="fas fa-broom"></i> Limpieza</a></li>
+    </ul>
+
+    <div class="pie-nav">
+      <button class="btn-cerrar-sesion" (click)="cerrarSesion()">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+      </button>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    
+    <header class="topbar">
+      <h1>Listado de reservas</h1>
+      <div class="topbar-actions">
+        <button (click)="crearReserva()" class="btn-primary">+ Crear reserva</button>
+      </div>
+    </header>
+
+    <div class="dashboard-body">
+      
+      <div *ngIf="mensajeError" class="alert error-alert">{{ mensajeError }}</div>
+      <div *ngIf="mensajeExito" class="alert success-alert">{{ mensajeExito }}</div>
+
+      <section class="admin-section search-section">
+        <div class="section-header">
+          <h2>🔍 Buscador de reservas</h2>
+        </div>
+        <div class="search-grid">
+          <div class="input-group">
+            <label>Reserva</label>
+            <input type="text" [(ngModel)]="filtroReserva" placeholder="Buscar número...">
+          </div>
+          <div class="input-group">
+            <label>Fecha inicio</label>
+            <input type="date" [(ngModel)]="filtroFechaInicio">
+          </div>
+          <div class="input-group">
+            <label>Fecha fin</label>
+            <input type="date" [(ngModel)]="filtroFechaFin">
+          </div>
+          <div class="input-group">
+            <label>Cliente</label>
+            <input type="text" [(ngModel)]="filtroCliente" placeholder="Nombre cliente...">
+          </div>
+          <div class="search-actions">
+            <button class="btn-primary" (click)="buscarReservas()">Buscar</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-section">
+        <div class="section-header">
+          <h2>📋 Todas las reservas</h2>
+        </div>
+        
+        <div class="table-wrapper">
+          <table class="reservas-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Fecha</th>
+                <th>Habitación</th>
+                <th>Estado</th>
+                <th>Total</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let reserva of reservasFiltradas">
+                <td><strong>{{ reserva.nombreUsuario }}</strong></td>
+                <td>{{ reserva.fechaEntrada | date:'dd/MM/yyyy' }} → {{ reserva.fechaSalida | date:'dd/MM/yyyy' }}</td>
+                <td>{{ reserva.numeroHabitacion || 'N/A' }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="{
+                    'gold': reserva.estado === 'PENDIENTE' || reserva.estado === 'RESERVADO',
+                    'success': reserva.estado === 'CHECK_IN' || reserva.estado === 'COMPLETADO',
+                    'danger': reserva.estado === 'CANCELADO'
+                  }">
+                    {{ reserva.estado }}
+                  </span>
+                </td>
+                <td class="total-col">
+                  {{ reserva.total | number:'1.2-2' }} €
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-primary" (click)="editarReserva(reserva)">Editar</button>
+                    <button class="btn-checkin" *ngIf="reserva.estado === 'PENDIENTE'" (click)="hacerCheckIn(reserva.id)">Check-In</button>
+                    <button class="btn-checkout" *ngIf="reserva.estado === 'CHECK_IN'" (click)="realizarCheckOut(reserva.id)">Check-Out</button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="!reservasFiltradas || reservasFiltradas.length === 0">
+                <td colspan="6" class="empty-state">No hay reservas registradas en este momento.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
     </div>

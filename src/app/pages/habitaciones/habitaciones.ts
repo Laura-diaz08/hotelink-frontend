@@ -129,6 +129,10 @@ export class HabitacionesComponent implements OnInit {
     this.habitacionService.reservarHabitacion(this.habitacionSeleccionadaId, datosReserva).subscribe({
       next: (respuesta) => {
         alert("¡Reserva completada con éxito!");
+        
+        // 1. Notificamos al calendario que la reserva se creó
+        this.habitacionService.notificarCambioReserva();
+        
         this.cerrarModal();
       },
       error: (err) => {
@@ -147,7 +151,7 @@ export class HabitacionesComponent implements OnInit {
     if (!this.fechaInicio || !this.fechaFin) {
       alert("⚠️ Por favor, selecciona las fechas de entrada y salida antes de reservar.");
       console.error("Error: Las fechas están vacías", { inicio: this.fechaInicio, fin: this.fechaFin });
-      return; // Cancelamos la operación aquí mismo
+      return;
     }
 
     const clienteId = Number(localStorage.getItem('id'));
@@ -161,10 +165,13 @@ export class HabitacionesComponent implements OnInit {
     this.habitacionService.reservarHabitacion(habitacionId, datosReserva).subscribe({
       next: (respuesta) => {
         alert("¡Reserva completada con éxito!");
+        
+        // 2. Notificamos también aquí por si es esta la vía que se utiliza
+        this.habitacionService.notificarCambioReserva();
+
         this.habitacionesDisponibles = []; 
         this.fechaInicio = '';
         this.fechaFin = '';
-        // this.cargarMisReservas(clienteId); 
       },
       error: (err) => {
         console.error(err);
