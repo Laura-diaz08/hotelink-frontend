@@ -177,6 +177,39 @@ export class MisReservasComponent implements OnInit {
     }
   }
 
+  getReservasActivas(): any[] {
+    return this.misReservasHabitaciones.filter(r => r.estado !== 'COMPLETADA' && r.estado !== 'CANCELADA');
+  }
+
+  getReservasCompletadas(): any[] {
+    return this.misReservasHabitaciones.filter(r => r.estado === 'COMPLETADA' || r.estado === 'CANCELADA');
+  }
+
+  getServiciosActivos(): any[] {
+    return this.misReservasServicios.filter(s => s.estado !== 'COMPLETADA');
+  }
+
+  getServiciosCompletados(): any[] {
+    return this.misReservasServicios.filter(s => s.estado === 'COMPLETADA');
+  }
+
+  calcularNoches(entrada: string, salida: string): number {
+    if (!entrada || !salida) return 0;
+    const inicio = new Date(entrada);
+    const fin = new Date(salida);
+    return Math.ceil((fin.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24));
+  }
+
+  getEstadoBadge(estado: string): string {
+    switch (estado?.toUpperCase()) {
+      case 'CONFIRMADA': return 'badge-confirmada';
+      case 'CHECKIN': return 'badge-checkin';
+      case 'COMPLETADA': return 'badge-completed';
+      case 'CANCELADA': return 'badge-cancelada';
+      default: return 'badge-pending';
+    }
+  }
+
   cerrarSesion() {
     localStorage.clear();
     this.router.navigate(['/login']);

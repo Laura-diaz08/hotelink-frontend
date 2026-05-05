@@ -24,7 +24,8 @@
     <header class="topbar">
       <h1>Listado de reservas</h1>
       <div class="topbar-actions">
-        <button (click)="crearReserva()" class="btn-primary">+ Crear reserva</button>
+        <!-- <button (click)="crearReserva()" class="btn-primary">+ Crear reserva</button> -->
+         <button (click)="cargarReservas()" class="btn-primary">Recargar</button>
       </div>
     </header>
 
@@ -96,9 +97,13 @@
                 </td>
                 <td>
                   <div class="action-buttons">
-                    <button class="btn-primary" (click)="editarReserva(reserva)">Editar</button>
-                    <button class="btn-checkin" *ngIf="reserva.estado === 'PENDIENTE'" (click)="hacerCheckIn(reserva.id)">Check-In</button>
-                    <button class="btn-checkout" *ngIf="reserva.estado === 'CHECK_IN'" (click)="realizarCheckOut(reserva.id)">Check-Out</button>
+                    <!-- <button class="btn-primary" (click)="editarReserva(reserva)">Editar</button> -->
+                     <button class="btn-primary" disabled>Editar</button>
+                    <button class="btn-cargos" (click)="abrirModalCargos(reserva)">
+                      <i class="fas fa-shopping-cart"></i> Cargos
+                    </button>
+                    <button class="btn-checkin" *ngIf="reserva.estado === 'CONFIRMADA'" (click)="hacerCheckIn(reserva.id)">Check-In</button>
+                    <button class="btn-checkout" *ngIf="reserva.estado === 'CHECKIN'" (click)="realizarCheckOut(reserva.id)">Check-Out</button>
                   </div>
                 </td>
               </tr>
@@ -112,4 +117,97 @@
 
     </div>
   </main>
+</div>
+
+<!-- MODAL CARGOS -->
+<div class="modal-overlay" *ngIf="mostrarModalCargos">
+  <div class="modal-content modal-cargos">
+    <button class="btn-close-modal" (click)="cerrarModalCargos()">✖</button>
+
+    <h3>Cargos de la Reserva</h3>
+    <p class="modal-desc">
+      {{ reservaSeleccionada?.nombreUsuario }} · Hab. {{ reservaSeleccionada?.numeroHabitacion }}
+    </p>
+
+    <!-- AÑADIR CARGO -->
+    <div class="cargo-form">
+      <h4>Añadir cargo</h4>
+      <div class="cargo-form-grid">
+        <div class="input-group">
+          <label>Artículo</label>
+          <select [(ngModel)]="cargoArticuloId">
+            <option value="">Selecciona artículo...</option>
+            <option *ngFor="let a of articulos" [value]="a.id">
+              {{ a.nombre }} - {{ a.precio }}€
+            </option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Cantidad</label>
+          <input type="number" [(ngModel)]="cargoCantidad" min="1" value="1">
+        </div>
+        <button class="btn-primary" (click)="agregarCargo()">
+          <i class="fas fa-plus"></i> Añadir
+        </button>
+      </div>
+    </div>
+
+    <!-- SERVICIOS DE LA ESTANCIA -->
+    <div class="cargos-lista" *ngIf="citasReserva.length > 0">
+      <h4>Servicios durante la estancia</h4>
+      <div class="cargo-item" *ngFor="let c of citasReserva">
+        <div class="cargo-info">
+          <span class="cargo-nombre">{{ c.servicio?.nombre }}</span>
+          <span class="cargo-detalle">
+            {{ c.fechaHoraCita | date:'dd/MM/yyyy HH:mm' }}
+          </span>
+          <span class="cargo-fecha">{{ c.estado }}</span>
+        </div>
+        <span class="cargo-precio">{{ c.servicio?.precio }}€</span>
+      </div>
+    </div>
+
+    <!-- ARTÍCULOS CARGADOS -->
+    <div class="cargos-lista">
+      <h4>Artículos cargados</h4>
+      <div *ngIf="cargosReserva.length === 0" class="empty-cargos">
+        No hay artículos registrados para esta reserva.
+      </div>
+      <div class="cargo-item" *ngFor="let c of cargosReserva">
+        <div class="cargo-info">
+          <span class="cargo-nombre">{{ c.articulo?.nombre }}</span>
+          <span class="cargo-detalle">
+            {{ c.cantidad }} x {{ c.precioUnitario }}€ = {{ c.cantidad * c.precioUnitario }}€
+          </span>
+          <span class="cargo-fecha">{{ c.fechaCargo | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <button class="btn-delete" (click)="eliminarCargo(c.id)">🗑️</button>
+      </div>
+    </div>
+
+    <!-- RESUMEN TOTAL -->
+    <div class="cargo-total">
+      <div class="total-fila">
+        <span>Habitación ({{ calcularNoches(reservaSeleccionada) }} noches)</span>
+        <span>{{ calcularNoches(reservaSeleccionada) * (reservaSeleccionada?.precioHabitacion || 0) }}€</span>
+      </div>
+      <div class="total-fila" *ngIf="citasReserva.length > 0">
+        <span>Servicios ({{ citasReserva.length }})</span>
+        <span>{{ totalServicios }}€</span>
+      </div>
+      <div class="total-fila" *ngFor="let c of citasReserva">
+        <span>· {{ c.servicio?.nombre }}</span>
+        <span>{{ c.servicio?.precio }}€</span>
+      </div>
+      <div class="total-fila" *ngIf="cargosReserva.length > 0">
+        <span>Artículos adicionales</span>
+        <span>{{ totalArticulos }}€</span>
+      </div>
+      <div class="total-fila total-final">
+        <span>TOTAL ESTIMADO</span>
+        <span>{{ (calcularNoches(reservaSeleccionada) * (reservaSeleccionada?.precioHabitacion || 0)) + totalCargos }}€</span>
+      </div>
+    </div>
+
+  </div>
 </div>

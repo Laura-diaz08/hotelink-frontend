@@ -9,6 +9,7 @@ import { ReservaService } from '../../services/reserva';
 import { ServicioService } from '../../services/servicio';
 import { Servicio } from '../../interfaces/servicio.interface';
 import { CitaService } from '../../services/cita';
+import { OpinionService } from '../../services/opinion';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -19,24 +20,38 @@ import { CitaService } from '../../services/cita';
 })
 export class UserDashboardComponent implements OnInit {
 
-  // --- VARIABLES DE HABITACIONES ---
   misReservas: any[] = []; 
   habitacionesDisponibles: Habitacion[] = [];
   fechaInicio: string = '';
   fechaFin: string = '';
   mensajeReserva: string = '';
-  habitaciones:  Habitacion[] = [];
-
-  // Variable para guardar el catálogo de Spa, Gimnasio, etc.
+  habitaciones: Habitacion[] = [];
   catalogoServicios: Servicio[] = [];
+  opiniones: any[] = [];
 
-  // Variables para el Modal de Servicios
   mostrarModalServicio: boolean = false;
   servicioSeleccionado: Servicio | null = null;
   fechaCita: string = '';
   horaCita: string = '';
-
   misReservasServicios: any[] = [];
+
+  slideActual: number = 0;
+  totalSlides: number = 3;
+
+  imagenesHabitaciones: { [key: string]: string } = {
+    'Sencilla': 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80',
+    'Doble': 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80',
+    'Suite': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80'
+  };
+
+  imagenesServicios: { [key: string]: string } = {
+    'Gimnasio': 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80',
+    'Masaje Relajante': 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=600&q=80',
+    'Circuito Spa': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80',
+    'Cena Romántica': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80',
+    'Traslado Aeropuerto': 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80',
+    'Alquiler de Bicicletas': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80'
+  };
 
   constructor(
     private router: Router,
@@ -44,108 +59,59 @@ export class UserDashboardComponent implements OnInit {
     private reservaService: ReservaService, 
     private servicioService: ServicioService,
     private citaService: CitaService,
+    private opinionService: OpinionService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     const idString = localStorage.getItem('id');
-    
     if (!idString) {
       this.cerrarSesion();
       return;
     }
-
-    const clienteId = Number(idString);
-    // Cargamos las reservas de habitaciones
-    // this.cargarMisReservas(clienteId);
-    // Cargamos el catálogo de servicios 
     this.cargarServicios();
     this.cargarHabitaciones();
+    this.cargarOpiniones();
   }
 
-  // cargarMisReservas(clienteId: number) {
-  //   const idCliente = Number(localStorage.getItem('id'));
+  getImagenHabitacion(tipo: string): string {
+    return this.imagenesHabitaciones[tipo] || 
+      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80';
+  }
 
-  //   // 1. Cargar reservas de habitaciones
-  //   this.reservaService.obtenerReservasPorCliente(idCliente).subscribe({
-  //     next: (data) => this.misReservas = data,
-  //     error: (e) => console.error("Error cargando habitaciones", e)
-  //   });
+  getImagenServicio(nombre: string): string {
+    return this.imagenesServicios[nombre] || 
+      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80';
+  }
 
-  //   // 2. Cargar citas de servicios (Spas, Gym, etc.)
-  //   // Nota: Asegúrate de añadir el método 'obtenerPorCliente' en tu CitaService de Java/Angular
-  //   this.citaService.obtenerPorCliente(idCliente).subscribe({
-  //     next: (data) => this.misReservasServicios = data,
-  //     error: (e) => console.error("Error cargando servicios", e)
-  //   });
-  // }
+  getEstrellas(n: number): string[] {
+    return Array(5).fill('').map((_, i) => i < n ? 'fas fa-star' : 'far fa-star');
+  }
 
-  buscarHabitaciones() {
-    if (!this.fechaInicio || !this.fechaFin) {
-      this.mensajeReserva = "Por favor, selecciona ambas fechas.";
-      return;
-    }
-
-    this.mensajeReserva = "Buscando...";
-    this.habitacionService.buscarDisponibles(this.fechaInicio, this.fechaFin).subscribe({
+  cargarOpiniones(): void {
+    this.opinionService.getOpiniones().subscribe({
       next: (data) => {
-        this.habitacionesDisponibles = data;
-        this.mensajeReserva = data.length > 0 ? "¡Habitaciones encontradas!" : "No hay habitaciones libres en esas fechas.";
+        this.opiniones = data.slice(0, 3);
         this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.error(err);
-        this.mensajeReserva = "Error al buscar habitaciones.";
-      }
+      error: (e) => console.error('Error cargando opiniones', e)
     });
   }
 
-  hacerReserva(habitacionId: number | undefined) {
-    if (!habitacionId) {
-      console.error("Error: La habitación no tiene ID");
-      return; 
-    }
-
-    const clienteId = Number(localStorage.getItem('id'));
-    
-    const datosReserva = {
-      clienteId: clienteId,
-      fechaInicio: this.fechaInicio,
-      fechaFin: this.fechaFin
-    };
-
-    this.habitacionService.reservarHabitacion(habitacionId, datosReserva).subscribe({
-      next: (respuesta) => {
-        alert("¡Reserva completada con éxito!");
-        this.habitacionesDisponibles = []; 
-        this.fechaInicio = '';
-        this.fechaFin = '';
-        // this.cargarMisReservas(clienteId); 
-      },
-      error: (err) => {
-        console.error(err);
-        alert("Hubo un problema al hacer la reserva.");
-      }
-    });
-  }
-
-  
   cargarServicios() {
     this.servicioService.getServicios().subscribe({
       next: (data) => {
-        this.catalogoServicios = data;
-        this.cdr.detectChanges(); // Forzamos actualización visual por si acaso
+        this.catalogoServicios = data.slice(0, 3);
+        this.cdr.detectChanges();
       },
-      error: (err) => console.error('Error al cargar el catálogo de servicios', err)
+      error: (err) => console.error('Error al cargar servicios', err)
     });
   }
-
-  // --- LÓGICA DEL MODAL DE SERVICIOS ---
 
   abrirModalReserva(servicio: Servicio) {
     this.servicioSeleccionado = servicio;
     this.mostrarModalServicio = true;
-    this.fechaCita = ''; // Limpiamos campos
+    this.fechaCita = '';
     this.horaCita = '';
   }
 
@@ -162,35 +128,30 @@ export class UserDashboardComponent implements OnInit {
 
     const minutos = this.horaCita.split(':')[1];
     if (minutos !== '00' && minutos !== '30') {
-      alert("⚠️ Solo se permiten reservas a horas en punto (ej: 10:00) o y media (ej: 10:30).");
+      alert("⚠️ Solo se permiten reservas a horas en punto o y media.");
       return;
     }
 
     const idCliente = Number(localStorage.getItem('id'));
     const idServicio = this.servicioSeleccionado?.id;
-    
-    // Unimos la fecha y la hora 
     const fechaHoraCita = `${this.fechaCita}T${this.horaCita}:00`;
 
     const nuevaCita = {
       usuario: { id: idCliente },  
       servicio: { id: idServicio }, 
-      fechaHoraCita: fechaHoraCita
+      fechaHoraCita
     };
 
-    // Llamamos al backend para guardarlo
     this.citaService.crearCita(nuevaCita).subscribe({
-      next: (respuesta) => {
+      next: () => {
         alert(`¡Reserva confirmada! Te esperamos el ${this.fechaCita} a las ${this.horaCita}.`);
         this.cerrarModal();
       },
       error: (err) => {
-        console.error("Error devuelto por el servidor:", err);
-        // Si Java nos mandó nuestro mensaje de error personalizado (Aforo completo)
-        if (err.status === 400 && err.error && err.error.error) {
+        if (err.status === 400 && err.error?.error) {
           alert("❌ " + err.error.error);
         } else {
-          alert("Hubo un problema al hacer la reserva. Inténtalo de nuevo.");
+          alert("Hubo un problema al hacer la reserva.");
         }
       }
     });
@@ -199,13 +160,23 @@ export class UserDashboardComponent implements OnInit {
   cargarHabitaciones() {
     this.habitacionService.getHabitaciones().subscribe({
       next: (data: Habitacion[]) => {
-        this.habitaciones = data.slice(-3); 
+        this.habitaciones = data.slice(0, 3); 
         this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.error('Error cargando habitaciones en Home', err);
-      }
+      error: (err) => console.error('Error cargando habitaciones', err)
     });
+  }
+
+  nextSlide(): void {
+    this.slideActual = (this.slideActual + 1) % this.totalSlides;
+  }
+
+  prevSlide(): void {
+    this.slideActual = (this.slideActual - 1 + this.totalSlides) % this.totalSlides;
+  }
+
+  irASlide(index: number): void {
+    this.slideActual = index;
   }
 
   cerrarSesion() {

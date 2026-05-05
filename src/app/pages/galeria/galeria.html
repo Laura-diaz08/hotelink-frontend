@@ -1,0 +1,67 @@
+<div class="galeria-wrapper" (keydown)="onKeydown($event)" tabindex="0">
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <div class="page-hero-content">
+      <h1 class="page-title">GALERÍA</h1>
+      <div class="title-divider"></div>
+      <p class="page-subtitle">Descubre los espacios y rincones de Hotelink</p>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- FILTROS -->
+    <div class="filtros-categorias">
+      <button *ngFor="let cat of categorias"
+              class="btn-categoria"
+              [class.activo]="categoriaActiva === cat"
+              (click)="filtrar(cat)">
+        {{ cat }}
+      </button>
+    </div>
+
+    <!-- CONTADOR -->
+    <div class="galeria-contador">
+      <span>{{ imagenesFiltradas.length }} fotografías</span>
+    </div>
+
+    <!-- GRID -->
+    <div class="galeria-grid">
+      <div class="galeria-item"
+           *ngFor="let img of imagenesFiltradas; let i = index"
+           (click)="abrirLightbox(i)">
+        <img [src]="img.url" [alt]="img.titulo" loading="lazy">
+        <div class="galeria-overlay">
+          <div class="galeria-info">
+            <span class="galeria-categoria">{{ img.categoria }}</span>
+            <h3 class="galeria-titulo">{{ img.titulo }}</h3>
+          </div>
+          <i class="fas fa-expand galeria-expand"></i>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox-overlay" *ngIf="lightboxAbierto" (click)="cerrarLightbox()">
+  <div class="lightbox-content" (click)="$event.stopPropagation()">
+
+    <button class="lightbox-close" (click)="cerrarLightbox()">✖</button>
+
+    <button class="lightbox-control prev" (click)="anterior()">❮</button>
+    <button class="lightbox-control next" (click)="siguiente()">❯</button>
+
+    <img [src]="imagenesFiltradas[imagenActual]?.url"
+         [alt]="imagenesFiltradas[imagenActual]?.titulo"
+         class="lightbox-imagen">
+
+    <div class="lightbox-footer">
+      <span class="lightbox-titulo">{{ imagenesFiltradas[imagenActual]?.titulo }}</span>
+      <span class="lightbox-contador">{{ imagenActual + 1 }} / {{ imagenesFiltradas.length }}</span>
+    </div>
+
+  </div>
+</div>

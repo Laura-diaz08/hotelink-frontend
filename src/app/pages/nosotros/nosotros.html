@@ -1,0 +1,108 @@
+<div class="nosotros-wrapper">
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <div class="page-hero-content">
+      <h1 class="page-title">NUESTRA HISTORIA</h1>
+      <div class="title-divider"></div>
+      <p class="page-subtitle">Desde 2010, creando experiencias únicas en el corazón de Cádiz</p>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- HISTORIA -->
+    <section class="historia-section">
+      <div class="historia-imagen">
+        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&q=80" alt="Hotel Hotelink">
+        <div class="historia-imagen-overlay">
+          <span>Cádiz, España · Est. 2010</span>
+        </div>
+      </div>
+
+      <div class="historia-grid">
+        <div class="historia-card">
+          <h3>Nuestros Orígenes</h3>
+          <p>Hotelink nació en 2010 en el corazón de Cádiz, fundado por la familia Díaz con la visión de crear un refugio de lujo accesible. Lo que comenzó como un pequeño establecimiento de 20 habitaciones se ha convertido en un referente de hospitalidad moderna en la costa gaditana.</p>
+          <p>Cada rincón del hotel ha sido diseñado con mimo y atención al detalle, respetando la esencia andaluza mientras se integran las comodidades más contemporáneas.</p>
+        </div>
+        <div class="historia-card">
+          <h3>Nuestra Misión</h3>
+          <p>Ofrecemos experiencias únicas que combinan el lujo contemporáneo con la calidez del trato personal, haciendo que cada huésped se sienta en casa desde el primer momento.</p>
+          <p>Creemos que la verdadera hospitalidad va más allá de una cama cómoda: es crear momentos que perduran en la memoria, conexiones auténticas y una atención que anticipa cada necesidad.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats-section">
+      <div class="stats-grid">
+        <div class="stat-item" *ngFor="let stat of stats">
+          <span class="stat-numero">{{ stat.numero }}</span>
+          <span class="stat-label">{{ stat.label }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- VALORES -->
+    <section class="valores-section">
+      <div class="section-title-group centered">
+        <p class="section-pretitle">Lo que nos define</p>
+        <h2 class="section-title">NUESTROS VALORES</h2>
+        <div class="title-divider-small"></div>
+      </div>
+
+      <div class="valores-grid">
+        <div class="valor-card" *ngFor="let v of valores">
+          <div class="valor-icono">
+            <i [class]="v.icono"></i>
+          </div>
+          <h3>{{ v.titulo }}</h3>
+          <p>{{ v.descripcion }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- EQUIPO -->
+    <section class="equipo-section">
+      <div class="section-title-group centered">
+        <p class="section-pretitle">Las personas detrás de Hotelink</p>
+        <h2 class="section-title">NUESTRO EQUIPO</h2>
+        <div class="title-divider-small"></div>
+      </div>
+
+      <div class="equipo-grid">
+        <div class="equipo-card" *ngFor="let m of equipo" [class.fundadora]="m.esFundadora">
+          <div class="equipo-foto-wrapper">
+            <img [src]="m.foto" 
+                [alt]="m.nombre" 
+                class="equipo-foto"
+                onerror="this.src='https://i.pravatar.cc/300?img=1'">
+            <div class="equipo-foto-overlay" *ngIf="m.esFundadora">
+              <span>Fundadora</span>
+            </div>
+          </div>
+          <div class="equipo-info">
+            <h3>{{ m.nombre }}</h3>
+            <span class="equipo-cargo">{{ m.cargo }}</span>
+            <p>{{ m.descripcion }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section class="cta-section">
+      <div class="cta-content">
+        <p class="cta-pretitle">Te esperamos</p>
+        <h2>¿Listo para vivir la experiencia Hotelink?</h2>
+        <p class="cta-desc">Reserva tu estancia y descubre por qué somos el destino favorito de miles de viajeros en Cádiz.</p>
+        <div class="cta-buttons">
+          <button class="btn-cta-primary" routerLink="/habitaciones">Ver habitaciones</button>
+          <button class="btn-cta-secondary" routerLink="/servicios-dashboard">Nuestros servicios</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>

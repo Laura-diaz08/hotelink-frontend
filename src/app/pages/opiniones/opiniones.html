@@ -1,0 +1,123 @@
+<div class="opiniones-wrapper">
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <div class="page-hero-content">
+      <h1 class="page-title">OPINIONES</h1>
+      <div class="title-divider"></div>
+      <p class="page-subtitle">Lo que dicen nuestros huéspedes sobre su experiencia</p>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- ESTADÍSTICAS -->
+    <section class="stats-section" *ngIf="estadisticas || opinionesInventadas.length > 0">
+      <div class="stats-media">
+        <span class="media-numero">{{ getMediaReal() }}</span>
+        <div class="media-estrellas">
+            <i *ngFor="let i of [1,2,3,4,5]" 
+                class="fas fa-star"
+                [style.color]="i <= getMediaReal() ? '#c9a84c' : 'rgba(255,255,255,0.2)'">
+            </i>
+        </div>
+        <span class="media-total">Basado en {{ getTotalReal() }} opiniones</span>
+      </div>
+
+      <div class="stats-distribucion">
+        <div class="distribucion-fila" *ngFor="let n of [5,4,3,2,1]">
+          <span class="dist-label">{{ n }} <i class="fas fa-star"></i></span>
+          <div class="dist-barra-container">
+            <div class="dist-barra" [style.width.%]="getPorcentajeEstrellas(n)"></div>
+          </div>
+          <span class="dist-porcentaje">{{ getPorcentajeEstrellas(n) }}%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORMULARIO -->
+    <section class="formulario-section" *ngIf="puedeOpinar">
+      <div class="formulario-card">
+        <div class="card-titulo">
+          <i class="fas fa-pen"></i>
+          <h3>Deja tu opinión</h3>
+        </div>
+
+        <div *ngIf="mensajeExito" class="alert success-alert">
+          <i class="fas fa-check-circle"></i> {{ mensajeExito }}
+        </div>
+        <div *ngIf="mensajeError" class="alert error-alert">
+          <i class="fas fa-exclamation-circle"></i> {{ mensajeError }}
+        </div>
+
+        <div class="estrellas-selector">
+          <label>Tu valoración</label>
+          <div class="estrellas-input">
+            <i *ngFor="let i of [1,2,3,4,5]"
+               class="fa-star"
+               [class.fas]="i <= (estrellasHover || nuevaEstrellas)"
+               [class.far]="i > (estrellasHover || nuevaEstrellas)"
+               (mouseenter)="setHover(i)"
+               (mouseleave)="setHover(0)"
+               (click)="setEstrellas(i)">
+            </i>
+          </div>
+        </div>
+
+        <div class="form-grupo">
+          <label>Tu comentario</label>
+          <textarea [(ngModel)]="nuevoComentario" rows="4"
+                    placeholder="Comparte tu experiencia en Hotelink..."></textarea>
+        </div>
+
+        <button class="btn-enviar" (click)="enviarOpinion()" [disabled]="enviando">
+          <i class="fas fa-paper-plane"></i>
+          {{ enviando ? 'Enviando...' : 'Publicar opinión' }}
+        </button>
+      </div>
+    </section>
+
+    <div class="no-puede-opinar" *ngIf="!puedeOpinar">
+      <i class="fas fa-info-circle"></i>
+      Solo los huéspedes que han completado una estancia pueden dejar una opinión.
+    </div>
+
+    <!-- OPINIONES -->
+    <section class="opiniones-section">
+      <div class="section-title-group">
+        <p class="section-pretitle">Experiencias reales</p>
+        <h2 class="section-title">TODAS LAS OPINIONES</h2>
+        <div class="title-divider-small"></div>
+      </div>
+
+      <div *ngIf="cargando" class="empty-state">
+        <p>Cargando opiniones...</p>
+      </div>
+
+      <div class="opiniones-grid" *ngIf="!cargando">
+        <div class="opinion-card" *ngFor="let o of getTodasLasOpiniones()">
+          <div class="opinion-header">
+            <div class="opinion-avatar">
+              {{ o.usuario?.nombre?.charAt(0)?.toUpperCase() }}
+            </div>
+            <div class="opinion-autor">
+              <strong>{{ o.usuario?.nombre }}</strong>
+              <span>{{ o.fecha | date:'MMMM yyyy' }}</span>
+            </div>
+            <div class="opinion-estrellas">
+              <i *ngFor="let e of getEstrellas(o.estrellas)"
+                 [class]="e"></i>
+            </div>
+          </div>
+          <p class="opinion-texto">{{ o.comentario }}</p>
+        </div>
+      </div>
+
+      <div *ngIf="!cargando && getTodasLasOpiniones().length === 0" class="empty-state">
+        <i class="fas fa-comment-slash empty-icon"></i>
+        <p>Aún no hay opiniones. ¡Sé el primero en opinar!</p>
+      </div>
+    </section>
+
+  </div>
+</div>

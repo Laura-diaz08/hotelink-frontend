@@ -1,106 +1,134 @@
 <div class="user-wrapper">
 
+  <!-- HEADER DE PÁGINA -->
+  <div class="page-hero">
+    <div class="page-hero-content">
+      <h1 class="page-title">NUESTRAS HABITACIONES</h1>
+      <div class="title-divider"></div>
+      <p class="page-subtitle">Encuentra el espacio perfecto para tu estancia</p>
+    </div>
+  </div>
+
   <div class="container main-content">
-    
-    <h2 class="page-title">HABITACIONES</h2>
 
-    <div class="habitaciones-layout">
-      
-      <aside class="filtros-sidebar">
-        <h3>Filtros</h3>
-
-        <div class="input-group">
-          <label>Tipo de Habitación</label>
+    <!-- FILTROS HORIZONTALES -->
+    <div class="filtros-bar">
+      <div class="filtros-inputs">
+        <div class="filtro-item">
+          <label>Tipo</label>
           <select [(ngModel)]="filtroTipo">
-            <option value="">Todas</option>
+            <option value="">Todos</option>
+            <option value="Sencilla">Sencilla</option>
             <option value="Doble">Doble</option>
             <option value="Suite">Suite</option>
-            <option value="Familiar">Familiar</option>
           </select>
         </div>
-
-        <div class="input-group">
-          <label>Precio Máximo (€)</label>
-          <input type="number" [(ngModel)]="filtroPrecioMax" placeholder="Ej: 100">
+        <div class="filtro-item">
+          <label>Precio máx. (€)</label>
+          <input type="number" [(ngModel)]="filtroPrecioMax" placeholder="Sin límite">
         </div>
-
-        <div class="input-group">
-            <label>Huéspedes (Min.)</label>
-            <input type="number" [(ngModel)]="filtroCapacidad" placeholder="Ej: 2" (input)="aplicarFiltros()">
+        <div class="filtro-item">
+          <label>Huéspedes mín.</label>
+          <input type="number" [(ngModel)]="filtroCapacidad" placeholder="Cualquiera" (input)="aplicarFiltros()">
         </div>
-
-        <div class="filtros-actions">
-          <button class="btn-outline" (click)="limpiarFiltros()">Limpiar</button>
-          <button class="btn-search btn-aplicar" (click)="aplicarFiltros()">Aplicar</button>
-        </div>
-      </aside>
-
-      <section class="habitaciones-lista">
-        
-        <div *ngIf="cargando" class="empty-state client-empty">
-          <p>Cargando habitaciones...</p>
-        </div>
-
-        <div *ngIf="!cargando && habitacionesFiltradas.length === 0" class="empty-state client-empty">
-          <p>No hemos encontrado habitaciones que coincidan con esos filtros.</p>
-          <button class="btn-outline mt-3" (click)="limpiarFiltros()">Quitar filtros</button>
-        </div>
-
-        <div class="room-details" *ngFor="let h of habitacionesFiltradas">
-            <div class="room-info-text">
-                <div class="room-header">
-                <h3>Habitación {{ h.numero }}</h3>
-                <span class="status-pill" [attr.data-status]="h.estado">{{ h.estado }}</span>
-                </div>
-                
-                <p class="service-desc">{{ h.descripcion }}</p>
-                
-                <div class="room-features">
-                <span><i class="fas fa-user"></i> Capacidad: {{ h.capacidad }} pers.</span>
-                <span><i class="fas fa-bed"></i> {{ h.tipo }}</span>
-                </div>
-            </div>
-            
-            <div class="room-actions-bottom">
-                <p class="price mb-0"><span class="amount">{{ h.precio }}€</span> / noche</p>
-                <div class="buttons-group">
-                    <button class="btn-outline" (click)="verDetalles(h.id)">Ver detalles</button>
-                    <button class="btn-book" [disabled]="h.estado !== 'LIBRE'" (click)="abrirModalReserva(h.id)">
-                        {{ h.estado === 'LIBRE' ? 'Reservar' : 'No disponible' }}
-                    </button>
-                </div>
-            </div>
-        </div>
-
-      </section>
-
+      </div>
+      <div class="filtros-actions">
+        <button class="btn-limpiar" (click)="limpiarFiltros()">Limpiar</button>
+        <button class="btn-aplicar" (click)="aplicarFiltros()">Buscar</button>
+      </div>
     </div>
+
+    <!-- RESULTADOS -->
+    <div class="resultados-header">
+      <span class="resultados-count">{{ habitacionesFiltradas.length }} habitaciones encontradas</span>
+    </div>
+
+    <!-- ESTADO CARGANDO -->
+    <div *ngIf="cargando" class="empty-state">
+      <p>Cargando habitaciones...</p>
+    </div>
+
+    <!-- ESTADO VACÍO -->
+    <div *ngIf="!cargando && habitacionesFiltradas.length === 0" class="empty-state">
+      <p>No hay habitaciones con esos filtros.</p>
+      <button class="btn-limpiar" (click)="limpiarFiltros()">Quitar filtros</button>
+    </div>
+
+    <!-- GRID DE HABITACIONES -->
+    <div class="habitaciones-grid" *ngIf="!cargando && habitacionesFiltradas.length > 0">
+      <div class="room-card" *ngFor="let h of habitacionesFiltradas">
+
+        <!-- IMAGEN -->
+        <div class="room-image">
+          <div class="room-tipo-badge">{{ h.tipo }}</div>
+          <div class="room-estado-badge" [ngClass]="getEstadoClase(h.estado)">
+            {{ h.estado }}
+          </div>
+          <div class="room-image-overlay">
+            <button class="btn-ver-detalles" (click)="verDetalles(h.id)">
+              Ver detalles
+            </button>
+          </div>
+        </div>
+
+        <!-- INFO -->
+        <div class="room-info">
+          <div class="room-info-top">
+            <h3>Habitación {{ h.numero }}</h3>
+            <p class="room-desc">
+              {{ h.descripcion || 'Una estancia de lujo con todas las comodidades para hacer de tu visita una experiencia inolvidable.' }}
+            </p>
+            <div class="room-features">
+              <span><i class="fas fa-users"></i> {{ h.capacidad }} huéspedes</span>
+              <span><i class="fas fa-bed"></i> {{ h.tipo }}</span>
+            </div>
+          </div>
+
+          <div class="room-footer">
+            <div class="price-block">
+              <span class="amount">{{ h.precio }}€</span>
+              <span class="per-night">/ noche</span>
+            </div>
+            <button class="btn-reservar"
+                    [disabled]="h.estado !== 'LIBRE'"
+                    [class.disabled]="h.estado !== 'LIBRE'"
+                    (click)="abrirModalReserva(h.id)">
+              {{ h.estado === 'LIBRE' ? 'Reservar' : 'No disponible' }}
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 </div>
 
+<!-- MODAL -->
 <div class="modal-overlay" *ngIf="mostrarModal">
   <div class="modal-content">
-    <h3><i class="fas fa-calendar-alt"></i> Fechas de Reserva</h3>
-    <p>Selecciona cuándo quieres disfrutar de esta habitación.</p>
-    
-    <div class="input-group">
-      <label>Fecha de Entrada <span class="text-danger">*</span></label>
-      <input type="date" [(ngModel)]="reservaFechaInicio">
+    <button class="btn-close-modal" (click)="cerrarModal()">✖</button>
+    <h3>Reservar habitación</h3>
+    <p class="modal-desc">Selecciona las fechas y número de huéspedes.</p>
+
+    <div class="modal-form">
+      <div class="input-group">
+        <label>Fecha de Entrada</label>
+        <input type="date" [(ngModel)]="reservaFechaInicio">
+      </div>
+      <div class="input-group">
+        <label>Fecha de Salida</label>
+        <input type="date" [(ngModel)]="reservaFechaFin">
+      </div>
+      <div class="input-group">
+        <label>Número de Huéspedes</label>
+        <input type="number" [(ngModel)]="reservaHuespedes" min="1" placeholder="Ej: 2">
+      </div>
     </div>
 
-    <div class="input-group mt-3">
-      <label>Fecha de Salida <span class="text-danger">*</span></label>
-      <input type="date" [(ngModel)]="reservaFechaFin">
-    </div>
-
-    <div class="input-group mt-3">
-      <label>Número de Huéspedes <span class="text-danger">*</span></label>
-      <input type="number" [(ngModel)]="reservaHuespedes" min="1" placeholder="Ej: 2">
-    </div>
-
-    <div class="modal-actions mt-4">
-      <button class="btn-outline" (click)="cerrarModal()">Cancelar</button>
-      <button class="btn-book" (click)="confirmarReserva()">Confirmar Reserva</button>
+    <div class="modal-actions">
+      <button class="btn-limpiar" (click)="cerrarModal()">Cancelar</button>
+      <button class="btn-aplicar" (click)="confirmarReserva()">Confirmar Reserva</button>
     </div>
   </div>
 </div>

@@ -10,6 +10,8 @@ import { Habitacion } from '../../../interfaces/habitacion.interface';
 import { ReservaService } from '../../../services/reserva';
 import { TareaLimpiezaService } from '../../../services/tarea-limpieza';
 import { Reserva } from '../../../interfaces/reserva.interface';
+import { ArticuloService } from '../../../services/articulo';
+import { CitaService } from '../../../services/cita';
 
 export interface TareaLimpieza {
   id: number;
@@ -20,7 +22,7 @@ export interface TareaLimpieza {
 }
 
 @Component({
-  selector: 'app-reservas-admin',
+  selector: 'app-reservas-admin-v2',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './reservas-admin.html',
@@ -51,6 +53,18 @@ export class ReservasAdminComponent implements OnInit{
     filtroFechaFin: string = '';
     filtroCliente: string = '';
     reservasFiltradas: Reserva[] = [];
+
+    mostrarModalCargos: boolean = false;
+    reservaSeleccionada: any = null;
+    articulos: any[] = [];
+    cargosReserva: any[] = [];
+    cargoArticuloId: string = '';
+    cargoCantidad: number = 1;
+    totalCargos: number = 0;
+
+    citasReserva: any[] = [];
+    totalServicios: number = 0;
+    totalArticulos: number = 0;
   
     // Variables para el formulario
     mostrarFormulario: boolean = false;
@@ -67,7 +81,9 @@ export class ReservasAdminComponent implements OnInit{
       private router: Router,
       private cdr: ChangeDetectorRef,
       private reservaService: ReservaService,
-      private tareaLimpiezaService: TareaLimpiezaService
+      private tareaLimpiezaService: TareaLimpiezaService,
+      private articuloService: ArticuloService,
+      private citaService: CitaService
     ) {}
   
     ngOnInit(): void {
@@ -75,6 +91,7 @@ export class ReservasAdminComponent implements OnInit{
       this.cargarHabitaciones();
       this.cargarReservas();
       this.cargarTareasLimpieza();
+      this.cargarArticulos();
     }
   
     cargarUsuarios() {
@@ -288,6 +305,108 @@ export class ReservasAdminComponent implements OnInit{
       }
 
       return true;
+    });
+  }
+
+  cargarArticulos(): void {
+    this.articuloService.getArticulos().subscribe({
+      next: (data) => this.articulos = data,
+      error: (e) => console.error('Error cargando artículos', e)
+    });
+  }
+
+  abrirModalCargos(reserva: any): void {
+    this.reservaSeleccionada = reserva;
+    this.mostrarModalCargos = true;
+    this.cargoArticuloId = '';
+    this.cargoCantidad = 1;
+    this.citasReserva = [];
+    this.cargarCargosReserva(reserva.id);
+    this.cargarCitasReserva(reserva);
+  }
+
+  cerrarModalCargos(): void {
+    this.mostrarModalCargos = false;
+    this.reservaSeleccionada = null;
+    this.cargosReserva = [];
+    this.citasReserva = [];
+    this.totalCargos = 0;
+    this.totalServicios = 0;
+    this.totalArticulos = 0;
+  }
+
+  cargarCargosReserva(reservaId: number): void {
+    this.articuloService.getCargosDeReserva(reservaId).subscribe({
+      next: (data) => {
+        this.cargosReserva = data;
+        this.calcularTotalCargos();
+      },
+      error: (e) => console.error('Error cargando cargos', e)
+    });
+  }
+
+  calcularTotalCargos(): void {
+    this.totalArticulos = this.cargosReserva.reduce((sum, c) => {
+      return sum + (c.cantidad * c.precioUnitario);
+    }, 0);
+
+    this.totalServicios = this.citasReserva.reduce((sum, c) => {
+      return sum + (c.servicio?.precio || 0);
+    }, 0);
+
+    this.totalCargos = this.totalArticulos + this.totalServicios;
+  }
+
+  agregarCargo(): void {
+    if (!this.cargoArticuloId) {
+      this.mensajeError = 'Selecciona un artículo';
+      return;
+    }
+    this.articuloService.añadirCargo(
+      this.reservaSeleccionada.id,
+      Number(this.cargoArticuloId),
+      this.cargoCantidad
+    ).subscribe({
+      next: () => {
+        this.mensajeExito = 'Cargo añadido correctamente';
+        this.cargoArticuloId = '';
+        this.cargoCantidad = 1;
+        this.cargarCargosReserva(this.reservaSeleccionada.id);
+        setTimeout(() => this.mensajeExito = '', 3000);
+      },
+      error: (err) => this.mensajeError = err.error?.error || 'Error al añadir cargo'
+    });
+  }
+
+  eliminarCargo(id: number): void {
+    if (!confirm('¿Seguro que quieres eliminar este cargo?')) return;
+    this.articuloService.eliminarCargo(id).subscribe({
+      next: () => {
+        this.cargarCargosReserva(this.reservaSeleccionada.id);
+        this.mensajeExito = 'Cargo eliminado';
+        setTimeout(() => this.mensajeExito = '', 3000);
+      },
+      error: () => this.mensajeError = 'Error al eliminar cargo'
+    });
+  }
+
+  calcularNoches(reserva: any): number {
+    if (!reserva) return 0;
+    const entrada = new Date(reserva.fechaEntrada);
+    const salida = new Date(reserva.fechaSalida);
+    return Math.ceil((salida.getTime() - entrada.getTime()) / (1000 * 60 * 60 * 24));
+  }
+
+  cargarCitasReserva(reserva: any): void {
+    const inicio = reserva.fechaEntrada.split('T')[0];
+    const fin = reserva.fechaSalida.split('T')[0];
+    
+    this.citaService.getCitasEntresFechas(reserva.usuarioId, inicio, fin).subscribe({
+      next: (data) => {
+        this.citasReserva = data.filter((c: any) => c.estado !== 'CANCELADA');
+        this.calcularTotalCargos();
+      },
+      error: (e) => console.error('Error cargando citas', e)
     });
   }
 }

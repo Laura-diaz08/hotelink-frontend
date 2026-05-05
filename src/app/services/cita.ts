@@ -43,4 +43,16 @@ export class CitaService {
     
     return this.http.delete(`${this.apiUrl}/${id}`, { headers });
   }
+
+  getCitasEntresFechas(usuarioId: number, inicio: string, fin: string): Observable<any[]> {
+    return this.http.get<any[]>(
+      `${this.apiUrl}/usuario/${usuarioId}/entre-fechas?inicio=${inicio}&fin=${fin}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  private getHeaders() {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+  }
 }

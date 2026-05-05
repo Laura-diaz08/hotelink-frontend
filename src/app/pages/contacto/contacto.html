@@ -1,0 +1,111 @@
+<div class="contacto-wrapper">
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <div class="page-hero-content">
+      <h1 class="page-title">CONTACTO</h1>
+      <div class="title-divider"></div>
+      <p class="page-subtitle">Estamos aquí para ayudarte en todo lo que necesites</p>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- HORARIOS E INFO -->
+    <section class="info-section">
+
+      <div class="horarios-card">
+        <div class="card-titulo">
+          <i class="fas fa-clock"></i>
+          <h3>Horarios</h3>
+        </div>
+        <div class="horarios-lista">
+          <div class="horario-item" *ngFor="let h of horarios">
+            <div class="horario-icono">
+              <i [class]="h.icono"></i>
+            </div>
+            <div class="horario-info">
+              <span class="horario-servicio">{{ h.servicio }}</span>
+              <span class="horario-hora">{{ h.horario }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contacto-info-card">
+        <div class="card-titulo">
+          <i class="fas fa-info-circle"></i>
+          <h3>Información de contacto</h3>
+        </div>
+        <div class="info-lista">
+          <div class="info-item" *ngFor="let info of infoContacto">
+            <div class="info-icono">
+              <i [class]="info.icono"></i>
+            </div>
+            <div>
+              <span class="info-titulo">{{ info.titulo }}</span>
+              <span class="info-valor">{{ info.valor }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- FORMULARIO Y MAPA -->
+    <section class="form-mapa-section">
+
+      <div class="formulario-card">
+        <div class="card-titulo">
+          <i class="fas fa-paper-plane"></i>
+          <h3>Envíanos un mensaje</h3>
+        </div>
+
+        <div *ngIf="mensajeExito" class="alert success-alert">
+          <i class="fas fa-check-circle"></i> {{ mensajeExito }}
+        </div>
+        <div *ngIf="mensajeError" class="alert error-alert">
+          <i class="fas fa-exclamation-circle"></i> {{ mensajeError }}
+        </div>
+
+        <div class="form-grupo">
+          <label>Nombre completo</label>
+          <input type="text" [(ngModel)]="nombre" placeholder="Tu nombre...">
+        </div>
+        <div class="form-grupo">
+          <label>Correo electrónico</label>
+          <input type="email" [(ngModel)]="email" placeholder="tu@email.com">
+        </div>
+        <div class="form-grupo">
+          <label>Mensaje</label>
+          <textarea [(ngModel)]="mensaje" rows="5" placeholder="¿En qué podemos ayudarte?"></textarea>
+        </div>
+
+        <button class="btn-enviar" (click)="enviarMensaje()" [disabled]="enviando">
+          <i class="fas fa-paper-plane"></i>
+          {{ enviando ? 'Enviando...' : 'Enviar mensaje' }}
+        </button>
+      </div>
+
+      <div class="mapa-card">
+        <div class="card-titulo">
+          <i class="fas fa-map-marker-alt"></i>
+          <h3>Visítanos</h3>
+        </div>
+        <div class="mapa-wrapper">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3162.5!2d-6.2890!3d36.5298!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd0dd1ead9f4d4ad%3A0x6c9a1b9e5d3e2f1a!2sC%C3%A1diz%2C+Spain!5e0!3m2!1ses!2ses!4v1620000000000!5m2!1ses!2ses"
+            width="100%"
+            height="100%"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+</div>

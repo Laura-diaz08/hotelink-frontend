@@ -1,197 +1,213 @@
 <div class="reservas-wrapper">
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <div class="page-hero-content">
+      <h1 class="page-title">MIS RESERVAS</h1>
+      <div class="title-divider"></div>
+      <p class="page-subtitle">Gestiona tus estancias y servicios</p>
+    </div>
+  </div>
+
   <div class="container">
-    <h2 class="page-title">Panel de Reservas</h2>
 
-    <div class="section-header">
-      <h3><i class="fas fa-bed"></i> Mis Habitaciones</h3>
-    </div>
-    
-    <div *ngIf="misReservasHabitaciones.length === 0" class="empty-state">
-      <p>No tienes reservas de habitaciones en este momento.</p>
-    </div>
-
-    <div *ngFor="let r of misReservasHabitaciones" class="reserva-item">
-
-      <div *ngIf="r.estado !== 'COMPLETADA'" class="modern-layout">
-        
-        <div class="card main-card">
-          <div class="card-header">
-            <h4>Detalles de la Estancia</h4>
-            <span class="status-badge pending">{{ r.estado || 'PENDIENTE' }}</span>
-          </div>
-
-          <div class="data-grid">
-            <div class="data-group">
-              <label>Fecha de Entrada</label>
-              <p>{{ r.fechaEntrada | date:'dd/MM/yyyy' }}</p>
-            </div>
-            <div class="data-group">
-              <label>Fecha de Salida</label>
-              <p>{{ r.fechaSalida | date:'dd/MM/yyyy' }}</p>
-            </div>
-            <div class="data-group">
-              <label>Huéspedes</label>
-              <p>2 Adultos, 0 Niños</p> </div>
-          </div>
-
-          <hr class="divider">
-
-          <div class="card-header mt-4">
-            <h4>Datos del Titular</h4>
-          </div>
-          
-          <div class="data-grid">
-            <div class="data-group">
-              <label>Cliente</label>
-              <p>Datos en perfil</p>
-            </div>
-            <div class="data-group">
-              <label>Peticiones especiales</label>
-              <p class="text-muted">Ninguna solicitud registrada.</p>
-            </div>
-          </div>
-
-          <div class="card-actions">
-            <button class="btn-manage" (click)="abrirModalGestion(r)">Gestionar Reserva</button>
-          </div>
+    <!-- HABITACIONES ACTIVAS -->
+    <section class="reservas-section" *ngIf="getReservasActivas().length > 0">
+      <div class="section-header">
+        <div class="section-title-group">
+          <p class="section-pretitle">Próximas estancias</p>
+          <h2 class="section-title">MIS HABITACIONES</h2>
+          <div class="title-divider-small"></div>
         </div>
+      </div>
 
-        <div class="card sidebar-card">
-          <h4>Resumen</h4>
-          
-          <div class="room-image">
+      <div *ngFor="let r of getReservasActivas()" class="reserva-card">
+        <div class="reserva-main">
+
+          <div class="reserva-image">
             <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=400&q=80" alt="Habitación">
+            <div class="reserva-tipo-badge">{{ r.habitacion?.tipo || 'Estándar' }}</div>
           </div>
-          
-          <div class="summary-details">
-            <div class="summary-row">
-              <span>Tipo de Habitación</span>
-              <strong>{{ r.habitacion?.tipo || 'Estándar' }}</strong>
+
+          <div class="reserva-info">
+            <div class="reserva-info-header">
+              <h3>Habitación {{ r.habitacion?.numero || 'Pendiente' }}</h3>
+              <span class="status-badge" [ngClass]="getEstadoBadge(r.estado)">
+                {{ r.estado || 'CONFIRMADA' }}
+              </span>
             </div>
-            <div class="summary-row">
-              <span>Nº Habitación</span>
-              <strong>{{ r.habitacion?.numero || 'Asignación pdte.' }}</strong>
+
+            <div class="reserva-fechas">
+              <div class="fecha-item">
+                <i class="fas fa-sign-in-alt"></i>
+                <div>
+                  <label>Entrada</label>
+                  <p>{{ r.fechaEntrada | date:'dd MMM yyyy' }}</p>
+                </div>
+              </div>
+              <div class="fecha-separador">→</div>
+              <div class="fecha-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <div>
+                  <label>Salida</label>
+                  <p>{{ r.fechaSalida | date:'dd MMM yyyy' }}</p>
+                </div>
+              </div>
             </div>
-            <div class="summary-row total">
-              <span>Precio total</span>
-              <strong>{{ r.habitacion?.precio || 0 }}€</strong>
+
+            <div class="reserva-detalles">
+              <span><i class="fas fa-users"></i> {{ r.numeroHuespedes || 1 }} huéspedes</span>
+              <span><i class="fas fa-moon"></i> {{ calcularNoches(r.fechaEntrada, r.fechaSalida) }} noches</span>
+            </div>
+
+            <div class="reserva-footer">
+              <div class="precio-total">
+                <span class="precio-label">Total</span>
+                <span class="precio-amount">{{ r.habitacion?.precio * calcularNoches(r.fechaEntrada, r.fechaSalida) || 0 }}€</span>
+              </div>
+              <button class="btn-gestionar" (click)="abrirModalGestion(r)">
+                Gestionar reserva
+              </button>
             </div>
           </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICIOS ACTIVOS -->
+    <section class="reservas-section" *ngIf="getServiciosActivos().length > 0">
+      <div class="section-header">
+        <div class="section-title-group">
+          <p class="section-pretitle">Bienestar y experiencias</p>
+          <h2 class="section-title">MIS SERVICIOS</h2>
+          <div class="title-divider-small"></div>
         </div>
       </div>
 
-      <div *ngIf="r.estado === 'COMPLETADA'" class="card compact-card">
-        <div class="compact-info">
-          <div class="icon-box"><i class="fas fa-check-circle"></i></div>
-          <div>
+      <div *ngFor="let s of getServiciosActivos()" class="servicio-card">
+        <div class="servicio-icon-area">
+          <i class="fas fa-spa"></i>
+        </div>
+        <div class="servicio-info">
+          <div class="servicio-info-header">
+            <h3>{{ s.servicio?.nombre || 'Servicio' }}</h3>
+            <span class="status-badge badge-pending">{{ s.estado || 'PENDIENTE' }}</span>
+          </div>
+          <p class="servicio-desc">{{ s.servicio?.descripcion || '' }}</p>
+          <div class="servicio-fechas">
+            <span><i class="fas fa-calendar"></i> {{ s.fechaHoraCita | date:'dd MMM yyyy' }}</span>
+            <span><i class="fas fa-clock"></i> {{ s.fechaHoraCita | date:'HH:mm' }}</span>
+          </div>
+        </div>
+        <div class="servicio-actions">
+          <span class="servicio-precio">{{ s.servicio?.precio || 0 }}€</span>
+          <button class="btn-anular" (click)="anularCita(s.id)">Anular cita</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ESTADOS VACÍOS -->
+    <div *ngIf="getReservasActivas().length === 0 && getServiciosActivos().length === 0" class="empty-wrapper">
+      <div class="empty-state">
+        <i class="fas fa-bed empty-icon"></i>
+        <h3>No tienes reservas activas</h3>
+        <p>Descubre nuestras habitaciones y servicios para planificar tu próxima estancia.</p>
+        <button class="btn-explorar" routerLink="/habitaciones">Explorar habitaciones</button>
+      </div>
+    </div>
+
+    <!-- HISTORIAL -->
+    <section class="reservas-section historial-section"
+             *ngIf="getReservasCompletadas().length > 0 || getServiciosCompletados().length > 0">
+      <div class="section-header">
+        <div class="section-title-group">
+          <p class="section-pretitle">Tus experiencias anteriores</p>
+          <h2 class="section-title">HISTORIAL</h2>
+          <div class="title-divider-small"></div>
+        </div>
+      </div>
+
+      <div class="historial-grid">
+        <div *ngFor="let r of getReservasCompletadas()" class="historial-card">
+          <div class="historial-icon"><i class="fas fa-check-circle"></i></div>
+          <div class="historial-info">
             <h4>Habitación {{ r.habitacion?.tipo }}</h4>
-            <p>Estancia del {{ r.fechaEntrada | date:'dd/MM/yyyy' }} al {{ r.fechaSalida | date:'dd/MM/yyyy' }}</p>
+            <p>{{ r.fechaEntrada | date:'dd/MM/yyyy' }} → {{ r.fechaSalida | date:'dd/MM/yyyy' }}</p>
           </div>
-        </div>
-        <div class="compact-actions">
-          <span class="status-badge completed">Completada</span>
-          <button class="btn-outline-small">Ver Factura</button>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="section-header mt-5">
-      <h3><i class="fas fa-spa"></i> Mis Servicios</h3>
-    </div>
-    
-    <div *ngIf="misReservasServicios.length === 0" class="empty-state">
-      <p>No tienes citas para servicios adicionales.</p>
-    </div>
-
-    <div *ngFor="let s of misReservasServicios" class="reserva-item">
-      
-      <div *ngIf="s.estado !== 'COMPLETADA'" class="modern-layout">
-        <div class="card main-card">
-          <div class="card-header">
-            <h4>Detalles de la Cita</h4>
-            <span class="status-badge pending">{{ s.estado || 'PENDIENTE' }}</span>
-          </div>
-          <div class="data-grid">
-            <div class="data-group">
-              <label>Día reservado</label>
-              <p>{{ s.fechaHoraCita | date:'dd/MM/yyyy' }}</p> 
-            </div>
-            <div class="data-group">
-              <label>Hora</label>
-              <p>{{ s.fechaHoraCita | date:'HH:mm' }}</p> 
-            </div>
-          </div>
-          <div class="card-actions">
-            <button class="btn-danger" (click)="anularCita(s.id)">Anular Cita</button>
+          <div class="historial-actions">
+            <span class="status-badge badge-completed">Completada</span>
           </div>
         </div>
 
-        <div class="card sidebar-card">
-          <h4>Servicio Contratado</h4>
-          <div class="summary-details mt-3">
-            <div class="summary-row">
-              <span>Servicio</span>
-              <strong>{{ s.servicio?.nombre || 'Servicio' }}</strong>
-            </div>
-            <div class="summary-row total">
-              <span>Precio</span>
-              <strong>{{ s.servicio?.precio || 0 }}€</strong>
-            </div>
+        <div *ngFor="let s of getServiciosCompletados()" class="historial-card">
+          <div class="historial-icon spa"><i class="fas fa-spa"></i></div>
+          <div class="historial-info">
+            <h4>{{ s.servicio?.nombre }}</h4>
+            <p>{{ s.fechaHoraCita | date:'dd/MM/yyyy' }} a las {{ s.fechaHoraCita | date:'HH:mm' }}</p>
+          </div>
+          <div class="historial-actions">
+            <span class="status-badge badge-completed">Disfrutado</span>
           </div>
         </div>
       </div>
+    </section>
 
-      <div *ngIf="s.estado === 'COMPLETADA'" class="card compact-card">
-        <div class="compact-info">
-          <div class="icon-box"><i class="fas fa-check-circle"></i></div>
-          <div>
-            <div>
-              <h4>{{ s.servicio?.nombre }}</h4>
-              <p>{{ s.fechaHoraCita | date:'dd/MM/yyyy' }} a las {{ s.fechaHoraCita | date:'HH:mm' }}</p> 
-            </div>
-          </div>
-        </div>
-        <div class="compact-actions">
-          <span class="status-badge completed">Disfrutado</span>
-        </div>
-      </div>
-
-    </div>
   </div>
 </div>
 
+<!-- MODAL GESTIÓN -->
 <div class="modal-overlay" *ngIf="mostrarModalGestion">
-  <div class="modal-content text-center">
-    <h3>⚙️ Gestionar Reserva</h3>
-    <p>Estado actual: <strong>{{ reservaAGestionar?.estado }}</strong></p>
+  <div class="modal-content">
+    <button class="btn-close-modal" (click)="cerrarModalGestion()">✖</button>
 
-    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
-      
-      <button class="btn-book" 
+    <h3>Gestionar Reserva</h3>
+    <p class="modal-desc">Habitación {{ reservaAGestionar?.habitacion?.numero }} · {{ reservaAGestionar?.habitacion?.tipo }}</p>
+
+    <!-- PROGRESO -->
+    <div class="progreso-reserva">
+      <div class="paso" [class.activo]="true" [class.completado]="reservaAGestionar?.checkIn">
+        <div class="paso-circulo"><i class="fas fa-calendar-check"></i></div>
+        <span>Confirmada</span>
+      </div>
+      <div class="paso-linea" [class.completado]="reservaAGestionar?.checkIn"></div>
+      <div class="paso" [class.activo]="reservaAGestionar?.checkIn" [class.completado]="reservaAGestionar?.checkOut">
+        <div class="paso-circulo"><i class="fas fa-key"></i></div>
+        <span>Check-In</span>
+      </div>
+      <div class="paso-linea" [class.completado]="reservaAGestionar?.checkOut"></div>
+      <div class="paso" [class.activo]="reservaAGestionar?.checkOut">
+        <div class="paso-circulo"><i class="fas fa-sign-out-alt"></i></div>
+        <span>Check-Out</span>
+      </div>
+    </div>
+
+    <div class="modal-actions-list">
+      <button class="btn-modal-action btn-checkin"
               *ngIf="reservaAGestionar?.estado !== 'CANCELADA' && !reservaAGestionar?.checkIn"
               (click)="hacerCheckIn()">
-        🔑 Hacer Check-In
+        <i class="fas fa-key"></i> Hacer Check-In
       </button>
 
-      <button class="btn-book" 
+      <button class="btn-modal-action btn-checkout"
               *ngIf="reservaAGestionar?.checkIn && !reservaAGestionar?.checkOut"
               (click)="hacerCheckOut()">
-        🚪 Hacer Check-Out
+        <i class="fas fa-sign-out-alt"></i> Hacer Check-Out
       </button>
 
-      <button class="btn-danger" style="background-color: #dc3545; color: white;"
+      <button class="btn-modal-action btn-cancelar"
               *ngIf="reservaAGestionar?.estado !== 'CANCELADA' && puedeCancelar()"
               (click)="cancelarReserva()">
-        ❌ Cancelar Reserva
+        <i class="fas fa-times"></i> Cancelar Reserva
       </button>
 
-      <p *ngIf="reservaAGestionar?.estado !== 'CANCELADA' && !puedeCancelar()" 
-         style="color: red; font-size: 12px;">
-        * No puedes cancelar: faltan menos de 10 días para tu llegada.
+      <p class="aviso-cancelacion"
+         *ngIf="reservaAGestionar?.estado !== 'CANCELADA' && !puedeCancelar()">
+        <i class="fas fa-info-circle"></i>
+        No puedes cancelar: faltan menos de 10 días para tu llegada.
       </p>
 
-      <button class="btn-outline" (click)="cerrarModalGestion()">Cerrar ventana</button>
+      <button class="btn-modal-cerrar" (click)="cerrarModalGestion()">Cerrar</button>
     </div>
   </div>
 </div>

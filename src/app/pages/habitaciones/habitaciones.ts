@@ -185,6 +185,15 @@ export class HabitacionesComponent implements OnInit {
     alert(`Mostrando detalles de la habitación ID: ${id}`);
   }
 
+  getEstadoClase(estado: string): string {
+    switch (estado?.toUpperCase()) {
+      case 'LIBRE': return 'estado-libre';
+      case 'OCUPADA': return 'estado-ocupada';
+      case 'LIMPIEZA': return 'estado-limpieza';
+      default: return 'estado-otro';
+    }
+  }
+
   cerrarSesion() {
     localStorage.clear(); 
     this.router.navigate(['/login']);

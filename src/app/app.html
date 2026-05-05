@@ -1,5 +1,7 @@
-<header class="topbar client-topbar" *ngIf="!router.url.includes('/login') && !router.url.includes('/register') && !router.url.includes('/admin')">
-  <div class="logo-text">Hote<span class="logo-accent">link</span></div>
+<header class="topbar client-topbar"
+        [class.navbar-solida]="!esTransparente"
+        [class.navbar-transparente]="esTransparente"
+        *ngIf="!router.url.includes('/login') && !router.url.includes('/register') && !router.url.includes('/admin')">  <div class="logo-text">Hote<span class="logo-accent">link</span></div>
   <nav class="main-nav">
     <ul class="nav-list">
       <li><a routerLink="/home" class="nav-link">Inicio</a></li>

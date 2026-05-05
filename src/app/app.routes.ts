@@ -10,6 +10,10 @@ import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-das
 import { HabitacionesAdmin } from './pages/admin/habitaciones-admin/habitaciones-admin';
 import { UsuariosAdmin } from './pages/admin/usuarios-admin/usuarios-admin';
 import { LimpiezaAdmin } from './pages/admin/limpieza-admin/limpieza-admin';
+import { NosotrosComponent } from './pages/nosotros/nosotros';
+import { ContactoComponent } from './pages/contacto/contacto';
+import { OpinionesComponent } from './pages/opiniones/opiniones';
+import { GaleriaComponent } from './pages/galeria/galeria';
 
 
 export const routes: Routes = [
@@ -21,8 +25,12 @@ export const routes: Routes = [
   { path: 'admin/limpieza', component: LimpiezaAdmin },
   { path: 'home', component: UserDashboardComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'servicios-dashboard', component: ServiciosComponent },   
+  { path: 'servicios', component: ServiciosComponent },   
   { path: 'mis-reservas', component: MisReservasComponent },
   { path: 'habitaciones', component: HabitacionesComponent },
+  { path: 'nosotros', component: NosotrosComponent },
+  { path: 'contacto', component: ContactoComponent },
+  { path: 'opiniones', component: OpinionesComponent },
+  { path: 'galeria', component: GaleriaComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' }
 ];
