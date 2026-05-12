@@ -38,6 +38,8 @@ export class UserDashboardComponent implements OnInit {
   slideActual: number = 0;
   totalSlides: number = 3;
 
+  mediaValoracion: string = '4.9★';
+
   imagenesHabitaciones: { [key: string]: string } = {
     'Sencilla': 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80',
     'Doble': 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80',
@@ -69,6 +71,18 @@ export class UserDashboardComponent implements OnInit {
       this.cerrarSesion();
       return;
     }
+
+    this.opinionService.getEstadisticas().subscribe({
+      next: (data) => {
+        setTimeout(() => {
+          if (data.media) {
+            this.mediaValoracion = data.media.toFixed(1) + '★';
+          }
+          this.cdr.detectChanges();
+        }, 0);
+      }
+    });
+
     this.cargarServicios();
     this.cargarHabitaciones();
     this.cargarOpiniones();

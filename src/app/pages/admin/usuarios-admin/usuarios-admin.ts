@@ -20,8 +20,7 @@ export class UsuariosAdmin implements OnInit {
   filtroNombre: string = '';
   filtroRol: string = '';
 
-  roles: string[] = ['ADMIN', 'CLIENTE', 'RECEPCION', 'LIMPIEZA', 'SERVICIOS'];
-  rolesEmpleado: string[] = ['ADMIN', 'RECEPCION', 'LIMPIEZA', 'SERVICIOS'];
+  roles: string[] = ['ADMIN', 'CLIENTE', 'RECEPCION', 'LIMPIEZA', 'MASAJES', 'GIMNASIO', 'CONDUCTOR', 'COCINA'];
 
   mostrarModal: boolean = false;
   modoEdicion: boolean = false;

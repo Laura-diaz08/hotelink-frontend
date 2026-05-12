@@ -30,36 +30,31 @@ export class NosotrosComponent {
       nombre: 'Laura Díaz',
       cargo: 'Directora General',
       descripcion: 'Fundadora y alma de Hotelink. Con más de 20 años en el sector hotelero, Laura lidera el hotel con pasión y visión de futuro.',
-      foto: 'assets/laura-diaz.jpg',
-      esFundadora: true
+      foto: 'assets/laura-diaz.jpg'
     },
     {
-      nombre: 'María Fernández',
-      cargo: 'Jefa de Recepción',
-      descripcion: 'El primer rostro que verás al llegar. María garantiza que cada check-in sea una experiencia memorable.',
-      foto: 'https://i.pravatar.cc/300?img=5',
-      esFundadora: false
+      nombre: 'Javier Montes',
+      cargo: 'Jefe de Recepción',
+      descripcion: 'Experto en hospitalidad y atención al cliente. Javier se asegura de que tu bienvenida a Cádiz sea perfecta y fluida.',
+      foto: 'assets/javier-montes.jpg'
     },
     {
       nombre: 'Antonio Ruiz',
       cargo: 'Chef Ejecutivo',
       descripcion: 'Con estrella Michelin en su haber, Antonio transforma cada comida en una experiencia gastronómica única.',
-      foto: 'https://i.pravatar.cc/300?img=12',
-      esFundadora: false
+      foto: 'assets/antonio-ruiz.jpg'
     },
     {
       nombre: 'Laura Sánchez',
       cargo: 'Directora de Bienestar',
       descripcion: 'Experta en técnicas de relajación y bienestar, Laura diseña tratamientos exclusivos para el cuerpo y la mente.',
-      foto: 'https://i.pravatar.cc/300?img=9',
-      esFundadora: false
+      foto: 'assets/laura_sanchez.jpg'
     },
     {
       nombre: 'Carmen Torres',
       cargo: 'Gobernanta de Pisos',
       descripcion: 'Carmen dirige con precisión y cariño al equipo de limpieza, garantizando que cada habitación esté impecable.',
-      foto: 'https://i.pravatar.cc/300?img=47',
-      esFundadora: false
+      foto: 'assets/carmen-torres.jpg'
     }
   ];
 

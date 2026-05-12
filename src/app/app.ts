@@ -1,8 +1,8 @@
-import { Component, signal, HostListener  } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { Router } from '@angular/router';
+import { Component, signal, HostListener } from '@angular/core';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -13,9 +13,23 @@ import { CommonModule } from '@angular/common';
 export class App {
   protected readonly title = signal('hotelink-front');
 
-  constructor(public router: Router) {}
-
   navbarSolida: boolean = false;
+  nombreUsuario: string = '';
+
+  currentYear = new Date().getFullYear();
+
+  constructor(public router: Router) {
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.nombreUsuario = localStorage.getItem('nombre') || 'Viajero';
+      window.scrollTo(0, 0);
+    });
+  }
+
+  ngOnInit() {
+    this.nombreUsuario = localStorage.getItem('nombre') || 'Viajero';
+  }
 
   @HostListener('window:scroll', [])
   onScroll(): void {
@@ -27,7 +41,7 @@ export class App {
   }
 
   cerrarSesion() {
-    localStorage.removeItem('token');
-    this.router.navigate(['/login']); 
+    localStorage.clear();
+    this.router.navigate(['/login']);
   }
 }

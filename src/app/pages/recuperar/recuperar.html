@@ -1,0 +1,46 @@
+<div class="auth-wrapper">
+    <div class="auth-card">
+
+        <!-- PASO 1: EMAIL -->
+        <div *ngIf="paso === 1">
+            <h2>Recuperar contraseña</h2>
+            <p>Introduce tu email y te enviaremos un código.</p>
+            <div *ngIf="error" class="alert error">{{ error }}</div>
+            <div *ngIf="mensaje" class="alert success">{{ mensaje }}</div>
+            <div class="form-grupo">
+            <label>Email</label>
+            <input type="email" [(ngModel)]="email" placeholder="tu@email.com">
+            </div>
+            <button class="btn-auth" (click)="solicitarCodigo()" [disabled]="enviando">
+            {{ enviando ? 'Enviando...' : 'Enviar código' }}
+            </button>
+            <a class="btn-volver" routerLink="/login">Volver al login</a>
+        </div>
+
+        <!-- PASO 2: CÓDIGO Y NUEVA CONTRASEÑA -->
+        <div *ngIf="paso === 2">
+            <div class="auth-icon">✉️</div>
+            <h2>Introduce el código</h2>
+            <p>Hemos enviado un código a <strong>{{ email }}</strong></p>
+            <div *ngIf="error" class="alert error">{{ error }}</div>
+            <div *ngIf="mensaje" class="alert success">{{ mensaje }}</div>
+            <div class="form-grupo">
+            <label>Código de verificación</label>
+            <input type="text" [(ngModel)]="codigo" placeholder="123456" maxlength="6">
+            </div>
+            <div class="form-grupo">
+            <label>Nueva contraseña</label>
+            <input type="password" [(ngModel)]="nuevaPassword" placeholder="Nueva contraseña">
+            </div>
+            <div class="form-grupo">
+            <label>Repetir contraseña</label>
+            <input type="password" [(ngModel)]="repetirPassword" placeholder="Repite la contraseña">
+            </div>
+            <button class="btn-auth" (click)="confirmar()" [disabled]="enviando">
+            {{ enviando ? 'Guardando...' : 'Cambiar contraseña' }}
+            </button>
+            <button class="btn-volver" (click)="paso = 1">Volver</button>
+        </div>
+
+    </div>
+</div>

@@ -1,158 +1,309 @@
-<div class="user-wrapper">
+<div class="home-wrapper">
 
-  <!-- HERO CARRUSEL -->
-  <section class="hero-carousel">
-    <div class="carousel-slide active">
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <p class="hero-pretitle">Bienvenido a</p>
-        <h1 class="hero-title">Hote<span class="hero-accent">link</span></h1>
-        <p class="hero-subtitle">Una experiencia única de hospitalidad y confort</p>
-        <div class="hero-buttons">
-          <button class="btn-hero-primary" routerLink="/habitaciones">Descubrir habitaciones</button>
-          <button class="btn-hero-secondary" routerLink="/servicios">Nuestros servicios</button>
+  <!-- HERO -->
+  <section class="hero-section position-relative overflow-hidden">
+    <div id="heroCarousel" class="carousel slide carousel-fade h-100" data-bs-ride="carousel">
+      <div class="carousel-inner h-100">
+        <div class="carousel-item active h-100">
+          <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1600&q=80"
+               class="d-block w-100 h-100 hero-img" alt="Hotel">
+        </div>
+        <div class="carousel-item h-100">
+          <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1600&q=80"
+               class="d-block w-100 h-100 hero-img" alt="Hotel">
+        </div>
+        <div class="carousel-item h-100">
+          <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1600&q=80"
+               class="d-block w-100 h-100 hero-img" alt="Hotel">
+        </div>
+      </div>
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+
+    <div class="hero-overlay position-absolute top-0 start-0 w-100 h-100"></div>
+
+    <div class="hero-content position-absolute top-50 start-50 translate-middle text-center text-white">
+      <div class="hero-box">
+        <p class="hero-pretitle text-uppercase letter-spacing-wide mb-2">Bienvenido a</p>
+        <h1 class="hero-title display-1 fw-black mb-3">
+          HOTE<span class="text-gold">LINK</span>
+        </h1>
+        <p class="hero-subtitle fs-5 fw-light mb-5 mx-auto" style="max-width:500px;">
+          Una experiencia única de hospitalidad y confort en el corazón de Cádiz
+        </p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+          <a routerLink="/habitaciones" class="btn btn-outline-white btn-lg px-5 py-3 fw-bold text-uppercase">
+            Reservar ahora
+          </a>
+          <a routerLink="/servicios" class="btn btn-outline-white btn-lg px-5 py-3 fw-bold text-uppercase">
+            Nuestros servicios
+          </a>
         </div>
       </div>
     </div>
 
-    <button class="carousel-control prev" (click)="prevSlide()">❮</button>
-    <button class="carousel-control next" (click)="nextSlide()">❯</button>
+  </section>
 
-    <div class="carousel-indicators">
-      <span [class.active]="slideActual === 0" (click)="irASlide(0)"></span>
-      <span [class.active]="slideActual === 1" (click)="irASlide(1)"></span>
-      <span [class.active]="slideActual === 2" (click)="irASlide(2)"></span>
+  <!-- STRIP STATS -->
+  <section class="stats-strip bg-dark text-white py-4">
+    <div class="container">
+      <div class="row text-center g-0">
+        <div class="col-4 border-end border-secondary">
+          <div class="stat-number text-gold fw-black fs-1">15+</div>
+          <div class="stat-label text-uppercase small letter-spacing-wide text-muted">Años de experiencia</div>
+        </div>
+        <div class="col-4 border-end border-secondary">
+          <div class="stat-number text-gold fw-black fs-1">5K+</div>
+          <div class="stat-label text-uppercase small letter-spacing-wide text-muted">Huéspedes satisfechos</div>
+        </div>
+        <div class="col-4">
+          <div class="stat-number text-gold fw-black fs-1">{{ mediaValoracion }}</div>
+          <div class="stat-label text-uppercase small letter-spacing-wide text-muted">Valoración media</div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <div class="container main-content">
-
-    <div *ngIf="mensajeReserva" class="alert info-alert">{{ mensajeReserva }}</div>
-
-    <!-- HABITACIONES -->
-    <section class="content-section rooms-section">
-      <div class="section-header">
-        <div class="section-title-group">
-          <p class="section-pretitle">Descansa en el lujo</p>
-          <h2 class="section-title">NUESTRAS HABITACIONES</h2>
-          <div class="title-divider"></div>
+  <!-- HABITACIONES -->
+  <section class="py-6 bg-light">
+    <div class="container">
+      <div class="row align-items-end mb-5">
+        <div class="col-md-8">
+          <p class="section-pretitle text-gold text-uppercase fw-bold letter-spacing-wide mb-2">
+            Descansa en el lujo
+          </p>
+          <h2 class="section-heading mb-0">NUESTRAS HABITACIONES</h2>
+          <div class="heading-line mt-3"></div>
         </div>
-        <button class="btn-outline" routerLink="/habitaciones">Ver todas</button>
-      </div>
-
-      <div class="rooms-grid">
-        <div class="room-card" *ngFor="let h of habitaciones">
-          <div class="room-image-placeholder">
-            <img [src]="getImagenHabitacion(h.tipo)" [alt]="h.tipo" 
-                style="width:100%;height:100%;object-fit:cover;">
-            <div class="room-badge">{{ h.tipo }}</div>
-            <div class="room-overlay">
-              <button class="btn-book" routerLink="/habitaciones">Ver detalles</button>
-            </div>
-          </div>
-          <div class="room-info">
-            <h3>Habitación {{ h.numero }}</h3>
-            <p class="room-desc">{{ h.descripcion || 'Disfruta de una estancia inigualable.' }}</p>
-            <div class="room-footer">
-              <p class="price"><span class="amount">{{ h.precio }}€</span> <span class="per-night">/ noche</span></p>
-              <button class="btn-book-small" routerLink="/habitaciones">Reservar</button>
-            </div>
-          </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+          <a routerLink="/habitaciones" class="btn btn-dark btn-lg px-4 text-uppercase fw-bold">
+            Ver todas <i class="fas fa-arrow-right ms-2"></i>
+          </a>
         </div>
       </div>
-    </section>
 
-    <!-- SERVICIOS -->
-    <section class="content-section services-section">
-      <div class="section-title-group centered">
-        <p class="section-pretitle">Experiencias exclusivas</p>
-        <h2 class="section-title">SERVICIOS DESTACADOS</h2>
-        <div class="title-divider"></div>
-      </div>
-
-      <div class="services-grid" *ngIf="catalogoServicios.length > 0">
-        <div *ngFor="let s of catalogoServicios" class="service-card">
-          <div class="service-image">
-            <img [src]="getImagenServicio(s.nombre)" [alt]="s.nombre"
-                style="width:100%;height:100%;object-fit:cover;">
-          </div>
-          <div class="service-info">
-            <h3>{{ s.nombre }}</h3>
-            <p>{{ s.descripcion }}</p>
-            <div class="service-footer">
-              <span class="service-price">{{ s.precio }}€</span>
-              <button class="btn-service" (click)="abrirModalReserva(s)">Reservar</button>
+      <div class="row g-4">
+        <div class="col-md-4" *ngFor="let h of habitaciones">
+          <div class="room-card-bs h-100">
+            <div class="room-img-wrapper overflow-hidden">
+              <img [src]="getImagenHabitacion(h.tipo)" [alt]="h.tipo" class="room-img w-100">
+              <div class="room-img-overlay">
+                <a routerLink="/habitaciones" class="btn btn-gold fw-bold text-uppercase">
+                  Ver detalles
+                </a>
+              </div>
+              <span class="room-type-badge">{{ h.tipo }}</span>
+            </div>
+            <div class="room-body p-4">
+              <h3 class="fw-semibold display-6 mb-2">Habitación {{ h.numero }}</h3>
+              <p class="text-muted small mb-3">{{ h.descripcion || 'Disfruta de una estancia inigualable con todas las comodidades.' }}</p>
+              <div class="d-flex justify-content-between align-items-center border-top pt-3">
+                <div>
+                  <span class="room-price fw-black fs-3 text-dark">{{ h.precio }}€</span>
+                  <span class="text-muted small"> / noche</span>
+                </div>
+                <a routerLink="/habitaciones" class="btn btn-dark fw-bold text-uppercase px-4">
+                  Reservar
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="ver-mas-wrapper">
-        <button class="btn-outline" routerLink="/servicios">Ver todos los servicios</button>
+  <!-- BANNER INTERMEDIO -->
+  <section class="banner-section position-relative py-7 text-white text-center">
+    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&q=80"
+         class="banner-bg" alt="Restaurant">
+    <div class="banner-overlay"></div>
+    <div class="container position-relative">
+      <p class="text-gold text-uppercase fw-bold letter-spacing-wide mb-3">Gastronomía de autor</p>
+      <h2 class="display-4 fw-black mb-4">Una experiencia<br>para los sentidos</h2>
+      <a routerLink="/servicios" class="btn btn-gold btn-lg px-5 py-3 fw-bold text-uppercase">
+        Descubrir
+      </a>
+    </div>
+  </section>
+
+  <!-- SERVICIOS -->
+  <section class="py-6 bg-white">
+    <div class="container">
+      <div class="text-center mb-5">
+        <p class="section-pretitle text-gold text-uppercase fw-bold letter-spacing-wide mb-2">
+          Experiencias exclusivas
+        </p>
+        <h2 class="section-heading mb-0">SERVICIOS DESTACADOS</h2>
+        <div class="heading-line mx-auto mt-3"></div>
       </div>
-    </section>
 
-    <!-- OPINIONES -->
-   <section class="content-section opinions-section">
-      <div class="section-title-group centered">
-        <p class="section-pretitle">Lo que dicen nuestros huéspedes</p>
-        <h2 class="section-title">OPINIONES</h2>
-        <div class="title-divider"></div>
-      </div>
-
-      <div class="opinions-grid" *ngIf="opiniones.length > 0">
-        <div class="opinion-card" *ngFor="let o of opiniones">
-          <div class="opinion-stars">
-            <i *ngFor="let e of getEstrellas(o.estrellas)" [class]="e"></i>
-          </div>
-          <p class="opinion-text">"{{ o.comentario }}"</p>
-          <div class="opinion-author">
-            <div class="author-avatar">{{ o.usuario?.nombre?.charAt(0)?.toUpperCase() }}</div>
-            <div>
-              <strong>{{ o.usuario?.nombre }}</strong>
-              <span>{{ o.fecha | date:'MMMM yyyy' }}</span>
+      <div class="row g-4">
+        <div class="col-md-4" *ngFor="let s of catalogoServicios">
+          <div class="service-card-bs h-100">
+            <div class="service-img-wrapper overflow-hidden">
+              <img [src]="getImagenServicio(s.nombre)" [alt]="s.nombre" class="service-img w-100">
+              <div class="service-price-badge">{{ s.precio }}€</div>
+            </div>
+            <div class="service-body p-4">
+              <h3 class="fw-semibold display-6 mb-2">{{ s.nombre }}</h3>
+              <p class="text-muted small mb-4">{{ s.descripcion }}</p>
+              <button class="btn btn-dark w-100 fw-bold text-uppercase py-3"
+                      (click)="abrirModalReserva(s)">
+                Reservar ahora
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="ver-mas-wrapper">
-        <button class="btn-outline" routerLink="/opiniones">Ver todas las opiniones</button>
+      <div class="text-center mt-5">
+        <a routerLink="/servicios" class="btn btn-outline-dark btn-lg px-5 fw-bold text-uppercase">
+          Ver todos los servicios
+        </a>
       </div>
-    </section>
+    </div>
+  </section>
 
-  </div>
+  <!-- OPINIONES -->
+  <section class="py-6 bg-dark text-white">
+    <div class="container">
+      <div class="text-center mb-5">
+        <p class="section-pretitle text-gold text-uppercase fw-bold letter-spacing-wide mb-2">
+          Lo que dicen nuestros huéspedes
+        </p>
+        <h2 class="section-heading mb-0">OPINIONES</h2>
+        <div class="heading-line mx-auto mt-3" style="background: #c9a84c;"></div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-4" *ngFor="let o of opiniones">
+          <div class="opinion-card-bs h-100 p-4">
+            <div class="opinion-stars mb-3">
+              <i *ngFor="let e of getEstrellas(o.estrellas)" [class]="e + ' text-gold'"></i>
+            </div>
+            <p class="opinion-text fst-italic mb-4">"{{ o.comentario }}"</p>
+            <div class="d-flex align-items-center gap-3 mt-auto">
+              <div class="author-avatar-bs fw-black">
+                {{ o.usuario?.nombre?.charAt(0)?.toUpperCase() }}
+              </div>
+              <div>
+                <div class="fw-bold text-white">{{ o.usuario?.nombre }}</div>
+                <div class="text-muted small">{{ o.fecha | date:'MMMM yyyy' }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-5">
+        <a routerLink="/opiniones" class="btn btn-gold btn-lg px-5 fw-bold text-uppercase">
+          Ver todas las opiniones
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALERÍA -->
+  <section class="py-6 bg-light">
+    <div class="container">
+      <div class="text-center mb-5">
+        <p class="section-pretitle text-gold text-uppercase fw-bold letter-spacing-wide mb-2">
+          Nuestros espacios
+        </p>
+        <h2 class="section-heading mb-0">GALERÍA</h2>
+        <div class="heading-line mx-auto mt-3"></div>
+      </div>
+
+      <div class="row g-2">
+        <div class="col-md-4 col-6">
+          <div class="gallery-item-bs" style="background-image: url('https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80')" routerLink="/galeria"></div>
+          <div class="gallery-overlay">
+            <span>Explorar</span>
+          </div>
+        </div>
+        <div class="col-md-4 col-6">
+          <div class="gallery-item-bs" style="background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80')" routerLink="/galeria"></div>
+        <div class="gallery-overlay">
+          <span>Explorar</span>
+        </div>
+        </div>
+        <div class="col-md-4 col-6">
+          <div class="gallery-item-bs" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80')" routerLink="/galeria"></div>
+          <div class="gallery-overlay">
+            <span>Explorar</span>
+          </div>
+        </div>
+        <div class="col-md-4 col-6">
+          <div class="gallery-item-bs" style="background-image: url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=600&q=80')" routerLink="/galeria"></div>
+          <div class="gallery-overlay">
+            <span>Explorar</span>
+          </div>
+        </div>
+        <div class="col-md-4 col-6">
+          <div class="gallery-item-bs" style="background-image: url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80')" routerLink="/galeria"></div>
+          <div class="gallery-overlay">
+            <span>Explorar</span>
+          </div>
+        </div>
+        <div class="col-md-4 col-6">
+          <div class="gallery-item-bs" style="background-image: url('https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=600&q=80')" routerLink="/galeria"></div>
+          <div class="gallery-overlay">
+            <span>Explorar</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-5">
+        <a routerLink="/galeria" class="btn btn-outline-dark btn-lg px-5 fw-bold text-uppercase">
+          Ver galería completa
+        </a>
+      </div>
+    </div>
+  </section>
+
 </div>
 
-<section class="content-section gallery-section">
-  <div class="section-title-group centered">
-    <p class="section-pretitle">Nuestros espacios</p>
-    <h2 class="section-title">GALERÍA</h2>
-    <div class="title-divider"></div>
-  </div>
+<!-- MODAL SERVICIO -->
+<div class="modal-overlay" *ngIf="mostrarModalServicio">
+  <div class="modal-content-bs">
+    <button class="btn-close-bs" (click)="cerrarModal()">✖</button>
 
-  <div class="gallery-grid">
-    <div class="gallery-item" 
-         style="background-image: url('https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80')">
+    <div class="modal-header-img">
+      <img [src]="getImagenServicio(servicioSeleccionado?.nombre || '')"
+           [alt]="servicioSeleccionado?.nombre">
+      <div class="modal-header-overlay">
+        <h3 class="text-white fw-black fs-3">{{ servicioSeleccionado?.nombre }}</h3>
+        <span class="text-gold fw-bold fs-4">{{ servicioSeleccionado?.precio }}€</span>
+      </div>
     </div>
-    <div class="gallery-item"
-         style="background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80')">
-    </div>
-    <div class="gallery-item"
-         style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80')">
-    </div>
-    <div class="gallery-item"
-         style="background-image: url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=600&q=80')">
-    </div>
-    <div class="gallery-item"
-         style="background-image: url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80')">
-    </div>
-    <div class="gallery-item"
-         style="background-image: url('https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=600&q=80')">
-    </div>
-  </div>
 
-  <div class="ver-mas-wrapper">
-    <button class="btn-outline" routerLink="/galeria">Ver galería completa</button>
+    <div class="p-4">
+      <p class="text-muted mb-4">{{ servicioSeleccionado?.descripcion }}</p>
+
+      <div class="row g-3 mb-4">
+        <div class="col-6">
+          <label class="form-label fw-bold text-uppercase small">📅 Fecha</label>
+          <input type="date" class="form-control form-control-lg" [(ngModel)]="fechaCita">
+        </div>
+        <div class="col-6">
+          <label class="form-label fw-bold text-uppercase small">⏰ Hora</label>
+          <input type="time" class="form-control form-control-lg" [(ngModel)]="horaCita" step="1800">
+        </div>
+      </div>
+
+      <div class="d-flex gap-3">
+        <button class="btn btn-outline-secondary flex-fill py-3 fw-bold text-uppercase"
+                (click)="cerrarModal()">Cancelar</button>
+        <button class="btn btn-gold flex-fill py-3 fw-bold text-uppercase"
+                (click)="confirmarReservaServicio()">Confirmar</button>
+      </div>
+    </div>
   </div>
-</section>
+</div>

@@ -81,42 +81,34 @@
           <div *ngIf="tareasFiltradas.length === 0" class="empty-state">
             No hay tareas con los filtros seleccionados.
           </div>
-          <div *ngFor="let tarea of tareasFiltradas" class="tarea-item" [ngClass]="getClaseEstado(tarea.estado)">
-            <div class="tarea-header">
-              <span class="tarea-hab">🛏️ Hab. {{ tarea.habitacion?.numero }}</span>
-              <span class="tarea-badge" [ngClass]="getClaseEstado(tarea.estado)">{{ tarea.estado }}</span>
-            </div>
-            <div class="tarea-info">
-              <span><i class="fas fa-calendar"></i> {{ tarea.fecha | date:'dd/MM/yyyy' }}</span>
-              <span><i class="fas fa-user"></i> {{ tarea.empleado?.nombre || 'Sin asignar' }}</span>
-            </div>
-            <div class="tarea-actions">
+          <ng-container *ngFor="let tarea of tareasFiltradas">
+            <div class="tarea-item" [ngClass]="getClaseEstado(tarea.estado)"
+                *ngIf="tarea.estado !== 'COMPLETADA'">
+              <div class="tarea-header">
+                <span class="tarea-hab">🛏️ Hab. {{ tarea.habitacion?.numero }}</span>
+                <span class="tarea-badge" [ngClass]="getClaseEstado(tarea.estado)">{{ tarea.estado }}</span>
+              </div>
+              <div class="tarea-info">
+                <span><i class="fas fa-calendar"></i> {{ tarea.fecha | date:'dd/MM/yyyy' }}</span>
+                <span><i class="fas fa-user"></i> {{ tarea.empleado?.nombre || 'Sin asignar' }}</span>
+              </div>
+              <div class="tarea-actions">
                 <div class="asignar-group" *ngIf="!tarea.empleado">
-                    <select class="select-empleado" [(ngModel)]="tarea.empleadoSeleccionado">
+                  <select class="select-empleado" [(ngModel)]="tarea.empleadoSeleccionado">
                     <option value="">Asignar empleado...</option>
                     <option *ngFor="let emp of empleados" [value]="emp.id">{{ emp.nombre }}</option>
-                    </select>
-                    <button class="btn-aceptar" (click)="asignarEmpleado(tarea, tarea.empleadoSeleccionado)">
+                  </select>
+                  <button class="btn-aceptar" (click)="asignarEmpleado(tarea, tarea.empleadoSeleccionado)">
                     ✓ Aceptar
-                    </button>
+                  </button>
                 </div>
                 <div class="empleado-asignado" *ngIf="tarea.empleado">
-                    <i class="fas fa-user-check"></i> {{ tarea.empleado.nombre }}
+                  <i class="fas fa-user-check"></i> {{ tarea.empleado.nombre }}
                 </div>
-                <div class="btn-group">
-                    <button class="btn-pendiente" 
-                            *ngIf="tarea.estado !== 'PENDIENTE'"
-                            (click)="cambiarEstado(tarea, 'PENDIENTE')">Pendiente</button>
-                    <button class="btn-proceso" 
-                            *ngIf="tarea.estado !== 'EN_PROCESO'"
-                            (click)="cambiarEstado(tarea, 'EN_PROCESO')">En proceso</button>
-                    <button class="btn-completada" 
-                            *ngIf="tarea.estado !== 'COMPLETADA'"
-                            (click)="cambiarEstado(tarea, 'COMPLETADA')">Completada</button>
-                    <button class="btn-delete" (click)="eliminar(tarea.id)">🗑️</button>
-                </div>
-                </div>
-          </div>
+                <button class="btn-delete" (click)="eliminar(tarea.id)">🗑️</button>
+              </div>
+            </div>
+          </ng-container>
         </div>
 
       </section>

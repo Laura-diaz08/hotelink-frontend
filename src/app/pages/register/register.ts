@@ -25,16 +25,21 @@ export class RegisterComponent {
   mensajeError: string = '';
   mensajeExito: string = '';
 
+  confirmarPassword: string = '';
+
   constructor(private authService: Auth, private router: Router) {}
 
   onSubmit() {
+    if (this.passwordNoCoincide() || this.confirmarPassword === '') {
+      this.mensajeError = 'Las contraseñas no coinciden.';
+      return;
+    }
     // Aquí llamaremos al servicio para registrar al usuario
     this.authService.registro(this.registroData as Usuario).subscribe({
       next: (respuesta) => {
-        this.mensajeExito = '¡Registro completado! Redirigiendo al login...';
-        // Esperamos 2 segundos para que lea el mensaje y lo mandamos al login
+        this.mensajeExito = '¡Registro completado! Revisa tu correo para verificar la cuenta.';
         setTimeout(() => {
-          this.router.navigate(['/login']);
+          this.router.navigate(['/verificar']);
         }, 2000);
       },
       error: (error) => {
@@ -42,6 +47,11 @@ export class RegisterComponent {
         this.mensajeError = 'Error al crear la cuenta. Comprueba los datos.';
       }
     });
+  }
+
+  passwordNoCoincide(): boolean {
+    return this.confirmarPassword !== '' && 
+          this.registroData.password !== this.confirmarPassword;
   }
 
   volverAlLogin() {

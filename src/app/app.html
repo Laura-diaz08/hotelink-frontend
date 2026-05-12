@@ -1,7 +1,8 @@
 <header class="topbar client-topbar"
         [class.navbar-solida]="!esTransparente"
         [class.navbar-transparente]="esTransparente"
-        *ngIf="!router.url.includes('/login') && !router.url.includes('/register') && !router.url.includes('/admin')">  <div class="logo-text">Hote<span class="logo-accent">link</span></div>
+        *ngIf="!router.url.includes('/login') && !router.url.includes('/register') && !router.url.includes('/admin') && !router.url.includes('/trabajador') && !router.url.includes('/verificar') && !router.url.includes('/recuperar') ">  
+        <div class="logo-text">Hote<span class="logo-accent">link</span></div>
   <nav class="main-nav">
     <ul class="nav-list">
       <li><a routerLink="/home" class="nav-link">Inicio</a></li>
@@ -15,9 +16,52 @@
     </ul>
   </nav>
   <div class="user-actions">
-    <span class="welcome-text">¡Hola, Viajero!</span>
+    <span class="welcome-text">¡Hola, {{ nombreUsuario }}!</span>
     <button (click)="cerrarSesion()" class="btn-logout">Cerrar Sesión</button>
   </div>
 </header>
 
 <router-outlet></router-outlet>
+
+<footer class="footer" *ngIf="!router.url.includes('/login') && !router.url.includes('/register') && !router.url.includes('/admin') && !router.url.includes('/trabajador') && !router.url.includes('/verificar') && !router.url.includes('/recuperar') ">
+  <div class="footer-container">
+
+    <div class="footer-brand">
+      <div class="footer-logo">Hote<span class="footer-accent">link</span></div>
+      <p class="footer-desc">Una experiencia única de hospitalidad y confort en el corazón de Cádiz.</p>
+      <div class="footer-social">
+        <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-btn"><i class="fab fa-facebook"></i></a>
+        <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+
+      </div>
+    </div>
+
+    <div class="footer-links">
+      <h4>Navegación</h4>
+      <ul>
+        <li><a routerLink="/home">Inicio</a></li>
+        <li><a routerLink="/habitaciones">Habitaciones</a></li>
+        <li><a routerLink="/servicios">Servicios</a></li>
+        <li><a routerLink="/nosotros">Nosotros</a></li>
+        <li><a routerLink="/opiniones">Opiniones</a></li>
+        <li><a routerLink="/galeria">Galería</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-contacto">
+      <h4>Contacto</h4>
+      <ul>
+        <li><i class="fas fa-map-marker-alt"></i> Calle Real 12, Cádiz, España</li>
+        <li><i class="fas fa-phone"></i> +34 956 123 456</li>
+        <li><i class="fas fa-envelope"></i> gestionHotelink&#64;gmail.com</li>
+        <li><i class="fas fa-clock"></i> Recepción 24h</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <p>© {{ currentYear }} Hotelink. Todos los derechos reservados.</p>
+  </div>
+</footer>

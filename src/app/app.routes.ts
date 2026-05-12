@@ -14,6 +14,9 @@ import { NosotrosComponent } from './pages/nosotros/nosotros';
 import { ContactoComponent } from './pages/contacto/contacto';
 import { OpinionesComponent } from './pages/opiniones/opiniones';
 import { GaleriaComponent } from './pages/galeria/galeria';
+import { TrabajadorDashboardComponent } from './pages/trabajador-dashboard/trabajador-dashboard';
+import { VerificarComponent } from './pages/verificar/verificar';
+import { RecuperarComponent } from './pages/recuperar/recuperar';
 
 
 export const routes: Routes = [
@@ -32,5 +35,8 @@ export const routes: Routes = [
   { path: 'contacto', component: ContactoComponent },
   { path: 'opiniones', component: OpinionesComponent },
   { path: 'galeria', component: GaleriaComponent },
+  { path: 'trabajador', component: TrabajadorDashboardComponent },
+  { path: 'verificar', component: VerificarComponent },
+  { path: 'recuperar', component: RecuperarComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' }
 ];

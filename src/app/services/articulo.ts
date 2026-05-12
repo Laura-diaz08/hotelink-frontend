@@ -31,6 +31,14 @@ export class ArticuloService {
     );
   }
 
+  agregarCargoCliente(reservaId: number, articuloId: number, 
+                    cantidad: number, usuarioId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/cargo/cliente`,
+      { reservaId, articuloId, cantidad, usuarioId },
+      { headers: this.getHeaders() }
+    );
+  }
+
   getCargosDeReserva(reservaId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/cargo/reserva/${reservaId}`, { headers: this.getHeaders() });
   }

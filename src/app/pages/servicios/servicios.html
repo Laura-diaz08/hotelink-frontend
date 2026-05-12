@@ -2,6 +2,9 @@
 
   <!-- HERO -->
   <div class="page-hero">
+    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1600&q=80" 
+        class="page-hero-img" alt="Servicios">
+    <div class="page-hero-overlay"></div>
     <div class="page-hero-content">
       <h1 class="page-title">NUESTROS SERVICIOS</h1>
       <div class="title-divider"></div>
@@ -22,11 +25,7 @@
 
         <div class="servicio-imagen">
           <img [src]="getImagen(s.nombre)" [alt]="s.nombre">
-          <div class="servicio-overlay">
-            <button class="btn-reservar-overlay" (click)="abrirModal(s)">
-              Reservar ahora
-            </button>
-          </div>
+          <div class="servicio-overlay"></div>
           <div class="servicio-precio-badge">{{ s.precio }}€</div>
         </div>
 

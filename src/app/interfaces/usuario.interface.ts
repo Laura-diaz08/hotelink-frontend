@@ -1,17 +1,18 @@
+export type Rol = 'ADMIN' | 'CLIENTE' | 'RECEPCION' | 'LIMPIEZA' | 'GIMNASIO' | 'MASAJES' | 'CONDUCTOR' | 'COCINA';
 
 export interface Usuario {
-  id?: number;          
-  nombre: string;       
+  id?: number;
+  nombre: string;
   email: string;
-  password?: string;    
-  rol: 'ADMIN' | 'CLIENTE' | 'RECEPCION' | 'LIMPIEZA' | 'SERVICIOS'; 
+  password?: string;
+  rol: Rol;
 }
 
-// También definimos qué nos devuelve el Login
 export interface LoginResponse {
   token: string;
-  rol: 'ADMIN' | 'CLIENTE' | 'RECEPCION' | 'LIMPIEZA' | 'SERVICIOS';
+  rol: Rol;
   tipo: string;
   expiraEn: string;
   id: number;
+  nombre: string;
 }

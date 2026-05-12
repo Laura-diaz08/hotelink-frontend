@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HabitacionService } from '../../../services/habitacion';
 import { Habitacion } from '../../../interfaces/habitacion.interface';
+import { ReservaService } from '../../../services/reserva';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -29,14 +30,18 @@ export class AdminDashboardComponent implements OnInit {
   diasDelMes: number[] = [];
   habitacionesMes: any[] = [];
 
+  ultimosMovimientos: any[] = [];
+
   constructor(
     private habitacionService: HabitacionService,
+    private reservaService: ReservaService,
     private cdr: ChangeDetectorRef,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.cargarDashboard();
+    this.cargarMovimientos();
   }
 
   cargarDashboard(): void {
@@ -189,6 +194,40 @@ export class AdminDashboardComponent implements OnInit {
     this.habitacionService.actualizarHabitacion(habitacion).subscribe(() => {
       console.log(`Habitación ${habitacion.numero} actualizada`);
       this.cargarDatosLimpieza(); // Recargamos la lista
+    });
+  }
+
+  cargarMovimientos(): void {
+    this.reservaService.getAllReservas().subscribe({
+      next: (data: any[]) => {
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+
+        const conCheckin = data
+          .filter(r => r.checkIn)
+          .map(r => ({
+            ...r,
+            tipo: 'L',
+            fecha: r.fechaEntrada,
+            diff: Math.abs(new Date(r.fechaEntrada).getTime() - hoy.getTime())
+          }));
+
+        const conCheckout = data
+          .filter(r => r.checkOut)
+          .map(r => ({
+            ...r,
+            tipo: 'S',
+            fecha: r.fechaSalida,
+            diff: Math.abs(new Date(r.fechaSalida).getTime() - hoy.getTime())
+          }));
+
+        this.ultimosMovimientos = [...conCheckin, ...conCheckout]
+          .sort((a, b) => a.diff - b.diff)
+          .slice(0, 4);
+
+        this.cdr.detectChanges();
+      },
+      error: (e) => console.error('Error cargando movimientos', e)
     });
   }
 

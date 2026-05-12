@@ -96,7 +96,11 @@ export class LimpiezaAdmin implements OnInit {
   }
 
   getTareasPorEstado(estado: string): any[] {
-    return this.tareasFiltradas.filter(t => t.estado === estado);
+    const tareas = this.tareas.filter(t => t.estado === estado);
+    if (estado === 'COMPLETADA') {
+      return tareas.slice(-5);
+    }
+    return tareas;
   }
 
   cambiarEstado(tarea: any, nuevoEstado: string): void {

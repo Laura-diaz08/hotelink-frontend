@@ -1,0 +1,25 @@
+<div class="verificar-wrapper">
+      <div class="verificar-card">
+        <h2>Verifica tu cuenta</h2>
+        <p>Hemos enviado un código de 6 dígitos a tu correo electrónico.</p>
+
+        <div *ngIf="mensaje" class="alert success">{{ mensaje }}</div>
+        <div *ngIf="error" class="alert error">{{ error }}</div>
+
+        <div class="form-grupo">
+          <label>Nombre de usuario</label>
+          <input type="text" [(ngModel)]="nombre" placeholder="Tu nombre de usuario">
+        </div>
+
+        <div class="form-grupo">
+          <label>Código de verificación</label>
+          <input type="text" [(ngModel)]="codigo" placeholder="123456" maxlength="6">
+        </div>
+
+        <button class="btn-verificar" (click)="verificar()" [disabled]="enviando">
+          {{ enviando ? 'Verificando...' : 'Verificar cuenta' }}
+        </button>
+
+        <a routerLink="/login" (click)="volverAlLogin()" class="btn-volver">Volver al login</a>
+      </div>
+    </div>

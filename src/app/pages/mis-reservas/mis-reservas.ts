@@ -4,6 +4,8 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReservaService } from '../../services/reserva';
 import { CitaService } from '../../services/cita';
+import { FacturaService } from '../../services/factura';
+import { ArticuloService } from '../../services/articulo';
 
 @Component({
   selector: 'app-mis-reservas',
@@ -19,15 +21,28 @@ export class MisReservasComponent implements OnInit {
   mostrarModalGestion: boolean = false;
   reservaAGestionar: any = null;
 
+  articulos: any[] = [];
+  mostrarModalCargos: boolean = false;
+  reservaParaCargos: any = null;
+  cargosReserva: any[] = [];
+  articuloSeleccionadoId: string = '';
+  cantidadArticulo: number = 1;
+  totalCargos: number = 0;
+  mensajeCargo: string = '';
+  mensajeErrorCargo: string = '';
+
   constructor(
     private reservaService: ReservaService,
     private citaService: CitaService,
     private router: Router,
+    private facturaService: FacturaService,
+    private articuloService: ArticuloService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.cargarMisReservas();
+    this.cargarArticulos();
   }
 
   cargarMisReservas() {
@@ -208,6 +223,83 @@ export class MisReservasComponent implements OnInit {
       case 'CANCELADA': return 'badge-cancelada';
       default: return 'badge-pending';
     }
+  }
+
+  descargarFactura(reservaId: number): void {
+    this.facturaService.descargarFacturaPDF(reservaId);
+  }
+
+  cargarArticulos(): void {
+    this.articuloService.getArticulos().subscribe({
+      next: (data) => this.articulos = data,
+      error: (e) => console.error('Error cargando artículos', e)
+    });
+  }
+
+  abrirModalCargosCliente(reserva: any): void {
+    this.reservaParaCargos = reserva;
+    this.mostrarModalCargos = true;
+    this.articuloSeleccionadoId = '';
+    this.cantidadArticulo = 1;
+    this.cdr.detectChanges();
+
+    setTimeout(() => {
+      this.cargarCargosReserva(reserva.id);
+    }, 200);
+  }
+
+  cerrarModalCargos(): void {
+    this.mostrarModalCargos = false;
+    this.reservaParaCargos = null;
+    this.cargosReserva = [];
+    this.totalCargos = 0;
+    this.mensajeCargo = '';
+    this.mensajeErrorCargo = '';
+  }
+
+  cargarCargosReserva(reservaId: number): void {
+    this.articuloService.getCargosDeReserva(reservaId).subscribe({
+      next: (data) => {
+        this.cargosReserva = data;
+        this.totalCargos = data.reduce((sum: number, c: any) => 
+          sum + (c.cantidad * c.precioUnitario), 0);
+        this.cdr.detectChanges();
+      },
+      error: (e) => console.error('Error cargando cargos', e)
+    });
+  }
+
+  agregarCargo(): void {
+
+    console.log('articuloSeleccionadoId:', this.articuloSeleccionadoId);
+    console.log('tipo:', typeof this.articuloSeleccionadoId);
+    if (!this.articuloSeleccionadoId || this.articuloSeleccionadoId === '' || 
+      this.articuloSeleccionadoId === '0') {
+      this.mensajeErrorCargo = 'Selecciona un artículo';
+      setTimeout(() => this.mensajeErrorCargo = '', 3000);
+      return;
+    }
+
+    const idCliente = Number(localStorage.getItem('id'));
+
+    this.articuloService.agregarCargoCliente(
+      this.reservaParaCargos.id,
+      Number(this.articuloSeleccionadoId),
+      this.cantidadArticulo,
+      idCliente
+    ).subscribe({
+      next: () => {
+        this.mensajeCargo = '¡Artículo añadido correctamente!';
+        this.articuloSeleccionadoId = '';
+        this.cantidadArticulo = 1;
+        this.cargarCargosReserva(this.reservaParaCargos.id);
+        setTimeout(() => this.mensajeCargo = '', 3000);
+      },
+      error: (err) => {
+        this.mensajeErrorCargo = err.error?.error || 'Error al añadir el artículo';
+        setTimeout(() => this.mensajeErrorCargo = '', 3000);
+      }
+    });
   }
 
   cerrarSesion() {

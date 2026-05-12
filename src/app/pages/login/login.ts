@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms'; 
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Auth } from '../../services/auth';
 import { Usuario, LoginResponse } from '../../interfaces/usuario.interface';
 import { CommonModule } from '@angular/common'; 
@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule], 
+  imports: [FormsModule, CommonModule, RouterModule], 
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
@@ -45,40 +45,35 @@ export class LoginComponent {
             console.error("¡ALERTA! Java no me está devolviendo el ID en el login");
         }
 
+        localStorage.setItem('nombre', respuesta.nombre);
+
         // Evaluamos el rol exacto que nos llega desde Java
         switch (respuesta.rol) {
           case 'ADMIN':
             this.router.navigate(['/admin']);
             break;
-
           case 'CLIENTE':
-            this.router.navigate(['/home']); // La pantalla del huésped
+            this.router.navigate(['/home']);
             break;
-
-          case 'SERVICIOS':
-            this.router.navigate(['/servicios-dashboard']); // ¡La que acabamos de crear!
-            break;
-
           case 'LIMPIEZA':
-            // Cambia '/panel-limpieza' por la ruta que le pusieras a la tabla de limpieza
-            this.router.navigate(['/limpieza-dashboard']); 
+          case 'GIMNASIO':
+          case 'MASAJES':
+          case 'CONDUCTOR':
+          case 'COCINA':
+            this.router.navigate(['/trabajador']);
             break;
-
-          case 'RECEPCION':
-            // Cambia esto por la ruta del panel de recepción cuando la crees
-            this.router.navigate(['/recepcion']); 
-            break;
-
           default:
-            // Por si acaso llega un rol raro o vacío, lo mandamos al login de vuelta
-            console.error('Rol no reconocido:', respuesta.rol);
             this.router.navigate(['/login']);
             break;
         }
       },
-      error: (error: any) => {
-        console.error('Error:', error);
-        this.mensajeError = 'Usuario o contraseña incorrectos';
+      error: (e) => {
+        const msg = e.error?.error || 'Error al iniciar sesión';
+        if (msg.includes('no verificada')) {
+          this.router.navigate(['/verificar']);
+        } else {
+          this.mensajeError = msg;
+        }
       }
     });
   }

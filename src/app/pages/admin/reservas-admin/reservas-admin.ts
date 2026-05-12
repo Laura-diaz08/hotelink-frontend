@@ -74,6 +74,16 @@ export class ReservasAdminComponent implements OnInit{
       password: '',
       rol: 'CLIENTE' // Por defecto crearemos usuarios normales
     };
+
+    mostrarModalReserva: boolean = false;
+    nuevaReserva = {
+      usuarioId: '',
+      habitacionId: '',
+      fechaEntrada: '',
+      fechaSalida: '',
+      numeroHuespedes: 1
+    };
+    clientes: any[] = [];
   
     constructor(
       private usuarioService: UsuarioService, 
@@ -92,6 +102,7 @@ export class ReservasAdminComponent implements OnInit{
       this.cargarReservas();
       this.cargarTareasLimpieza();
       this.cargarArticulos();
+      this.cargarClientes();
     }
   
     cargarUsuarios() {
@@ -340,6 +351,7 @@ export class ReservasAdminComponent implements OnInit{
       next: (data) => {
         this.cargosReserva = data;
         this.calcularTotalCargos();
+        this.cdr.detectChanges();
       },
       error: (e) => console.error('Error cargando cargos', e)
     });
@@ -405,8 +417,63 @@ export class ReservasAdminComponent implements OnInit{
       next: (data) => {
         this.citasReserva = data.filter((c: any) => c.estado !== 'CANCELADA');
         this.calcularTotalCargos();
+        this.cdr.detectChanges();
       },
       error: (e) => console.error('Error cargando citas', e)
+    });
+  }
+
+  cargarClientes(): void {
+    this.usuarioService.getUsuarios().subscribe({
+      next: (data) => {
+        this.clientes = data.filter((u: any) => u.rol === 'CLIENTE');
+      },
+      error: (e) => console.error('Error cargando clientes', e)
+    });
+  }
+
+  abrirModalReserva(): void {
+    this.nuevaReserva = {
+      usuarioId: '',
+      habitacionId: '',
+      fechaEntrada: '',
+      fechaSalida: '',
+      numeroHuespedes: 1
+    };
+    this.mostrarModalReserva = true;
+  }
+
+  cerrarModalReserva(): void {
+    this.mostrarModalReserva = false;
+  }
+
+  crearReserva(): void {
+    if (!this.nuevaReserva.usuarioId || !this.nuevaReserva.habitacionId ||
+        !this.nuevaReserva.fechaEntrada || !this.nuevaReserva.fechaSalida) {
+      this.mensajeError = 'Rellena todos los campos';
+      setTimeout(() => this.mensajeError = '', 3000);
+      return;
+    }
+
+    const reserva = {
+      usuario: { id: Number(this.nuevaReserva.usuarioId) },
+      habitacion: { id: Number(this.nuevaReserva.habitacionId) },
+      fechaEntrada: this.nuevaReserva.fechaEntrada,
+      fechaSalida: this.nuevaReserva.fechaSalida,
+      numeroHuespedes: this.nuevaReserva.numeroHuespedes
+    };
+
+    this.reservaService.crearReserva(reserva).subscribe({
+      next: () => {
+        this.mensajeExito = 'Reserva creada correctamente';
+        this.cerrarModalReserva();
+        this.cargarReservas();
+        setTimeout(() => this.mensajeExito = '', 3000);
+      },
+      error: (err) => {
+        this.mensajeError = err.error?.error || 'Error al crear la reserva';
+        setTimeout(() => this.mensajeError = '', 3000);
+      }
     });
   }
 }

@@ -36,6 +36,15 @@ export class HabitacionesComponent implements OnInit {
   reservaFechaFin: string = '';
   reservaHuespedes: number = 1;
 
+  errorReserva: string = '';
+  exitoReserva: string = '';
+
+  imagenesHabitaciones: { [key: string]: string } = {
+    'Sencilla': 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80',
+    'Doble': 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80',
+    'Suite': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80'
+  };
+
   constructor(
     private habitacionService: HabitacionService,
     private router: Router,
@@ -91,29 +100,34 @@ export class HabitacionesComponent implements OnInit {
   abrirModalReserva(id: number | undefined) {
     this.habitacionSeleccionadaId = id;
     this.mostrarModal = true;
-    this.reservaFechaInicio = ''; 
+    this.reservaFechaInicio = '';
     this.reservaFechaFin = '';
     this.reservaHuespedes = 1;
+    this.errorReserva = '';
+    this.exitoReserva = '';
   }
+
   cerrarModal() {
     this.mostrarModal = false;
     this.habitacionSeleccionadaId = undefined;
   }
 
   confirmarReserva() {
+    this.errorReserva = '';
+    this.exitoReserva = '';
 
     if (!this.reservaFechaInicio || !this.reservaFechaFin) {
-      alert("⚠️ Por favor, selecciona las fechas de entrada y salida.");
-      return; 
+      this.errorReserva = 'Por favor, selecciona las fechas de entrada y salida.';
+      return;
     }
 
     if (!this.reservaHuespedes || this.reservaHuespedes < 1) {
-      alert("⚠️ Por favor, indica al menos 1 huésped.");
+      this.errorReserva = 'Por favor, indica al menos 1 huésped.';
       return;
     }
 
     if (!this.habitacionSeleccionadaId) {
-      console.error("Error: No hay ninguna habitación seleccionada.");
+      this.errorReserva = 'No hay ninguna habitación seleccionada.';
       return;
     }
 
@@ -123,21 +137,20 @@ export class HabitacionesComponent implements OnInit {
       clienteId: clienteId,
       fechaInicio: this.reservaFechaInicio,
       fechaFin: this.reservaFechaFin,
-      numeroHuespedes: this.reservaHuespedes 
+      numeroHuespedes: this.reservaHuespedes
     };
 
     this.habitacionService.reservarHabitacion(this.habitacionSeleccionadaId, datosReserva).subscribe({
-      next: (respuesta) => {
-        alert("¡Reserva completada con éxito!");
-        
-        // 1. Notificamos al calendario que la reserva se creó
+      next: () => {
+        this.exitoReserva = '¡Reserva completada con éxito!';
         this.habitacionService.notificarCambioReserva();
-        
-        this.cerrarModal();
+        this.cdr.detectChanges();
+        setTimeout(() => this.cerrarModal(), 2000);
       },
       error: (err) => {
         console.error(err);
-        alert("Hubo un problema con la reserva.");
+        this.errorReserva = err.error?.error || 'La habitación ya está ocupada en esas fechas.';
+        this.cdr.detectChanges();
       }
     });
   }
@@ -192,6 +205,11 @@ export class HabitacionesComponent implements OnInit {
       case 'LIMPIEZA': return 'estado-limpieza';
       default: return 'estado-otro';
     }
+  }
+
+  getImagenHabitacion(tipo: string): string {
+    return this.imagenesHabitaciones[tipo] || 
+      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80';
   }
 
   cerrarSesion() {

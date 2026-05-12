@@ -53,4 +53,8 @@ export class ReservaService {
   eliminarReserva(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
   }
+
+  crearReserva(reserva: any): Observable<any> {
+    return this.http.post(this.apiUrl, reserva, { headers: this.getHeaders() });
+  }
 }

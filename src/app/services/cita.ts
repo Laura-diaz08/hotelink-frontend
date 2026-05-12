@@ -55,4 +55,25 @@ export class CitaService {
     const token = localStorage.getItem('token');
     return new HttpHeaders({ 'Authorization': `Bearer ${token}` });
   }
+
+  todasLasCitas(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/todas`, { headers: this.getHeaders() });
+  }
+
+  getCitasDisponibles(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/disponibles`, { headers: this.getHeaders() });
+  }
+
+  asignarEmpleado(citaId: number, empleadoId: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${citaId}/asignar`, 
+      { empleadoId }, 
+      { headers: this.getHeaders() }
+    );
+  }
+
+  getCitasEmpleado(empleadoId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/empleado/${empleadoId}`, 
+      { headers: this.getHeaders() }
+    );
+  }
 }

@@ -1,0 +1,211 @@
+<div class="trabajador-wrapper">
+
+  <!-- NAVBAR -->
+  <nav class="trabajador-nav">
+    <div class="nav-logo">Hote<span>link</span></div>
+    <div class="nav-info">
+      <span class="nav-nombre">{{ nombre }}</span>
+      <span class="nav-rol">{{ rol }}</span>
+    </div>
+    <button class="btn-logout" (click)="cerrarSesion()">
+      <i class="fas fa-sign-out-alt"></i> Salir
+    </button>
+  </nav>
+
+  <div class="trabajador-container" style="position: relative; z-index: 1;">
+
+    <!-- TABS -->
+    <div class="tabs-wrapper">
+      <button class="tab-btn" 
+              [class.active]="tabActiva === 'tareas'"
+              (click)="tabActiva = 'tareas'"
+              *ngIf="rol === 'LIMPIEZA'">
+        <i class="fas fa-broom"></i> Mis Tareas
+        <span class="tab-badge" *ngIf="getTareasPendientes().length > 0">
+          {{ getTareasPendientes().length }}
+        </span>
+      </button>
+      <button class="tab-btn"
+              [class.active]="tabActiva === 'disponibles'"
+              (click)="tabActiva = 'disponibles'"
+              *ngIf="rol !== 'LIMPIEZA'">
+        <i class="fas fa-list"></i> Disponibles
+        <span class="tab-badge" *ngIf="citasDisponibles.length > 0">
+          {{ citasDisponibles.length }}
+        </span>
+      </button>
+      <button class="tab-btn"
+              [class.active]="tabActiva === 'miscitas'"
+              (click)="tabActiva = 'miscitas'"
+              *ngIf="rol !== 'LIMPIEZA'">
+        <i class="fas fa-calendar-check"></i> Mis Citas
+        <span class="tab-badge badge-turquoise" *ngIf="misCitas.length > 0">
+          {{ misCitas.length }}
+        </span>
+      </button>
+    </div>
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div>
+        <h1 *ngIf="tabActiva === 'tareas'">Mis Tareas de Limpieza</h1>
+        <h1 *ngIf="tabActiva === 'disponibles'">Citas Disponibles</h1>
+        <h1 *ngIf="tabActiva === 'miscitas'">Mis Citas Asignadas</h1>
+        <p *ngIf="tabActiva === 'tareas'">Gestiona tus tareas asignadas</p>
+        <p *ngIf="tabActiva === 'disponibles'">Citas de {{ rol | titlecase }} sin asignar</p>
+        <p *ngIf="tabActiva === 'miscitas'">Tus citas confirmadas</p>
+      </div>
+      <div class="header-stats" *ngIf="tabActiva === 'tareas'">
+        <div class="stat-pill pendiente">
+          <span>{{ getTareasPendientes().length }}</span>
+          <label>Pendientes</label>
+        </div>
+        <div class="stat-pill en-proceso">
+          <span>{{ getTareasEnProceso().length }}</span>
+          <label>En proceso</label>
+        </div>
+        <div class="stat-pill completada">
+          <span>{{ getTareasCompletadas().length }}</span>
+          <label>Completadas</label>
+        </div>
+      </div>
+      <div class="header-stats" *ngIf="tabActiva !== 'tareas'">
+        <div class="stat-pill pendiente">
+          <span>{{ citasDisponibles.length }}</span>
+          <label>Disponibles</label>
+        </div>
+        <div class="stat-pill proxima">
+          <span>{{ misCitas.length }}</span>
+          <label>Mis citas</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: MIS TAREAS -->
+    <div *ngIf="tabActiva === 'tareas'">
+
+      <div *ngIf="cargandoTareas" class="loading">
+        <i class="fas fa-spinner fa-spin"></i> Cargando tareas...
+      </div>
+
+      <div *ngIf="!cargandoTareas && tareasAsignadas.length === 0" class="empty-state">
+        <i class="fas fa-check-circle empty-icon"></i>
+        <h3>No tienes tareas asignadas</h3>
+        <p>Cuando se te asigne una habitación aparecerá aquí.</p>
+      </div>
+
+      <section *ngIf="getTareasPendientes().length > 0">
+        <h2 class="seccion-titulo"><i class="fas fa-clock"></i> Pendientes</h2>
+        <div class="tareas-grid">
+          <div class="tarea-card pendiente" *ngFor="let t of getTareasPendientes()">
+            <div class="tarea-header">
+              <div class="habitacion-numero">
+                <i class="fas fa-bed"></i> Hab. {{ t.habitacion?.numero || t.numeroHabitacion }}
+              </div>
+              <span class="tarea-badge pendiente">Pendiente</span>
+            </div>
+            <div class="tarea-info">
+              <span><i class="fas fa-calendar"></i> {{ t.fecha | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <button class="btn-iniciar" (click)="iniciarTarea(t)">
+              <i class="fas fa-play"></i> Iniciar limpieza
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section *ngIf="getTareasEnProceso().length > 0" style="margin-top: 40px;">
+        <h2 class="seccion-titulo en-proceso"><i class="fas fa-spinner fa-spin"></i> En proceso</h2>
+        <div class="tareas-grid">
+          <div class="tarea-card en-proceso" *ngFor="let t of getTareasEnProceso()">
+            <div class="tarea-header">
+              <div class="habitacion-numero">
+                <i class="fas fa-bed"></i> Hab. {{ t.habitacion?.numero || t.numeroHabitacion }}
+              </div>
+              <span class="tarea-badge en-proceso">En proceso</span>
+            </div>
+            <div class="tarea-info">
+              <span><i class="fas fa-calendar"></i> {{ t.fecha | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <button class="btn-completar" (click)="completarTarea(t)">
+              <i class="fas fa-check"></i> Marcar como completada
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section *ngIf="getTareasCompletadas().length > 0" style="margin-top: 40px;">
+        <h2 class="seccion-titulo completada"><i class="fas fa-check-circle"></i> Completadas</h2>
+        <div class="tareas-grid">
+          <div class="tarea-card completada" *ngFor="let t of getTareasCompletadas()">
+            <div class="tarea-header">
+              <div class="habitacion-numero">
+                <i class="fas fa-bed"></i> Hab. {{ t.habitacion?.numero || t.numeroHabitacion }}
+              </div>
+              <span class="tarea-badge completada">Completada</span>
+            </div>
+            <div class="tarea-info">
+              <span><i class="fas fa-calendar"></i> {{ t.fecha | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- TAB: DISPONIBLES -->
+    <div *ngIf="tabActiva === 'disponibles'">
+      <div *ngIf="citasDisponibles.length === 0" class="empty-state">
+        <i class="fas fa-calendar-times empty-icon"></i>
+        <h3>No hay citas disponibles</h3>
+        <p>No hay citas sin asignar para tu especialidad.</p>
+      </div>
+      <div class="citas-lista">
+        <div class="cita-card disponible" *ngFor="let c of citasDisponibles">
+          <div class="cita-hora">
+            <span class="cita-fecha">{{ c.fechaHoraCita | date:'dd/MM' }}</span>
+            {{ c.fechaHoraCita | date:'HH:mm' }}
+          </div>
+          <div class="cita-info">
+            <h3>{{ c.servicio?.nombre }}</h3>
+            <p><i class="fas fa-user"></i> {{ c.usuario?.nombre }}</p>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
+            <span class="cita-precio">{{ c.servicio?.precio }}€</span>
+            <button class="btn-asignarme" (click)="asignarme(c)">
+              <i class="fas fa-hand-pointer"></i> Asignarme
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: MIS CITAS -->
+    <div *ngIf="tabActiva === 'miscitas'">
+      <div *ngIf="misCitas.length === 0" class="empty-state">
+        <i class="fas fa-calendar empty-icon"></i>
+        <h3>No tienes citas asignadas</h3>
+        <p>Asígnate citas desde la pestaña Disponibles.</p>
+      </div>
+      <div class="citas-lista">
+        <div class="cita-card hoy" *ngFor="let c of misCitas">
+          <div class="cita-hora">
+            <span class="cita-fecha">{{ c.fechaHoraCita | date:'dd/MM' }}</span>
+            {{ c.fechaHoraCita | date:'HH:mm' }}
+          </div>
+          <div class="cita-info">
+            <h3>{{ c.servicio?.nombre }}</h3>
+            <p><i class="fas fa-user"></i> {{ c.usuario?.nombre }}</p>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
+            <span class="cita-precio">{{ c.servicio?.precio }}€</span>
+            <span class="cita-estado">
+              <i class="fas fa-check-circle"></i> Asignada
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

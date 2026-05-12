@@ -1,0 +1,616 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --cream: #fff8f2;
+    --orange: #ff8457;
+    --pink: #ff5fa2;
+    --turquoise: #27c2c1;
+    --dark: #1f2937;
+    --text: #5f6470;
+    --white: #ffffff;
+    --shadow: 0 15px 40px rgba(0, 0, 0, .08);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.trabajador-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #fff8f2, #ffffff, #f6ffff);
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  flex-direction: column;
+  isolation: isolate;
+  position: relative;
+  z-index: 9999;
+}
+
+/* NAVBAR */
+.trabajador-nav {
+  background: linear-gradient(135deg, #ff8457, #ff5fa2) !important;
+  padding: 16px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  box-shadow: 0 4px 20px rgba(255,95,162,0.3);
+  flex-shrink: 0;
+  isolation: isolate;
+}
+
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--dark) ;
+}
+
+.nav-logo span { color: white ; }
+
+.nav-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-nombre {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: white !important;
+}
+
+.nav-rol {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: white ;
+  background: rgba(255,255,255,0.25);
+  padding: 2px 10px;
+  border-radius: 50px;
+}
+
+.btn-logout {
+  background: rgba(255,255,255,0.2);
+  border: 2px solid var(--dark) !important;
+  color: var(--dark) !important;
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-logout:hover {
+  background: red;
+  border-color: red !important;
+  color: white !important;
+}
+
+.nav-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-nombre {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--dark) !important;
+}
+
+
+/* CONTENEDOR */
+.trabajador-container {
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px 5% 80px;
+  flex: 1;
+}
+
+/* TABS */
+.tabs-wrapper {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 36px;
+    background: white;
+    padding: 8px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    width: fit-content;
+}
+
+.tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: transparent;
+    color: var(--text);
+}
+
+.tab-btn:hover {
+    background: #fff0e8;
+    color: var(--orange);
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, var(--orange), var(--pink));
+    color: var(--dark) !important;
+    box-shadow: 0 4px 15px rgba(255, 95, 162, 0.3);
+}
+
+.tab-badge {
+    background: var(--orange);
+    color: var(--dark);
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 50px;
+}
+
+.tab-btn.active .tab-badge {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+.badge-turquoise {
+    background: var(--turquoise) !important;
+}
+
+/* PAGE HEADER */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 800;
+    color: var(--dark);
+    margin: 0 0 6px 0;
+    line-height: 1;
+}
+
+.page-header p {
+    color: var(--text);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* STATS */
+.header-stats {
+    display: flex;
+    gap: 12px;
+}
+
+.stat-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 14px 20px;
+    border-radius: 16px;
+    min-width: 80px;
+}
+
+.stat-pill span {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.stat-pill label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.stat-pill.pendiente {
+    background: linear-gradient(135deg, #fff0e8, #ffe4d0);
+    color: var(--orange);
+}
+
+.stat-pill.en-proceso {
+    background: linear-gradient(135deg, #e0fafa, #c8f5f4);
+    color: var(--turquoise);
+}
+
+.stat-pill.completada {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.stat-pill.proxima {
+    background: linear-gradient(135deg, #fff0e8, #ffe4f0);
+    color: var(--orange);
+}
+
+/* SECCIÓN TITULO */
+.seccion-titulo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 0 0 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.seccion-titulo i {
+    color: var(--orange);
+}
+
+.seccion-titulo.en-proceso i {
+    color: #3b82f6;
+}
+
+.seccion-titulo.completada i {
+    color: #10b981;
+}
+
+/* TAREAS GRID */
+.tareas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* TAREA CARD */
+.tarea-card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255, 132, 87, 0.1);
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.tarea-card:hover {
+    transform: translateY(-4px);
+}
+
+.tarea-card.pendiente {
+    border-top: 4px solid var(--orange);
+}
+
+.tarea-card.en-proceso {
+    border-top: 4px solid var(--turquoise);
+}
+
+.tarea-card.completada {
+    border-top: 4px solid #10b981;
+    opacity: 0.8;
+}
+
+.tarea-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.habitacion-numero {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.habitacion-numero i {
+    color: var(--orange);
+}
+
+.tarea-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 12px;
+    border-radius: 50px;
+}
+
+.tarea-badge.pendiente {
+    background: #fff0e8;
+    color: var(--orange);
+}
+
+.tarea-badge.en-proceso {
+    background: #e0fafa;
+    color: var(--turquoise);
+}
+
+.tarea-badge.completada {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.tarea-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.tarea-info span {
+    font-size: 0.875rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tarea-info i {
+    color: var(--orange);
+}
+
+/* BOTONES */
+.btn-iniciar {
+    padding: 12px;
+    background: linear-gradient(135deg, var(--orange), var(--pink));
+    color: var(--dark);
+    border: none;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 4px 15px rgba(255, 95, 162, 0.3);
+}
+
+.btn-iniciar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 95, 162, 0.4);
+}
+
+.btn-completar {
+    padding: 12px;
+    background: linear-gradient(135deg, var(--turquoise), #1fa8a7);
+    color: var(--dark);
+    border: none;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 4px 15px rgba(39, 194, 193, 0.3);
+}
+
+.btn-completar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(39, 194, 193, 0.4);
+}
+
+/* CITAS */
+.citas-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.cita-card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255, 132, 87, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s;
+}
+
+.cita-card:hover {
+    transform: translateY(-3px);
+}
+
+.cita-card.disponible {
+    border-left: 4px solid var(--orange);
+}
+
+.cita-card.hoy {
+    border-left: 4px solid var(--turquoise);
+}
+
+.cita-hora {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 60px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.cita-fecha {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--orange);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: 'Poppins', sans-serif;
+}
+
+.cita-info {
+    flex: 1;
+}
+
+.cita-info h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 0 0 4px 0;
+}
+
+.cita-info p {
+    font-size: 0.85rem;
+    color: var(--text);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cita-info p i {
+    color: var(--orange);
+}
+
+.cita-precio {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--orange);
+}
+
+.cita-estado {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--turquoise);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* BOTÓN ASIGNARME */
+.btn-asignarme {
+    padding: 10px 18px;
+    background: linear-gradient(135deg, var(--orange), var(--pink));
+    color: var(--dark);
+    border: none;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 4px 15px rgba(255, 95, 162, 0.3);
+}
+
+.btn-asignarme:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 95, 162, 0.4);
+}
+
+/* EMPTY STATE */
+.empty-state {
+    text-align: center;
+    padding: 60px 40px;
+    background: white;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+}
+
+.empty-icon {
+    font-size: 3rem;
+    color: var(--orange);
+    opacity: 0.4;
+    display: block;
+    margin-bottom: 16px;
+}
+
+.empty-state h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 0 0 10px 0;
+}
+
+.empty-state p {
+    color: var(--text);
+    font-size: 0.95rem;
+}
+
+/* LOADING */
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--text);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.loading i {
+    color: var(--orange);
+    font-size: 1.2rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .tareas-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tabs-wrapper {
+        width: 100%;
+    }
+
+    .tab-btn {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .header-stats {
+        flex-wrap: wrap;
+    }
+}

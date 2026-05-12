@@ -80,10 +80,6 @@
             </div>
 
             <div class="hab-actions">
-              <select class="select-estado" (change)="cambiarEstado(hab, $any($event.target).value)">
-                <option value="">Cambiar estado</option>
-                <option *ngFor="let e of estados" [value]="e">{{ e }}</option>
-              </select>
               <div class="btn-group">
                 <button class="btn-edit" (click)="abrirModalEditar(hab)">
                   <i class="fas fa-edit"></i> Editar
@@ -108,6 +104,7 @@
 <!-- MODAL CREAR/EDITAR -->
 <div class="modal-overlay" *ngIf="mostrarModal">
   <div class="modal-content">
+    <button class="btn-close-modal" (click)="cerrarModal()">✖</button>
     <h3>{{ modoEdicion ? 'Editar Habitación' : 'Nueva Habitación' }}</h3>
 
     <div class="form-grid">

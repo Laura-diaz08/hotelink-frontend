@@ -13,10 +13,10 @@
     </ul>
 
     <div class="pie-nav">
-    <button class="btn-cerrar-sesion" (click)="cerrarSesion()">
-      <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-    </button>
-  </div>
+      <button class="btn-cerrar-sesion" (click)="cerrarSesion()">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+      </button>
+    </div>
   </nav>
 
   <main class="contenido-principal">
@@ -95,9 +95,26 @@
 
       <div class="tarjeta">
         <h3><i class="fas fa-exchange-alt color-exito"></i> Movimientos</h3>
-        <div class="mov-item"><strong>L:</strong> F. García - 101</div>
-        <div class="mov-item"><strong>L:</strong> M. Sánchez - 203</div>
-        <div class="mov-item"><strong>S:</strong> Sr. Roberts - 202</div>
+
+        <div *ngIf="ultimosMovimientos.length === 0" class="mov-empty">
+          No hay llegadas ni salidas hoy.
+        </div>
+
+        <div class="mov-item" *ngFor="let m of ultimosMovimientos">
+          <span class="mov-badge" [class.llegada]="m.tipo === 'L'" [class.salida]="m.tipo === 'S'">
+            {{ m.tipo }}
+          </span>
+          <div class="mov-info">
+            <strong>{{ m.nombreUsuario }}</strong>
+            <span>Hab. {{ m.numeroHabitacion }} · {{ m.fecha | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <span class="mov-estado checkin" *ngIf="m.tipo === 'L'">
+            <i class="fas fa-sign-in-alt"></i> Llegada
+          </span>
+          <span class="mov-estado salida-text" *ngIf="m.tipo === 'S'">
+            <i class="fas fa-sign-out-alt"></i> Salida
+          </span>
+        </div>
       </div>
 
     </div>
