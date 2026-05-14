@@ -81,11 +81,6 @@
           <h2 class="section-heading mb-0">NUESTRAS HABITACIONES</h2>
           <div class="heading-line mt-3"></div>
         </div>
-        <div class="col-md-4 text-md-end mt-3 mt-md-0">
-          <a routerLink="/habitaciones" class="btn btn-dark btn-lg px-4 text-uppercase fw-bold">
-            Ver todas <i class="fas fa-arrow-right ms-2"></i>
-          </a>
-        </div>
       </div>
 
       <div class="row g-4">
@@ -95,17 +90,17 @@
               <img [src]="getImagenHabitacion(h.tipo)" [alt]="h.tipo" class="room-img w-100">
               <div class="room-img-overlay">
                 <a routerLink="/habitaciones" class="btn btn-gold fw-bold text-uppercase">
-                  Ver detalles
+                  Ver disponibilidad
                 </a>
               </div>
               <span class="room-type-badge">{{ h.tipo }}</span>
             </div>
             <div class="room-body p-4">
-              <h3 class="fw-semibold display-6 mb-2">Habitación {{ h.numero }}</h3>
+              <h3 class="fw-semibold display-6 mb-2">{{ h.tipo }}</h3>
               <p class="text-muted small mb-3">{{ h.descripcion || 'Disfruta de una estancia inigualable con todas las comodidades.' }}</p>
               <div class="d-flex justify-content-between align-items-center border-top pt-3">
                 <div>
-                  <span class="room-price fw-black fs-3 text-dark">{{ h.precio }}€</span>
+                  <span class="room-price fw-black fs-3 text-dark">Desde {{ h.precio }}€</span>
                   <span class="text-muted small"> / noche</span>
                 </div>
                 <a routerLink="/habitaciones" class="btn btn-dark fw-bold text-uppercase px-4">

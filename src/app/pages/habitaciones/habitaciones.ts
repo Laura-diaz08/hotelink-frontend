@@ -1,219 +1,167 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { HabitacionService } from '../../services/habitacion'; 
-import { Habitacion } from '../../interfaces/habitacion.interface'; 
+import { HabitacionService } from '../../services/habitacion';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-habitaciones',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './habitaciones.html',
-  styleUrls: ['./habitaciones.css']
+  styleUrl: './habitaciones.css'
 })
 export class HabitacionesComponent implements OnInit {
-  
-  habitaciones: Habitacion[] = [];
-  habitacionesFiltradas: Habitacion[] = [];
-  habitacionesDisponibles: Habitacion[] = [];
-  fechaInicio: string = '';
-  fechaFin: string = '';
 
-  // Variables de los filtros adaptadas a tu BD
-  filtroTipo: string = '';
-  filtroPrecioMax: number | null = null;
-  // Puedes añadir un filtro de estado si quieres, o buscar solo las "LIBRES"
+  // Carrusel
+  slideActivo: { [tipo: string]: number } = { Sencilla: 0, Doble: 0, Suite: 0 };
 
-  filtroCapacidad: number | null = null; // Recuperamos esta variable
+  imagenesHabitacion: { [tipo: string]: string[] } = {
+    Sencilla: [
+      'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80',
+      'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&q=80',
+      'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=800&q=80'
+    ],
+    Doble: [
+      'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&q=80',
+      'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&q=80',
+      'https://images.unsplash.com/photo-1505693314120-0d443867891c?w=800&q=80'
+    ],
+    Suite: [
+      'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800&q=80',
+      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80',
+      'https://images.unsplash.com/photo-1563911302283-d2bc129e7570?w=800&q=80'
+    ]
+  };
 
-  cargando: boolean = true;
+  precioDesde: { [tipo: string]: number } = { Sencilla: 0, Doble: 0, Suite: 0 };
 
+  // Modal
   mostrarModal: boolean = false;
-  habitacionSeleccionadaId: number | undefined;
+  tipoSeleccionado: string = '';
   reservaFechaInicio: string = '';
   reservaFechaFin: string = '';
   reservaHuespedes: number = 1;
-
+  disponibilidadInfo: number | null = null;
   errorReserva: string = '';
   exitoReserva: string = '';
-
-  imagenesHabitaciones: { [key: string]: string } = {
-    'Sencilla': 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80',
-    'Doble': 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80',
-    'Suite': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80'
-  };
+  hoyStr: string = new Date().toISOString().split('T')[0];
 
   constructor(
     private habitacionService: HabitacionService,
-    private router: Router,
+    private http: HttpClient,
     private cdr: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.cargarHabitaciones();
+    this.cargarPreciosDesde();
   }
 
-  cargarHabitaciones() {
-    this.cargando = true;
-    console.log("1. Llamando a Spring Boot..."); // Chivato 1
+  infoTipos: { [tipo: string]: any } = {};
 
+  cargarPreciosDesde(): void {
     this.habitacionService.getHabitaciones().subscribe({
-      next: (data: Habitacion[]) => {
-        console.log("2. ¡Spring Boot respondió! Datos recibidos:", data); // Chivato 2
-        
-        this.habitaciones = data;
-        this.habitacionesFiltradas = data;
-        this.cargando = false;
-        this.cdr.detectChanges(); 
-      },
-      error: (err) => {
-        console.error('3. ERROR GRAVE al conectar con Spring Boot:', err); // Chivato 3
-        this.cargando = false;
+      next: (data: any[]) => {
+
+        ['Sencilla', 'Doble', 'Suite'].forEach(tipo => {
+          const habitacionesTipo = data.filter(h => h.tipo === tipo);
+
+          if (habitacionesTipo.length > 0) {
+            const primera = habitacionesTipo[0];
+
+            this.precioDesde[tipo] = Math.min(...habitacionesTipo.map(h => h.precio));
+            this.infoTipos[tipo] = {
+              descripcion: primera.descripcion,
+              capacidad: primera.capacidad
+            };
+
+          }
+        });
         this.cdr.detectChanges();
       }
     });
   }
 
-  aplicarFiltros() {
-    this.habitacionesFiltradas = this.habitaciones.filter(h => {
-      let cumpleTipo = this.filtroTipo ? h.tipo?.toLowerCase() === this.filtroTipo.toLowerCase() : true;
-      let cumplePrecio = this.filtroPrecioMax ? h.precio <= this.filtroPrecioMax : true;
-      // Ahora podemos filtrar por capacidad real de la BD
-      let cumpleCapacidad = this.filtroCapacidad ? h.capacidad >= this.filtroCapacidad : true;
-      
-      return cumpleTipo && cumplePrecio && cumpleCapacidad;
-    });
-    this.cdr.detectChanges();
+  prevSlide(tipo: string): void {
+    const total = this.imagenesHabitacion[tipo].length;
+    this.slideActivo[tipo] = ((this.slideActivo[tipo] || 0) - 1 + total) % total;
   }
 
-  limpiarFiltros() {
-    this.filtroTipo = '';
-    this.filtroPrecioMax = null;
-    this.filtroCapacidad = null; 
-    this.habitacionesFiltradas = [...this.habitaciones];
-
-    this.cdr.detectChanges();
+  nextSlide(tipo: string): void {
+    const total = this.imagenesHabitacion[tipo].length;
+    this.slideActivo[tipo] = ((this.slideActivo[tipo] || 0) + 1) % total;
   }
 
-  abrirModalReserva(id: number | undefined) {
-    this.habitacionSeleccionadaId = id;
+  abrirModalTipo(tipo: string): void {
+    this.tipoSeleccionado = tipo;
     this.mostrarModal = true;
+    this.disponibilidadInfo = null;
+    this.errorReserva = '';
+    this.exitoReserva = '';
     this.reservaFechaInicio = '';
     this.reservaFechaFin = '';
     this.reservaHuespedes = 1;
-    this.errorReserva = '';
-    this.exitoReserva = '';
   }
 
-  cerrarModal() {
+  cerrarModal(): void {
     this.mostrarModal = false;
-    this.habitacionSeleccionadaId = undefined;
+    this.disponibilidadInfo = null;
   }
 
-  confirmarReserva() {
-    this.errorReserva = '';
-    this.exitoReserva = '';
-
+  buscarDisponibilidad(): void {
     if (!this.reservaFechaInicio || !this.reservaFechaFin) {
-      this.errorReserva = 'Por favor, selecciona las fechas de entrada y salida.';
+      this.errorReserva = 'Selecciona las fechas de entrada y salida.';
       return;
     }
+    this.errorReserva = '';
+    console.log('Buscando disponibilidad:', this.tipoSeleccionado, this.reservaFechaInicio, this.reservaFechaFin);
+    
+    this.http.get<any>(
+      `http://localhost:8080/habitaciones/disponibles?tipo=${this.tipoSeleccionado}&entrada=${this.reservaFechaInicio}&salida=${this.reservaFechaFin}`
+    ).subscribe({
+      next: (data) => {
+        console.log('Respuesta:', data);
+        this.disponibilidadInfo = data.disponibles;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error:', err);
+        this.errorReserva = 'Error al consultar disponibilidad.';
+        this.cdr.detectChanges();
+      }
+    });
+  }
 
-    if (!this.reservaHuespedes || this.reservaHuespedes < 1) {
-      this.errorReserva = 'Por favor, indica al menos 1 huésped.';
-      return;
-    }
-
-    if (!this.habitacionSeleccionadaId) {
-      this.errorReserva = 'No hay ninguna habitación seleccionada.';
-      return;
-    }
-
+  confirmarReserva(): void {
     const clienteId = Number(localStorage.getItem('id'));
+    if (!clienteId) {
+      this.errorReserva = 'Debes iniciar sesión para reservar.';
+      return;
+    }
 
-    const datosReserva = {
-      clienteId: clienteId,
-      fechaInicio: this.reservaFechaInicio,
-      fechaFin: this.reservaFechaFin,
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+
+    const body = {
+      tipo: this.tipoSeleccionado,
+      fechaEntrada: this.reservaFechaInicio,
+      fechaSalida: this.reservaFechaFin,
+      usuarioId: clienteId,
       numeroHuespedes: this.reservaHuespedes
     };
 
-    this.habitacionService.reservarHabitacion(this.habitacionSeleccionadaId, datosReserva).subscribe({
+    this.http.post<any>('http://localhost:8080/reservas/por-tipo', body, { headers }).subscribe({
       next: () => {
-        this.exitoReserva = '¡Reserva completada con éxito!';
-        this.habitacionService.notificarCambioReserva();
+        this.exitoReserva = '¡Reserva confirmada! Puedes verla en Mis Reservas.';
+        this.disponibilidadInfo = null;
         this.cdr.detectChanges();
-        setTimeout(() => this.cerrarModal(), 2000);
+        setTimeout(() => this.cerrarModal(), 2500);
       },
       error: (err) => {
-        console.error(err);
-        this.errorReserva = err.error?.error || 'La habitación ya está ocupada en esas fechas.';
+        this.errorReserva = err.error?.error || 'Error al realizar la reserva.';
         this.cdr.detectChanges();
       }
     });
   }
 
-  hacerReserva(habitacionId: number | undefined) {
-    if (!habitacionId) {
-      console.error("Error: La habitación no tiene ID");
-      return; 
-    }
-
-    if (!this.fechaInicio || !this.fechaFin) {
-      alert("⚠️ Por favor, selecciona las fechas de entrada y salida antes de reservar.");
-      console.error("Error: Las fechas están vacías", { inicio: this.fechaInicio, fin: this.fechaFin });
-      return;
-    }
-
-    const clienteId = Number(localStorage.getItem('id'));
-    
-    const datosReserva = {
-      clienteId: clienteId,
-      fechaInicio: this.fechaInicio,
-      fechaFin: this.fechaFin
-    };
-
-    this.habitacionService.reservarHabitacion(habitacionId, datosReserva).subscribe({
-      next: (respuesta) => {
-        alert("¡Reserva completada con éxito!");
-        
-        // 2. Notificamos también aquí por si es esta la vía que se utiliza
-        this.habitacionService.notificarCambioReserva();
-
-        this.habitacionesDisponibles = []; 
-        this.fechaInicio = '';
-        this.fechaFin = '';
-      },
-      error: (err) => {
-        console.error(err);
-        alert("Hubo un problema al hacer la reserva.");
-      }
-    });
-  }
-
-  verDetalles(id: number | undefined) {
-    if (!id) return;
-    alert(`Mostrando detalles de la habitación ID: ${id}`);
-  }
-
-  getEstadoClase(estado: string): string {
-    switch (estado?.toUpperCase()) {
-      case 'LIBRE': return 'estado-libre';
-      case 'OCUPADA': return 'estado-ocupada';
-      case 'LIMPIEZA': return 'estado-limpieza';
-      default: return 'estado-otro';
-    }
-  }
-
-  getImagenHabitacion(tipo: string): string {
-    return this.imagenesHabitaciones[tipo] || 
-      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80';
-  }
-
-  cerrarSesion() {
-    localStorage.clear(); 
-    this.router.navigate(['/login']);
-  }
 }

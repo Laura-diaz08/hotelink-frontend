@@ -173,9 +173,11 @@ export class UserDashboardComponent implements OnInit {
 
   cargarHabitaciones() {
     this.habitacionService.getHabitaciones().subscribe({
-      next: (data: Habitacion[]) => {
-        this.habitaciones = data.slice(0, 3); 
-        this.cdr.detectChanges();
+      next: (data: any[]) => {
+        const tipos = ['Sencilla', 'Doble', 'Suite'];
+        this.habitaciones = tipos
+          .map(tipo => data.find(h => h.tipo === tipo))
+          .filter(h => h !== undefined);
       },
       error: (err) => console.error('Error cargando habitaciones', err)
     });

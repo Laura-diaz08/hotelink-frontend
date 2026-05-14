@@ -6,119 +6,143 @@
          class="d-block w-100 h-100 hero-img" alt="Habitaciones">
     <div class="hero-overlay position-absolute top-0 start-0 w-100 h-100"></div>
     <div class="hero-content position-absolute top-50 start-50 translate-middle text-center text-white">
-      <p class="hero-pretitle text-uppercase letter-spacing-wide mb-2">Descansa en el lujo</p>
-      <h1 class="hero-title fw-black mb-3">NUESTRAS <span class="text-gold">HABITACIONES</span></h1>
+      <p class="hero-pretitle">Descansa en el lujo</p>
+      <h1 class="hero-title">NUESTRAS <span class="text-gold">HABITACIONES</span></h1>
       <div class="heading-line mx-auto mt-3 mb-4"></div>
-      <p class="hero-subtitle fw-light mx-auto" style="max-width:500px;">
-        Encuentra el espacio perfecto para tu estancia en Cádiz
-      </p>
+      <p class="hero-subtitle mx-auto">Encuentra el espacio perfecto para tu estancia en Cádiz</p>
     </div>
   </section>
 
-  <div class="container main-content">
+  <div class="main-content">
+    <div class="tipos-grid">
 
-    <!-- FILTROS -->
-    <div class="filtros-card">
-      <div class="filtros-grid">
-        <div class="filtro-item">
-          <label>Tipo</label>
-          <select [(ngModel)]="filtroTipo">
-            <option value="">Todos</option>
-            <option value="Sencilla">Sencilla</option>
-            <option value="Doble">Doble</option>
-            <option value="Suite">Suite</option>
-          </select>
-        </div>
-        <div class="filtro-item">
-          <label>Precio máx. (€)</label>
-          <input type="number" [(ngModel)]="filtroPrecioMax" placeholder="Sin límite">
-        </div>
-        <div class="filtro-item">
-          <label>Huéspedes mín.</label>
-          <input type="number" [(ngModel)]="filtroCapacidad" placeholder="Cualquiera">
-        </div>
-        <div class="filtro-actions">
-          <button class="btn-limpiar" (click)="limpiarFiltros()">Limpiar</button>
-          <button class="btn-buscar" (click)="aplicarFiltros()">Buscar</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- RESULTADOS -->
-    <div class="resultados-header">
-      <span class="resultados-count">
-        <i class="fas fa-home"></i> {{ habitacionesFiltradas.length }} habitaciones encontradas
-      </span>
-    </div>
-
-    <!-- CARGANDO -->
-    <div *ngIf="cargando" class="empty-state">
-      <i class="fas fa-spinner fa-spin empty-icon"></i>
-      <p>Cargando habitaciones...</p>
-    </div>
-
-    <!-- VACÍO -->
-    <div *ngIf="!cargando && habitacionesFiltradas.length === 0" class="empty-state">
-      <i class="fas fa-bed empty-icon"></i>
-      <p>No hay habitaciones con esos filtros.</p>
-      <button class="btn-buscar" (click)="limpiarFiltros()">Quitar filtros</button>
-    </div>
-
-    <!-- GRID -->
-    <div class="habitaciones-grid" *ngIf="!cargando && habitacionesFiltradas.length > 0">
-      <div class="room-card" *ngFor="let h of habitacionesFiltradas">
-
-        <div class="room-img-box">
-          <img [src]="getImagenHabitacion(h.tipo)" [alt]="h.tipo" class="room-img">
-          <span class="room-tipo-badge">{{ h.tipo }}</span>
-          <span class="room-estado-badge" [ngClass]="getEstadoClase(h.estado)">{{ h.estado }}</span>
-          <div class="room-hover-overlay">
-            <button class="btn-ver-overlay" (click)="verDetalles(h.id)">Ver detalles</button>
+      <!-- SENCILLA -->
+      <div class="tipo-card">
+        <div class="tipo-carrusel">
+          <div class="carrusel-inner" [style.transform]="'translateX(-' + (slideActivo['Sencilla'] || 0) * 100 + '%)'">
+            <img *ngFor="let img of imagenesHabitacion['Sencilla']" [src]="img" alt="Sencilla" class="carrusel-img">
           </div>
-        </div>
-
-        <div class="room-info">
-          <h3 class="room-nombre">Habitación {{ h.numero }}</h3>
-          <p class="room-desc">{{ h.descripcion || 'Una estancia de lujo con todas las comodidades para hacer de tu visita una experiencia inolvidable.' }}</p>
-          <div class="room-features">
-            <span><i class="fas fa-users"></i> {{ h.capacidad }} huéspedes</span>
-            <span><i class="fas fa-bed"></i> {{ h.tipo }}</span>
+          <button class="carrusel-btn prev" (click)="prevSlide('Sencilla')">&#8592;</button>
+          <button class="carrusel-btn next" (click)="nextSlide('Sencilla')">&#8594;</button>
+          <div class="carrusel-dots">
+            <span *ngFor="let img of imagenesHabitacion['Sencilla']; let i = index"
+                  class="dot" [class.active]="(slideActivo['Sencilla'] || 0) === i"
+                  (click)="slideActivo['Sencilla'] = i"></span>
           </div>
-          <div class="room-footer">
-            <div class="price-block">
-              <span class="amount">{{ h.precio }}€</span>
-              <span class="per-night">/ noche</span>
+          <span class="tipo-badge">Sencilla</span>
+        </div>
+        <div class="tipo-info">
+          <h2 class="tipo-nombre">Habitación Sencilla</h2>
+          <p class="tipo-desc">{{ infoTipos['Sencilla']?.descripcion || 'Acogedora habitación individual con todas las comodidades.' }}</p>
+          <div class="tipo-features">
+            <span><i class="fas fa-users"></i> Hasta {{ infoTipos['Sencilla']?.capacidad || 2 }} huéspedes</span>
+            <span><i class="fas fa-wifi"></i> WiFi incluido</span>
+            <span><i class="fas fa-snowflake"></i> Aire acondicionado</span>
+          </div>
+          <div class="tipo-footer">
+            <div class="precio-desde">
+              <span class="desde-label">Desde</span>
+              <span class="desde-precio">{{ precioDesde['Sencilla'] }}€</span>
+              <span class="desde-noche">/ noche</span>
             </div>
-            <button class="btn-reservar"
-                    [disabled]="h.estado === 'MANTENIMIENTO'"
-                    [class.disabled]="h.estado === 'MANTENIMIENTO'"
-                    (click)="abrirModalReserva(h.id)">
-              {{ h.estado === 'MANTENIMIENTO' ? 'Fuera de servicio' : 'Reservar' }}
+            <button class="btn-ver-disponibilidad" (click)="abrirModalTipo('Sencilla')">
+              Ver disponibilidad
             </button>
           </div>
         </div>
-
       </div>
-    </div>
 
+      <!-- DOBLE -->
+      <div class="tipo-card">
+        <div class="tipo-carrusel">
+          <div class="carrusel-inner" [style.transform]="'translateX(-' + (slideActivo['Doble'] || 0) * 100 + '%)'">
+            <img *ngFor="let img of imagenesHabitacion['Doble']" [src]="img" alt="Doble" class="carrusel-img">
+          </div>
+          <button class="carrusel-btn prev" (click)="prevSlide('Doble')">&#8592;</button>
+          <button class="carrusel-btn next" (click)="nextSlide('Doble')">&#8594;</button>
+          <div class="carrusel-dots">
+            <span *ngFor="let img of imagenesHabitacion['Doble']; let i = index"
+                  class="dot" [class.active]="(slideActivo['Doble'] || 0) === i"
+                  (click)="slideActivo['Doble'] = i"></span>
+          </div>
+          <span class="tipo-badge">Doble</span>
+        </div>
+        <div class="tipo-info">
+          <h2 class="tipo-nombre">Habitación Doble</h2>
+          <p class="tipo-desc">{{ infoTipos['Doble']?.descripcion || 'Espaciosa habitación con todas las comodidades para una estancia perfecta.' }}</p>
+          <div class="tipo-features">
+            <span><i class="fas fa-users"></i> Hasta {{ infoTipos['Doble']?.capacidad || 3 }} huéspedes</span>
+            <span><i class="fas fa-wifi"></i> WiFi incluido</span>
+            <span><i class="fas fa-bath"></i> Bañera</span>
+          </div>
+          <div class="tipo-footer">
+            <div class="precio-desde">
+              <span class="desde-label">Desde</span>
+              <span class="desde-precio">{{ precioDesde['Doble'] }}€</span>
+              <span class="desde-noche">/ noche</span>
+            </div>
+            <button class="btn-ver-disponibilidad" (click)="abrirModalTipo('Doble')">
+              Ver disponibilidad
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUITE -->
+      <div class="tipo-card">
+        <div class="tipo-carrusel">
+          <div class="carrusel-inner" [style.transform]="'translateX(-' + (slideActivo['Suite'] || 0) * 100 + '%)'">
+            <img *ngFor="let img of imagenesHabitacion['Suite']" [src]="img" alt="Suite" class="carrusel-img">
+          </div>
+          <button class="carrusel-btn prev" (click)="prevSlide('Suite')">&#8592;</button>
+          <button class="carrusel-btn next" (click)="nextSlide('Suite')">&#8594;</button>
+          <div class="carrusel-dots">
+            <span *ngFor="let img of imagenesHabitacion['Suite']; let i = index"
+                  class="dot" [class.active]="(slideActivo['Suite'] || 0) === i"
+                  (click)="slideActivo['Suite'] = i"></span>
+          </div>
+          <span class="tipo-badge">Suite</span>
+        </div>
+        <div class="tipo-info">
+          <h2 class="tipo-nombre">Suite Premium</h2>
+          <p class="tipo-desc">{{ infoTipos['Suite']?.descripcion || 'Nuestra suite de lujo con todas las comodidades para una experiencia incomparable.' }}</p>
+          <div class="tipo-features">
+            <span><i class="fas fa-users"></i> Hasta {{ infoTipos['Suite']?.capacidad || 4 }} huéspedes</span>
+            <span><i class="fas fa-wifi"></i> WiFi incluido</span>
+            <span><i class="fas fa-hot-tub"></i> Jacuzzi</span>
+          </div>
+          <div class="tipo-footer">
+            <div class="precio-desde">
+              <span class="desde-label">Desde</span>
+              <span class="desde-precio">{{ precioDesde['Suite'] }}€</span>
+              <span class="desde-noche">/ noche</span>
+            </div>
+            <button class="btn-ver-disponibilidad" (click)="abrirModalTipo('Suite')">
+              Ver disponibilidad
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>
 
-<!-- MODAL -->
+<!-- MODAL DISPONIBILIDAD -->
 <div class="modal-overlay" *ngIf="mostrarModal">
   <div class="modal-content-hab">
     <button class="btn-close-modal" (click)="cerrarModal()">✖</button>
-    <h3>Reservar habitación</h3>
-    <p class="modal-desc">Selecciona las fechas y número de huéspedes.</p>
+    <h3>{{ tipoSeleccionado }}</h3>
+    <p class="modal-desc">Selecciona las fechas para ver disponibilidad.</p>
 
     <div class="modal-form">
       <div class="input-group-hab">
         <label>📅 Fecha de Entrada</label>
-        <input type="date" [(ngModel)]="reservaFechaInicio">
+        <input type="date" [(ngModel)]="reservaFechaInicio" [min]="hoyStr">
       </div>
       <div class="input-group-hab">
         <label>📅 Fecha de Salida</label>
-        <input type="date" [(ngModel)]="reservaFechaFin">
+        <input type="date" [(ngModel)]="reservaFechaFin" [min]="reservaFechaInicio">
       </div>
       <div class="input-group-hab">
         <label>👥 Número de Huéspedes</label>
@@ -126,17 +150,36 @@
       </div>
     </div>
 
+    <!-- RESULTADO DISPONIBILIDAD -->
+    <div class="disponibilidad-result" *ngIf="disponibilidadInfo !== null">
+      <div class="disponible-ok" *ngIf="disponibilidadInfo > 0">
+        <i class="fas fa-check-circle"></i>
+        <span>¡Hay <strong>{{ disponibilidadInfo }}</strong> habitación(es) disponible(s)!</span>
+      </div>
+      <div class="disponible-no" *ngIf="disponibilidadInfo === 0">
+        <i class="fas fa-times-circle"></i>
+        <span>No hay habitaciones disponibles para esas fechas.</span>
+      </div>
+    </div>
+
     <div *ngIf="errorReserva" class="alert error-alert">
       <i class="fas fa-exclamation-circle"></i> {{ errorReserva }}
     </div>
-
     <div *ngIf="exitoReserva" class="alert success-alert">
       <i class="fas fa-check-circle"></i> {{ exitoReserva }}
     </div>
 
     <div class="modal-actions-hab">
       <button class="btn-limpiar" (click)="cerrarModal()">Cancelar</button>
-      <button class="btn-buscar" (click)="confirmarReserva()">Confirmar Reserva</button>
+      <button class="btn-buscar" (click)="buscarDisponibilidad()" *ngIf="disponibilidadInfo === null">
+        Buscar disponibilidad
+      </button>
+      <button class="btn-buscar" (click)="buscarDisponibilidad()" *ngIf="disponibilidadInfo !== null && disponibilidadInfo === 0">
+        Buscar de nuevo
+      </button>
+      <button class="btn-reservar-ahora" (click)="confirmarReserva()" *ngIf="disponibilidadInfo !== null && disponibilidadInfo > 0">
+        <i class="fas fa-check"></i> Reservar ahora
+      </button>
     </div>
   </div>
 </div>
