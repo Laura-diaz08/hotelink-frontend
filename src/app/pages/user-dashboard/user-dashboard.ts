@@ -41,18 +41,18 @@ export class UserDashboardComponent implements OnInit {
   mediaValoracion: string = '4.9★';
 
   imagenesHabitaciones: { [key: string]: string } = {
-    'Sencilla': 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80',
-    'Doble': 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80',
-    'Suite': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80'
+    'Sencilla': 'assets/habitacion_sencilla.png',
+    'Doble': 'assets/habitacion_doble.png',
+    'Suite': 'assets/habitacion_suite.png'
   };
 
   imagenesServicios: { [key: string]: string } = {
-    'Gimnasio': 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80',
-    'Masaje Relajante': 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=600&q=80',
-    'Circuito Spa': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80',
-    'Cena Romántica': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80',
-    'Traslado Aeropuerto': 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80',
-    'Alquiler de Bicicletas': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80'
+    'Circuito Spa Termal': 'assets/circuito_spa.png',
+    'Gimnasio & Fitness': 'assets/gimnasio_hotel.png',
+    'Masaje Relajante Esencial': 'assets/masaje_relajante.png',
+    'Traslado Aeropuerto': 'assets/traslado_aeropuerto.png',
+    'Alquiler de Bicicletas de Alta Gama': 'assets/alquiler_bicicletas.png',
+    'Cena Romantica Gourmet': 'assets/cena_romantica.png'
   };
 
   constructor(
@@ -89,13 +89,11 @@ export class UserDashboardComponent implements OnInit {
   }
 
   getImagenHabitacion(tipo: string): string {
-    return this.imagenesHabitaciones[tipo] || 
-      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80';
+    return this.imagenesHabitaciones[tipo];
   }
 
   getImagenServicio(nombre: string): string {
-    return this.imagenesServicios[nombre] || 
-      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80';
+    return this.imagenesServicios[nombre];
   }
 
   getEstrellas(n: number): string[] {

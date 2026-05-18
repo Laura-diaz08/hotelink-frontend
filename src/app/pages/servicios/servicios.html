@@ -2,7 +2,7 @@
 
   <!-- HERO -->
   <div class="page-hero">
-    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1600&q=80" 
+    <img src="assets/alquiler_bicicletas.png" 
         class="page-hero-img" alt="Servicios">
     <div class="page-hero-overlay"></div>
     <div class="page-hero-content">
@@ -106,6 +106,13 @@
           </span>
         </div>
       </div>
+    </div>
+
+    <div *ngIf="errorReserva" class="alert error-alert">
+      <i class="fas fa-exclamation-circle"></i> {{ errorReserva }}
+    </div>
+    <div *ngIf="exitoReserva" class="alert success-alert">
+      <i class="fas fa-check-circle"></i> {{ exitoReserva }}
     </div>
 
     <div class="modal-actions">

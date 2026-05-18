@@ -18,18 +18,20 @@ export class GaleriaComponent {
   imagenActual: number = 0;
 
   imagenes = [
-    { url: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80', categoria: 'Habitaciones', titulo: 'Suite Deluxe' },
-    { url: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800&q=80', categoria: 'Habitaciones', titulo: 'Habitación Doble' },
-    { url: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80', categoria: 'Habitaciones', titulo: 'Suite Premium' },
-    { url: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80', categoria: 'Spa & Bienestar', titulo: 'Circuito Spa' },
-    { url: 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=800&q=80', categoria: 'Spa & Bienestar', titulo: 'Sala de Masajes' },
-    { url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80', categoria: 'Spa & Bienestar', titulo: 'Gimnasio' },
-    { url: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80', categoria: 'Restaurante', titulo: 'Cena Romántica' },
-    { url: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80', categoria: 'Restaurante', titulo: 'Salón Principal' },
-    { url: 'https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=800&q=80', categoria: 'Restaurante', titulo: 'Terraza Gastronómica' },
-    { url: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=80', categoria: 'Exteriores', titulo: 'Fachada del Hotel' },
-    { url: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80', categoria: 'Exteriores', titulo: 'Piscina Exterior' },
-    { url: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800&q=80', categoria: 'Exteriores', titulo: 'Jardines' }
+    { url: 'assets/habitacion_suite.png', categoria: 'Habitaciones', titulo: 'Habitacion Suite' },
+    { url: 'assets/habitacion_doble.png', categoria: 'Habitaciones', titulo: 'Habitación Doble' },
+    { url: 'assets/habitacion_sencilla.png', categoria: 'Habitaciones', titulo: 'Habitacion Sencilla' },
+    { url: 'assets/circuito_spa.png', categoria: 'Spa & Bienestar', titulo: 'Circuito Spa' },
+    { url: 'assets/masaje_relajante.png', categoria: 'Spa & Bienestar', titulo: 'Masaje Relajante' },
+    { url: 'assets/gimnasio_hotel.png', categoria: 'Spa & Bienestar', titulo: 'Gimnasio' },
+    { url: 'assets/restaurante_hotel.png', categoria: 'Restaurante', titulo: 'Salon Principal' },
+    { url: 'assets/restaurante2_hotel.png', categoria: 'Restaurante', titulo: 'Salón' },
+    { url: 'assets/restaurante3_hotel.png', categoria: 'Restaurante', titulo: 'Terraza Gastronómica' },
+    { url: 'assets/hotel.png', categoria: 'Exteriores', titulo: 'Fachada del Hotel' },
+    { url: 'assets/exterior_hotel.png', categoria: 'Exteriores', titulo: 'Puerta Hotel' },
+    { url: 'assets/piscina2_hotel.png', categoria: 'Exteriores', titulo: 'Piscina Exterior' },
+    { url: 'assets/recepcion_hotel.png', categoria: 'Exteriores', titulo: 'Recepcion Hotel' },
+    { url: 'assets/exterior2_hotel.png', categoria: 'Exteriores', titulo: 'Jardines' }
   ];
 
   get imagenesFiltradas() {

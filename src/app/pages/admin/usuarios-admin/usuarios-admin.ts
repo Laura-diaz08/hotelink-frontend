@@ -142,8 +142,11 @@ export class UsuariosAdmin implements OnInit {
       case 'CLIENTE': return 'badge-cliente';
       case 'RECEPCION': return 'badge-recepcion';
       case 'LIMPIEZA': return 'badge-limpieza';
-      case 'SERVICIOS': return 'badge-servicios';
-      default: return '';
+      case 'MASAJES': return 'badge-masajes';
+      case 'GIMNASIO': return 'badge-gimnasio';
+      case 'CONDUCTOR': return 'badge-conductor';
+      case 'COCINA': return 'badge-cocina';
+      default: return 'badge-cliente';
     }
   }
 

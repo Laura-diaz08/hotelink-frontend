@@ -25,13 +25,16 @@ export class ServiciosComponent implements OnInit {
   aforoInfo: any = null;
   cargandoAforo: boolean = false;
 
+  errorReserva: string = '';
+  exitoReserva: string = '';
+
   imagenes: { [key: string]: string } = {
-    'Gimnasio': 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80',
-    'Masaje Relajante': 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=600&q=80',
-    'Circuito Spa': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80',
-    'Cena Romántica': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80',
-    'Traslado Aeropuerto': 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80',
-    'Alquiler de Bicicletas': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80'
+    'Circuito Spa Termal': 'assets/circuito_spa.png',
+    'Gimnasio & Fitness': 'assets/gimnasio_hotel.png',
+    'Masaje Relajante Esencial': 'assets/masaje_relajante.png',
+    'Traslado Aeropuerto': 'assets/traslado_aeropuerto.png',
+    'Alquiler de Bicicletas de Alta Gama': 'assets/alquiler_bicicletas.png',
+    'Cena Romantica Gourmet': 'assets/cena_romantica.png'
   };
 
   constructor(
@@ -68,6 +71,8 @@ export class ServiciosComponent implements OnInit {
     this.fechaCita = '';
     this.horaCita = '';
     this.aforoInfo = null;
+    this.errorReserva = '';
+    this.exitoReserva = '';
     this.mostrarModal = true;
   }
 
@@ -82,7 +87,8 @@ export class ServiciosComponent implements OnInit {
 
     const minutos = this.horaCita.split(':')[1];
     if (minutos !== '00' && minutos !== '30') {
-      alert('Solo se permiten reservas a horas en punto o y media.');
+      this.errorReserva = 'Solo se permiten reservas a horas en punto o y media.';
+      this.cdr.detectChanges();
       return;
     }
 
@@ -99,24 +105,31 @@ export class ServiciosComponent implements OnInit {
       },
       error: () => {
         this.cargandoAforo = false;
+        this.cdr.detectChanges();
       }
     });
   }
 
   confirmarReserva(): void {
+    this.errorReserva = '';
+    this.exitoReserva = '';
+
     if (!this.fechaCita || !this.horaCita) {
-      alert('Por favor selecciona fecha y hora.');
+      this.errorReserva = 'Por favor selecciona fecha y hora.';
+      this.cdr.detectChanges();
       return;
     }
 
     const minutos = this.horaCita.split(':')[1];
     if (minutos !== '00' && minutos !== '30') {
-      alert('Solo se permiten reservas a horas en punto o y media.');
+      this.errorReserva = 'Solo se permiten reservas a horas en punto o y media.';
+      this.cdr.detectChanges();
       return;
     }
 
     if (this.aforoInfo && this.aforoInfo.aforoDisponible === 0) {
-      alert('No hay aforo disponible para esa fecha y hora.');
+      this.errorReserva = 'No hay aforo disponible para esa fecha y hora.';
+      this.cdr.detectChanges();
       return;
     }
 
@@ -131,15 +144,15 @@ export class ServiciosComponent implements OnInit {
 
     this.citaService.crearCita(nuevaCita).subscribe({
       next: () => {
-        alert(`¡Reserva confirmada! Te esperamos el ${this.fechaCita} a las ${this.horaCita}.`);
-        this.cerrarModal();
+        this.exitoReserva = `¡Reserva confirmada! Te esperamos el ${this.fechaCita} a las ${this.horaCita}.`;
+        this.cdr.detectChanges();
+        setTimeout(() => this.cerrarModal(), 2500);
       },
       error: (err) => {
-        if (err.status === 400 && err.error?.error) {
-          alert('❌ ' + err.error.error);
-        } else {
-          alert('Hubo un problema al hacer la reserva.');
-        }
+        this.errorReserva = err.status === 400 && err.error?.error
+          ? err.error.error
+          : 'Hubo un problema al hacer la reserva.';
+        this.cdr.detectChanges();
       }
     });
   }

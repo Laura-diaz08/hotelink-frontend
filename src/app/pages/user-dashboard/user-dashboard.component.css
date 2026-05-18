@@ -144,15 +144,20 @@ a{
   color:white;
 }
 
-.btn-outline-dark{
-  background:transparent;
-  border:2px solid var(--dark);
+.btn-outline-dark {
+  background:
+    linear-gradient(
+      135deg,
+      var(--orange),
+      var(--pink)
+    );
   color:var(--dark);
+  box-shadow:
+    0 10px 30px rgba(255,95,162,.35);
 }
 
-.btn-outline-dark:hover{
-  background:var(--dark);
-  color:white;
+.btn-outline-dark:hover {
+  color:var(--dark);
 }
 
 .btn-outline-white{

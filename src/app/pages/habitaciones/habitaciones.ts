@@ -18,19 +18,19 @@ export class HabitacionesComponent implements OnInit {
 
   imagenesHabitacion: { [tipo: string]: string[] } = {
     Sencilla: [
-      'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80',
-      'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&q=80',
-      'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=800&q=80'
+      'assets/habitacion_sencilla.png',
+      'assets/baño_sencilla.png',
+      'assets/terraza_sencilla.png'
     ],
     Doble: [
-      'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&q=80',
-      'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&q=80',
-      'https://images.unsplash.com/photo-1505693314120-0d443867891c?w=800&q=80'
+      'assets/habitacion_doble.png',
+      'assets/baño_habitacion_doble.png',
+      'assets/terraza_habitacion_doble.png'
     ],
     Suite: [
-      'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800&q=80',
-      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80',
-      'https://images.unsplash.com/photo-1563911302283-d2bc129e7570?w=800&q=80'
+      'assets/habitacion_suite.png',
+      'assets/baño_suite.png',
+      'assets/terraza_suite.png'
     ]
   };
 
@@ -45,7 +45,12 @@ export class HabitacionesComponent implements OnInit {
   disponibilidadInfo: number | null = null;
   errorReserva: string = '';
   exitoReserva: string = '';
-  hoyStr: string = new Date().toISOString().split('T')[0];
+  
+  get mananaStr(): string {
+    const manana = new Date();
+    manana.setDate(manana.getDate() + 1);
+    return manana.toISOString().split('T')[0];
+  }
 
   constructor(
     private habitacionService: HabitacionService,
@@ -113,7 +118,31 @@ export class HabitacionesComponent implements OnInit {
       this.errorReserva = 'Selecciona las fechas de entrada y salida.';
       return;
     }
+
     this.errorReserva = '';
+
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    const manana = new Date(hoy);
+    manana.setDate(manana.getDate() + 1);
+
+    const fechaEntrada = new Date(this.reservaFechaInicio);
+    fechaEntrada.setHours(0, 0, 0, 0);
+
+    if (fechaEntrada < manana) {
+      this.errorReserva = 'La fecha de entrada debe ser a partir de mañana.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    // Validar que la salida sea posterior a la entrada
+    const fechaSalida = new Date(this.reservaFechaFin);
+    if (fechaSalida <= fechaEntrada) {
+      this.errorReserva = 'La fecha de salida debe ser posterior a la de entrada.';
+      this.cdr.detectChanges();
+      return;
+    }
+
     console.log('Buscando disponibilidad:', this.tipoSeleccionado, this.reservaFechaInicio, this.reservaFechaFin);
     
     this.http.get<any>(
