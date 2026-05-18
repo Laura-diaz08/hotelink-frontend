@@ -1,25 +1,40 @@
 <header class="topbar client-topbar"
         [class.navbar-solida]="!esTransparente"
         [class.navbar-transparente]="esTransparente"
-        *ngIf="!router.url.includes('/login') && !router.url.includes('/register') && !router.url.includes('/admin') && !router.url.includes('/trabajador') && !router.url.includes('/verificar') && !router.url.includes('/recuperar') ">  
-        <div class="logo-text">Hote<span class="logo-accent">link</span></div>
-  <nav class="main-nav">
+        *ngIf="!router.url.includes('/login') && !router.url.includes('/register') && !router.url.includes('/admin') && !router.url.includes('/trabajador') && !router.url.includes('/verificar') && !router.url.includes('/recuperar')">
+  
+  <div class="logo-text">Hote<span class="logo-accent">link</span></div>
+
+  <button class="hamburger" (click)="toggleMenu()" [class.abierto]="menuAbierto">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <nav class="main-nav" [class.menu-abierto]="menuAbierto">
     <ul class="nav-list">
-      <li><a routerLink="/home" class="nav-link">Inicio</a></li>
-      <li><a routerLink="/habitaciones" class="nav-link">Habitaciones</a></li>
-      <li><a routerLink="/mis-reservas" class="nav-link">Mis Reservas</a></li>
-      <li><a routerLink="/servicios" class="nav-link">Servicios</a></li>
-      <li><a routerLink="/nosotros" class="nav-link">Nosotros</a></li>
-      <li><a routerLink="/contacto" class="nav-link">Contacto</a></li>
-      <li><a routerLink="/opiniones" class="nav-link">Opiniones</a></li>
-      <li><a routerLink="/galeria" class="nav-link">Galería</a></li>
+      <li><a routerLink="/home" class="nav-link" (click)="cerrarMenu()">Inicio</a></li>
+      <li><a routerLink="/habitaciones" class="nav-link" (click)="cerrarMenu()">Habitaciones</a></li>
+      <li><a routerLink="/mis-reservas" class="nav-link" (click)="cerrarMenu()">Mis Reservas</a></li>
+      <li><a routerLink="/servicios" class="nav-link" (click)="cerrarMenu()">Servicios</a></li>
+      <li><a routerLink="/nosotros" class="nav-link" (click)="cerrarMenu()">Nosotros</a></li>
+      <li><a routerLink="/contacto" class="nav-link" (click)="cerrarMenu()">Contacto</a></li>
+      <li><a routerLink="/opiniones" class="nav-link" (click)="cerrarMenu()">Opiniones</a></li>
+      <li><a routerLink="/galeria" class="nav-link" (click)="cerrarMenu()">Galería</a></li>
+      <li class="nav-mobile-actions">
+        <span class="welcome-text">¡Hola, {{ nombreUsuario }}!</span>
+        <button (click)="cerrarSesion()" class="btn-logout">Cerrar Sesión</button>
+      </li>
     </ul>
   </nav>
+
   <div class="user-actions">
     <span class="welcome-text">¡Hola, {{ nombreUsuario }}!</span>
     <button (click)="cerrarSesion()" class="btn-logout">Cerrar Sesión</button>
   </div>
 </header>
+
+<div class="menu-overlay" *ngIf="menuAbierto" (click)="cerrarMenu()"></div>
 
 <router-outlet></router-outlet>
 

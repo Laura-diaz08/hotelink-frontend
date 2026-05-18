@@ -99,7 +99,7 @@
                     <option *ngFor="let emp of empleados" [value]="emp.id">{{ emp.nombre }}</option>
                   </select>
                   <button class="btn-aceptar" (click)="asignarEmpleado(tarea, tarea.empleadoSeleccionado)">
-                    ✓ Aceptar
+                    ✓
                   </button>
                 </div>
                 <div class="empleado-asignado" *ngIf="tarea.empleado">

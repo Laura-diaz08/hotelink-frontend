@@ -1013,19 +1013,116 @@ body {
     font-size: 2.5rem;
   }
 
+  /* RESERVA CARD EN MÓVIL */
+  .reserva-main {
+    grid-template-columns: 1fr;
+  }
+
+  .reserva-image {
+    height: 200px;
+    min-height: unset;
+  }
+
+  .reserva-info {
+    padding: 20px;
+  }
+
+  .reserva-info-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
   .reserva-info-header h3 {
-    font-size: 2rem;
+    font-size: 1.6rem;
+  }
+
+  .reserva-fechas {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .fecha-separador {
+    display: none;
+  }
+
+  .reserva-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .reserva-botones {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .reserva-botones button {
+    width: 100%;
+    justify-content: center;
   }
 
   .precio-amount {
     font-size: 2.5rem;
   }
 
+  /* SERVICIO CARD EN MÓVIL */
+  .servicio-card {
+    grid-template-columns: 60px 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .servicio-actions {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #fff0e8;
+    padding-top: 12px;
+  }
+
   .servicio-info-header h3 {
-    font-size: 1.6rem;
+    font-size: 1.3rem;
+  }
+
+  .servicio-fechas {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* HISTORIAL EN MÓVIL */
+  .historial-card {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .historial-actions {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  /* MODAL EN MÓVIL */
+  .modal-content {
+    padding: 28px 20px;
+    border-radius: 20px;
   }
 
   .modal-content h3 {
-    font-size: 2.2rem;
+    font-size: 1.4rem;
+  }
+
+  .progreso-reserva {
+    padding: 14px;
+  }
+
+  .paso-circulo {
+    width: 36px;
+    height: 36px;
+    font-size: 0.85rem;
+  }
+
+  .paso span {
+    font-size: 0.62rem;
   }
 }

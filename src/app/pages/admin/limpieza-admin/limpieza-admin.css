@@ -1,7 +1,3 @@
-/* ==========================================================================
-   HOTELINK - GESTIÓN DE LIMPIEZA FULL CSS
-   ========================================================================== */
-
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap');
 
 :host {
@@ -25,7 +21,7 @@
     overflow: hidden;
 }
 
-/* --- BARRA LATERAL (Consistente) --- */
+/* --- BARRA LATERAL --- */
 .barra-lateral {
     width: 280px;
     min-width: 280px;
@@ -45,9 +41,7 @@
     text-align: center;
 }
 
-.acento-logo {
-    color: var(--orange);
-}
+.acento-logo { color: var(--orange); }
 
 .enlaces-nav {
     list-style: none;
@@ -55,6 +49,8 @@
     margin: 0;
     flex-grow: 1;
 }
+
+.enlaces-nav li { margin-bottom: 8px; }
 
 .enlaces-nav a {
     text-decoration: none !important;
@@ -69,10 +65,20 @@
     transition: 0.3s ease;
 }
 
+.enlaces-nav a:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.05);
+}
+
 .enlaces-nav a.activo {
     background: linear-gradient(135deg, var(--orange), var(--pink));
     color: white !important;
     box-shadow: 0 8px 20px rgba(255, 95, 162, 0.25);
+}
+
+.pie-nav {
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .btn-cerrar-sesion {
@@ -88,14 +94,19 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
+    transition: 0.3s;
 }
+
+.btn-cerrar-sesion:hover { background: #ff4d4d; border-color: #ff4d4d; }
 
 /* --- CONTENIDO PRINCIPAL --- */
 .main-content {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
 
 .topbar {
@@ -117,28 +128,18 @@
     padding: 0 40px 40px;
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 30px;
 }
 
 /* --- ALERTAS --- */
 .alert {
     padding: 15px 25px;
     border-radius: 15px;
-    margin-bottom: 20px;
     font-weight: 600;
 }
 
-.success-alert {
-    background: #d1fae5;
-    color: #065f46;
-    border-left: 5px solid var(--turquoise);
-}
-
-.error-alert {
-    background: #fee2e2;
-    color: #991b1b;
-    border-left: 5px solid var(--pink);
-}
+.success-alert { background: #d1fae5; color: #065f46; border-left: 5px solid var(--turquoise); }
+.error-alert { background: #fee2e2; color: #991b1b; border-left: 5px solid var(--pink); }
 
 /* --- FILTROS --- */
 .filtros-section {
@@ -152,6 +153,15 @@
     display: flex;
     gap: 20px;
     align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 140px;
 }
 
 .input-group label {
@@ -159,8 +169,7 @@
     font-size: 0.8rem;
     color: var(--pink);
     text-transform: uppercase;
-    margin-bottom: 8px;
-    display: block;
+    letter-spacing: 1px;
 }
 
 .input-group input,
@@ -173,20 +182,20 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* --- PANEL PRINCIPAL (Grid) --- */
+/* --- PANEL PRINCIPAL --- */
 .panel-principal {
     display: grid;
-    grid-template-columns: 320px 1fr;
-    gap: 30px;
+    grid-template-columns: 300px 1fr;
+    gap: 25px;
 }
 
-/* EMPLEADOS CARD */
-.card-empleados {
+/* EMPLEADOS */
+.card-empleados,
+.card-tareas {
     background: white;
     border-radius: 25px;
     padding: 25px;
     box-shadow: var(--shadow);
-    height: fit-content;
 }
 
 .card-empleados h2,
@@ -195,17 +204,25 @@
     font-size: 1.4rem;
     margin-bottom: 20px;
     color: var(--dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.lista-empleados {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .empleado-item {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
     padding: 12px;
     border-radius: 15px;
     background: #f8fafc;
     margin-bottom: 10px;
-    transition: 0.3s;
 }
 
 .empleado-avatar {
@@ -218,124 +235,105 @@
     align-items: center;
     justify-content: center;
     font-weight: 700;
+    flex-shrink: 0;
 }
 
 .empleado-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
 }
 
 .empleado-info strong {
-  font-size: 0.95rem;
-  color: var(--dark);
-  display: block;
+    font-size: 0.95rem;
+    color: var(--dark);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .empleado-info span {
-  font-size: 0.78rem;
-  color: var(--text);
-  display: block;
+    font-size: 0.75rem;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* TAREAS CARD */
-.card-tareas {
-    background: white;
-    border-radius: 25px;
-    padding: 25px;
-    box-shadow: var(--shadow);
-}
-
+/* TAREAS */
 .tarea-item {
     background: white;
-    border-radius: 18px;
-    padding: 20px;
-    margin-bottom: 15px;
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 12px;
     border: 1px solid #f1f5f9;
-    border-top: 6px solid #e2e8f0;
-    /* Línea de estado como habitaciones */
+    border-top: 5px solid #e2e8f0;
     transition: 0.3s;
 }
 
-.tarea-item.PENDIENTE {
-    border-top-color: #ffb300;
-}
-
-.tarea-item.EN_PROCESO {
-    border-top-color: var(--orange);
-}
-
-.tarea-item.COMPLETADA {
-    border-top-color: var(--turquoise);
-}
+.tarea-item.PENDIENTE { border-top-color: #ffb300; }
+.tarea-item.EN_PROCESO { border-top-color: var(--orange); }
+.tarea-item.COMPLETADA { border-top-color: var(--turquoise); }
 
 .tarea-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .tarea-hab {
     font-weight: 800;
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--dark);
 }
 
 .tarea-badge {
     font-size: 0.7rem;
     font-weight: 800;
-    padding: 4px 12px;
+    padding: 4px 10px;
     border-radius: 50px;
     text-transform: uppercase;
 }
 
-.tarea-badge.PENDIENTE {
-    background: #fff8e1;
-    color: #ffb300;
+.tarea-badge.PENDIENTE { background: #fff8e1; color: #ffb300; }
+.tarea-badge.EN_PROCESO { background: #fff0eb; color: var(--orange); }
+.tarea-badge.COMPLETADA { background: #e0f7f6; color: var(--turquoise); }
+
+.tarea-info {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
 }
 
-.tarea-badge.EN_PROCESO {
-    background: #fff0eb;
-    color: var(--orange);
+.tarea-info span {
+    font-size: 0.85rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
-.tarea-badge.COMPLETADA {
-    background: #e0f7f6;
-    color: var(--turquoise);
-}
+.tarea-info i { color: var(--orange); }
 
 .tarea-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 15px;
-    padding-top: 15px;
+    padding-top: 12px;
     border-top: 1px solid #f1f5f9;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-.tarea-info {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.tarea-info span {
-  font-size: 0.875rem;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.tarea-info i { color: var(--orange); }
-
-/* ASIGNACIÓN */
 .asignar-group {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex: 1;
+    min-width: 0;
 }
 
 .select-empleado {
@@ -344,29 +342,38 @@
     border: 1px solid #cbd5e1;
     font-size: 0.85rem;
     flex: 1;
+    min-width: 0;
 }
 
-.btn-aceptar {
-    background: var(--turquoise);
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
+.empleado-asignado {
+    font-size: 0.85rem;
+    color: #065f46;
+    background: #d1fae5;
+    padding: 6px 12px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--text);
+    padding: 30px;
+    font-size: 0.9rem;
 }
 
 /* --- COLUMNAS KANBAN --- */
 .columnas-estado {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
+    gap: 20px;
 }
 
 .columna {
     background: rgba(255, 255, 255, 0.5);
-    border-radius: 25px;
-    padding: 20px;
+    border-radius: 20px;
+    padding: 18px;
     border: 2px dashed #e2e8f0;
 }
 
@@ -374,45 +381,51 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 15px;
+    padding: 10px 14px;
     border-radius: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
-.header-pendiente {
-    background: #ffb300;
+.columna-header h3 {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 700;
     color: white;
 }
 
-.header-en_proceso {
-    background: var(--orange);
+.columna-count {
+    background: rgba(255,255,255,0.3);
     color: white;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 2px 10px;
+    border-radius: 50px;
 }
 
-.header-completada {
-    background: var(--turquoise);
-    color: white;
-}
+.header-pendiente { background: #ffb300; }
+.header-en_proceso { background: var(--orange); }
+.header-completada { background: var(--turquoise); }
 
 .columna-card {
     background: white;
-    padding: 15px;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
-    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    margin-bottom: 10px;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 4px;
 }
 
-.columna-hab {
-    font-weight: 700;
-    color: var(--dark);
-}
+.columna-hab { font-weight: 700; color: var(--dark); font-size: 0.9rem; }
+.columna-emp { font-size: 0.78rem; color: var(--text); font-style: italic; }
+.columna-fecha { font-size: 0.75rem; color: var(--orange); }
 
-.columna-emp {
-    font-size: 0.8rem;
+.columna-empty {
+    text-align: center;
     color: var(--text);
+    font-size: 0.8rem;
+    padding: 16px;
     font-style: italic;
 }
 
@@ -426,6 +439,7 @@
     font-weight: 600;
     cursor: pointer;
     box-shadow: 0 5px 15px rgba(255, 95, 162, 0.3);
+    font-family: 'Poppins', sans-serif;
 }
 
 .btn-secondary {
@@ -436,6 +450,21 @@
     border-radius: 12px;
     font-weight: 700;
     cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    white-space: nowrap;
+}
+
+.btn-secondary:hover { background: var(--pink); color: white; }
+
+.btn-aceptar {
+    background: var(--turquoise);
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
 }
 
 .btn-delete {
@@ -445,7 +474,10 @@
     padding: 8px 12px;
     border-radius: 10px;
     cursor: pointer;
+    flex-shrink: 0;
 }
+
+.btn-delete:hover { background: #ff5252; color: white; }
 
 /* --- MODAL --- */
 .modal-overlay {
@@ -457,31 +489,178 @@
     align-items: center;
     justify-content: center;
     z-index: 1000;
+    padding: 20px;
 }
 
 .modal-content {
     background: white;
     padding: 40px;
     border-radius: 30px;
-    width: 450px;
+    width: 100%;
+    max-width: 450px;
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+    border-top: 5px solid var(--orange);
 }
 
 .modal-content h3 {
     font-family: 'Playfair Display', serif;
     font-size: 1.8rem;
     margin-bottom: 25px;
+    color: var(--dark);
 }
 
 .form-grid {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
+    margin-bottom: 20px;
 }
 
 .modal-actions {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     justify-content: flex-end;
-    margin-top: 30px;
+    margin-top: 24px;
+}
+
+/* =============================================
+   RESPONSIVE
+============================================= */
+
+@media (max-width: 1024px) {
+    .barra-lateral {
+        width: 220px;
+        min-width: 220px;
+        padding: 30px 15px;
+    }
+
+    .dashboard-body { padding: 0 20px 40px; }
+    .topbar { padding: 30px 20px 20px; }
+
+    .panel-principal {
+        grid-template-columns: 240px 1fr;
+    }
+
+    .columnas-estado {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-container {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .barra-lateral {
+        width: 100%;
+        min-width: unset;
+        height: auto;
+        padding: 16px 20px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .cabecera-logo {
+        margin-bottom: 0;
+        font-size: 1.3rem;
+    }
+
+    .enlaces-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        flex-grow: 0;
+    }
+
+    .enlaces-nav li { margin-bottom: 0; }
+
+    .enlaces-nav a {
+        padding: 6px 10px;
+        font-size: 0.75rem;
+        gap: 4px;
+    }
+
+    .pie-nav {
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+    }
+
+    .btn-cerrar-sesion {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+
+    .main-content {
+        overflow-x: hidden;
+        overflow-y: visible;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .topbar {
+        padding: 16px 16px 12px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .topbar h1 { font-size: 1.6rem; }
+
+    .dashboard-body {
+        padding: 0 12px 30px;
+        gap: 16px;
+    }
+
+    .filtros-section { padding: 16px; }
+
+    .filtros-grid {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .input-group { min-width: unset; }
+
+    /* PANEL EN COLUMNA */
+    .panel-principal {
+        grid-template-columns: 1fr;
+    }
+
+    .card-empleados { padding: 18px; }
+    .card-tareas { padding: 18px; }
+
+    .tarea-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .asignar-group {
+        width: 100%;
+    }
+
+    /* COLUMNAS KANBAN EN COLUMNA */
+    .columnas-estado {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        padding: 24px 18px;
+        border-radius: 20px;
+    }
+
+    .modal-content h3 {
+        font-size: 1.4rem;
+        margin-bottom: 18px;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+    }
+
+    .modal-actions button { width: 100%; }
 }

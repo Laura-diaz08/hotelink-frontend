@@ -186,14 +186,18 @@
   padding: 30px;
   border-radius: 25px;
   box-shadow: var(--shadow);
+  overflow: hidden; 
 }
 
 .table-wrapper {
   width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .reservas-table {
   width: 100%;
+  min-width: 700px;
   border-collapse: separate;
   border-spacing: 0 10px;
 }
@@ -607,4 +611,138 @@
 .total-col {
   font-weight: 700;
   color: var(--dark);
+}
+
+@media (max-width: 1024px) {
+  .barra-lateral {
+    width: 220px;
+    min-width: 220px;
+    padding: 30px 15px;
+  }
+
+  .dashboard-body {
+    padding: 0 20px 40px;
+  }
+
+  .topbar {
+    padding: 30px 20px 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-container {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    overflow: auto;
+  }
+
+  .barra-lateral {
+    width: 100%;
+    min-width: unset;
+    height: auto;
+    padding: 20px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .cabecera-logo {
+    margin-bottom: 0;
+    font-size: 1.4rem;
+  }
+
+  .enlaces-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    flex-grow: 0;
+  }
+
+  .enlaces-nav li {
+    margin-bottom: 0;
+  }
+
+  .enlaces-nav a {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    gap: 6px;
+  }
+
+  .pie-nav {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+    width: auto;
+  }
+
+  .btn-cerrar-sesion {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+
+  .main-content {
+    overflow: visible;
+  }
+
+  .topbar {
+    padding: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .topbar h1 {
+    font-size: 1.8rem;
+  }
+
+  .dashboard-body {
+    padding: 0 15px 30px;
+  }
+
+  .search-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* TABLA RESPONSIVE - scroll horizontal */
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .reservas-table {
+    min-width: 650px;
+  }
+
+  .reservas-table th,
+  .reservas-table td {
+    padding: 10px 8px;
+    font-size: 0.8rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .btn-cargos,
+  .btn-checkin,
+  .btn-checkout {
+    height: 34px;
+    padding: 0 10px;
+    font-size: 0.75rem;
+  }
+
+  .modal-content {
+    padding: 24px 18px;
+    border-radius: 18px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cargo-form-grid {
+    grid-template-columns: 1fr;
+  }
 }

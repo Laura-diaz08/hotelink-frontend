@@ -30,6 +30,12 @@ export class RegisterComponent {
   constructor(private authService: Auth, private router: Router) {}
 
   onSubmit() {
+    const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(this.registroData.email || '')) {
+      this.mensajeError = 'Introduce un correo electrónico válido.';
+      return;
+    }
+    
     if (this.passwordNoCoincide() || this.confirmarPassword === '') {
       this.mensajeError = 'Las contraseñas no coinciden.';
       return;

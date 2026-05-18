@@ -461,3 +461,130 @@
   color: white;
   transform: rotate(90deg);
 }
+
+@media (max-width: 1024px) {
+  .barra-lateral {
+    width: 220px;
+    min-width: 220px;
+    padding: 30px 15px;
+  }
+
+  .dashboard-body {
+    padding: 0 20px 40px;
+  }
+
+  .topbar {
+    padding: 30px 20px 20px;
+  }
+
+  .habitaciones-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-container {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    overflow: auto;
+  }
+
+  .barra-lateral {
+    width: 100%;
+    min-width: unset;
+    height: auto;
+    padding: 20px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .cabecera-logo {
+    margin-bottom: 0;
+    font-size: 1.4rem;
+  }
+
+  .enlaces-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    flex-grow: 0;
+  }
+
+  .enlaces-nav li {
+    margin-bottom: 0;
+  }
+
+  .enlaces-nav a {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    gap: 6px;
+  }
+
+  .pie-nav {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+    width: auto;
+  }
+
+  .btn-cerrar-sesion {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+
+  .main-content {
+    overflow: visible;
+  }
+
+  .topbar {
+    padding: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .topbar h1 {
+    font-size: 1.8rem;
+  }
+
+  .dashboard-body {
+    padding: 0 15px 30px;
+  }
+
+  .filtros-grid {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .leyenda {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .habitaciones-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-content {
+    padding: 24px 18px;
+    border-radius: 20px;
+  }
+
+  .modal-content h3 {
+    font-size: 1.5rem;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .modal-actions button {
+    width: 100%;
+  }
+}

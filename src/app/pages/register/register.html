@@ -14,7 +14,14 @@
 
       <div class="form-grupo">
         <label>Correo electrónico</label>
-        <input type="email" name="email" [(ngModel)]="registroData.email" required placeholder="tu@email.com">
+        <input type="email" name="email" [(ngModel)]="registroData.email" required 
+              placeholder="tu@email.com"
+              pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+              #emailInput="ngModel"
+              [class.input-error]="emailInput.invalid && emailInput.touched">
+        <div *ngIf="emailInput.invalid && emailInput.touched" class="alert error">
+          Introduce un correo electrónico válido.
+        </div>
       </div>
 
       <div class="form-grupo">

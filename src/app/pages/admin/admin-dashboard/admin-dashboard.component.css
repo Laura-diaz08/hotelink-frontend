@@ -1,7 +1,3 @@
-/* ==========================================================================
-   ADMIN DASHBOARD - EQUILIBRADO (LETRAS GRANDES PERO PROPORCIONADAS)
-   ========================================================================== */
-
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap');
 
 :host {
@@ -26,13 +22,16 @@
 
 /* --- BARRA LATERAL --- */
 .barra-lateral {
-    width: 280px;
-    min-width: 280px;
-    background: var(--dark);
-    padding: 40px 20px;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+  width: 280px;
+  min-width: 280px;
+  background: var(--dark);
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  flex-shrink: 0;
 }
 
 .cabecera-logo {
@@ -53,118 +52,81 @@
   opacity: 1 !important;
 }
 
-.acento-logo {
-  color: var(--orange) !important;
-}
+.acento-logo { color: var(--orange) !important; }
 
 .enlaces-nav {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    flex-grow: 1;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
 }
 
 .enlaces-nav li { margin-bottom: 8px; }
 
 .enlaces-nav a {
-    text-decoration: none !important;
-    color: rgba(255, 255, 255, 0.6);
-    padding: 14px 20px;
-    font-size: 1rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    border-radius: 15px;
-    transition: 0.3s ease;
+  text-decoration: none !important;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 14px 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-radius: 15px;
+  transition: 0.3s ease;
 }
 
 .enlaces-nav a:hover {
-    color: white;
-    background: rgba(255, 255, 255, 0.05);
+  color: white;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .enlaces-nav a.activo {
-    background: linear-gradient(135deg, var(--orange), var(--pink));
-    color: white !important;
-    box-shadow: 0 8px 20px rgba(255, 95, 162, 0.25);
-}
-
-.btn-cerrar-sesion {
-    width: 100%;
-    background: transparent;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    color: white;
-    padding: 12px;
-    border-radius: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: 0.3s;
-}
-
-.btn-cerrar-sesion:hover { background: #ff4d4d; border-color: #ff4d4d; }
-
-.barra-lateral {
-    width: 280px;
-    background: var(--dark);
-    padding: 40px 20px;
-    display: flex;
-    flex-direction: column;
-    height: 100vh; 
-    position: sticky;
-    top: 0;
-    min-width: 280px;
-    flex-shrink: 0; 
-
+  background: linear-gradient(135deg, var(--orange), var(--pink));
+  color: white !important;
+  box-shadow: 0 8px 20px rgba(255, 95, 162, 0.25);
 }
 
 .pie-nav {
-    margin-top: auto; 
-    padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .btn-cerrar-sesion {
-    width: 100%;
-    background: transparent;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    color: white;
-    padding: 12px;
-    border-radius: 12px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: all 0.3s ease;
-    text-decoration: none;
+  width: 100%;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 12px;
+  border-radius: 12px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
 }
 
 .btn-cerrar-sesion:hover {
-    background: #ff4d4d; 
-    border-color: #ff4d4d;
-    transform: translateY(-2px);
+  background: #ff4d4d;
+  border-color: #ff4d4d;
+  transform: translateY(-2px);
 }
 
-.btn-cerrar-sesion i {
-    font-size: 1.1rem;
-}
-
-/* --- CONTENIDO PRINCIPAL (Con scroll propio) --- */
+/* --- CONTENIDO PRINCIPAL --- */
 .contenido-principal {
   flex: 1;
   height: 100vh;
   overflow-y: auto;
+  overflow-x: hidden;
   padding-bottom: 30px;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 /* --- CABECERA --- */
@@ -184,47 +146,15 @@
   margin: 0;
 }
 
-.stat-card-bs {
-    font-family: 'Poppins', sans-serif !important;
-}
-
-.stat-card-bs label {
-    font-family: 'Poppins', sans-serif; 
-    color: var(--pink) !important;
-    text-transform: uppercase;
-    font-weight: 700;
-    font-size: 0.8rem; 
-    letter-spacing: 1px; 
-    
-    margin: 0;
-    display: inline-block;
-}
-
-.stat-card-bs span {
-    font-family: 'Playfair Display', serif; 
-    font-size: 2.5rem; 
-    font-weight: 800;
-    color: var(--dark) !important;
-    margin-left: 10px; 
-    line-height: 1;
-}
-
-.stat-card-bs p {
-    font-family: 'Poppins', sans-serif;
-    color: var(--text);
-    font-size: 0.9rem;
-    margin: 10px 0 0 0;
-}
-
 /* --- REJILLAS --- */
 .rejilla-stats,
 .fila-calendario-full,
 .rejilla-inferior-triple {
   width: 100%;
   max-width: 1400px;
-  /* Evita que en pantallas ultra-anchas se estire demasiado */
   margin: 0 auto;
   padding: 0 40px 25px;
+  box-sizing: border-box;
 }
 
 .rejilla-stats {
@@ -233,60 +163,88 @@
   gap: 20px;
 }
 
+/* --- TARJETAS STAT --- */
 .tarjeta.stat {
-    display: flex;
-    flex-direction: column; 
-    justify-content: center;
-    padding: 25px 30px;
-    min-height: 140px; 
-    border-radius: 24px;
-    background: white;
-    border-left: 8px solid var(--orange);
-    box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 25px 30px;
+  min-height: 140px;
+  border-radius: 24px;
+  background: white;
+  border-left: 8px solid var(--orange);
+  box-shadow: var(--shadow);
 }
 
 .tarjeta.stat label {
-    font-family: 'Poppins', sans-serif !important;
-    color: var(--pink) !important;
-    font-size: 0.85rem !important;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 5px; 
-    line-height: 1.2;
-    display: block; 
+  font-family: 'Poppins', sans-serif !important;
+  color: var(--pink) !important;
+  font-size: 0.85rem !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 5px;
+  line-height: 1.2;
+  display: block;
 }
 
 .tarjeta.stat .valor {
-    font-family: 'Playfair Display', serif !important;
-    font-size: 3rem !important;
-    font-weight: 800;
-    color: var(--dark);
-    margin: 0;
-    line-height: 1;
-    display: block;
+  font-family: 'Playfair Display', serif !important;
+  font-size: 3rem !important;
+  font-weight: 800;
+  color: var(--dark);
+  margin: 0;
+  line-height: 1;
+  display: block;
 }
 
 .tarjeta.stat small {
-    font-family: 'Poppins', sans-serif;
-    color: var(--text);
-    font-size: 0.9rem;
-    margin-top: 10px;
-    opacity: 0.8;
+  font-family: 'Poppins', sans-serif;
+  color: var(--text);
+  font-size: 0.9rem;
+  margin-top: 10px;
+  opacity: 0.8;
+}
+
+.stat-card-bs { font-family: 'Poppins', sans-serif !important; }
+
+.stat-card-bs label {
+  font-family: 'Poppins', sans-serif;
+  color: var(--pink) !important;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  margin: 0;
+  display: inline-block;
+}
+
+.stat-card-bs span {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--dark) !important;
+  margin-left: 10px;
+  line-height: 1;
+}
+
+.stat-card-bs p {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text);
+  font-size: 0.9rem;
+  margin: 10px 0 0 0;
 }
 
 .buscador {
-    font-family: 'Poppins', sans-serif;
-    padding: 12px 25px;
-    border: 2px solid #eee;
-    border-radius: 50px;
-    outline: none;
-    transition: 0.3s;
+  font-family: 'Poppins', sans-serif;
+  padding: 12px 25px;
+  border: 2px solid #eee;
+  border-radius: 50px;
+  outline: none;
+  transition: 0.3s;
 }
 
-.buscador:focus {
-    border-color: var(--orange);
-}
+.buscador:focus { border-color: var(--orange); }
 
 /* --- CALENDARIO --- */
 .vista-calendario {
@@ -352,7 +310,7 @@
   color: var(--dark);
 }
 
-/* --- MOVIMIENTOS (LETRA MÁS PEQUEÑA) --- */
+/* --- MOVIMIENTOS --- */
 .mov-item {
   display: flex;
   align-items: center;
@@ -363,14 +321,12 @@
 
 .mov-info strong {
   font-size: 0.95rem;
-  /* Letra más pequeña como pediste */
   color: var(--dark);
   display: block;
 }
 
 .mov-info span {
   font-size: 0.8rem;
-  /* Subtexto pequeño */
   color: var(--text);
 }
 
@@ -413,14 +369,126 @@
   color: var(--text);
 }
 
+/* =============================================
+   RESPONSIVE
+============================================= */
+
 @media (max-width: 1024px) {
   .barra-lateral {
-    width: 80px;
-    padding: 20px 10px;
+    width: 220px;
+    min-width: 220px;
+    padding: 30px 15px;
   }
+
   .rejilla-stats,
   .fila-calendario-full,
   .rejilla-inferior-triple {
-    padding: 0 15px 20px;
+    padding: 0 20px 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .contenedor-admin {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .barra-lateral {
+    width: 100%;
+    min-width: unset;
+    height: auto;
+    padding: 16px 20px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    position: static;
+  }
+
+  .cabecera-logo {
+    margin-bottom: 0;
+    font-size: 1.3rem;
+  }
+
+  .enlaces-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    flex-grow: 0;
+  }
+
+  .enlaces-nav li { margin-bottom: 0; }
+
+  .enlaces-nav a {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+    gap: 4px;
+  }
+
+  .pie-nav {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .btn-cerrar-sesion {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    transform: none;
+  }
+
+  .btn-cerrar-sesion:hover {
+    transform: none;
+  }
+
+  .contenido-principal {
+    height: auto;
+    overflow-y: visible;
+    overflow-x: hidden;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .cabecera-dash {
+    padding: 16px 12px 12px;
+  }
+
+  .cabecera-dash h1 { font-size: 1.5rem; }
+
+  .rejilla-stats,
+  .fila-calendario-full,
+  .rejilla-inferior-triple {
+    padding: 0 12px 16px;
+  }
+
+  .rejilla-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .tarjeta.stat {
+    padding: 18px 16px;
+    min-height: 100px;
+  }
+
+  .tarjeta.stat .valor {
+    font-size: 2rem !important;
+  }
+
+  .rejilla-inferior-triple {
+    grid-template-columns: 1fr;
+  }
+
+  .vista-calendario {
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .rejilla-stats {
+    grid-template-columns: 1fr;
   }
 }

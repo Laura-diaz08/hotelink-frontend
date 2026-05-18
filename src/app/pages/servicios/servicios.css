@@ -157,6 +157,7 @@
   font-size: 1.1rem;
   color: var(--text);
   line-height: 1.6;
+  text-align: justify;
 }
 
 .servicio-aforo {
@@ -356,6 +357,10 @@
 
 .modal-form {
   padding: 20px 30px;
+}
+
+.modal-header-info p {
+  text-align: justify;
 }
 
 .form-row {
